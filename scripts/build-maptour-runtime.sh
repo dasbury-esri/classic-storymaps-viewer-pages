@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RUNTIME_PATH="${RUNTIME_PATH:-runtimes/maptour/upstream/MapTour}"
+OUTPUT_PATH="${OUTPUT_PATH:-runtimes/maptour/build}"
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "npm is required on PATH." >&2
+  exit 1
+fi
+
+if [[ ! -d "$RUNTIME_PATH" ]]; then
+  echo "Runtime path not found: $RUNTIME_PATH" >&2
+  exit 1
+fi
+
+rm -rf "$OUTPUT_PATH"
+mkdir -p "$OUTPUT_PATH"
+
+pushd "$RUNTIME_PATH" >/dev/null
+  npm ci
+  npx grunt
+popd >/dev/null
+
+copy_item() {
+  local src="$1"
+  local dst="$2"
+  if [[ -e "$src" ]]; then
+    cp -R "$src" "$dst"
+  fi
+}
+
+copy_item "$RUNTIME_PATH/index.html" "$OUTPUT_PATH"
+copy_item "$RUNTIME_PATH/app" "$OUTPUT_PATH"
+copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
+
+echo "Map Tour build output copied to $OUTPUT_PATH"

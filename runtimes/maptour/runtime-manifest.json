@@ -1,0 +1,76 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "maptour",
+  "displayName": "Story Map Tour",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/maptour",
+  "canonicalUrlPattern": "/templates/classic-storymaps/maptour",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/maptour/index.html"
+  ],
+  "upstream": {
+    "repo": "classic-storymap-tour",
+    "owner": "dasbury-esri",
+    "refType": "commit",
+    "ref": "2e56c7e08801fc6bbfc2bc27e0d220688a7120a6",
+    "sourceSubpath": "MapTour",
+    "license": "<license-id>"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt"
+    ],
+    "workingDirectory": "runtimes/maptour/upstream/MapTour",
+    "outputPath": "runtimes/maptour/build"
+  },
+  "deploy": {
+    "iisTargetPath": "/templates/classic-storymaps/maptour",
+    "packageInclude": [
+      "index.html",
+      "app/**",
+      "resources/**"
+    ],
+    "packageExclude": [
+      "src/**",
+      "node_modules/**",
+      "tests/**"
+    ],
+    "defaultDocument": "index.html"
+  },
+  "launch": {
+    "supportedQueryParams": [
+      "appid",
+      "webmap"
+    ],
+    "precedenceRule": "appid-first",
+    "webmapSupport": "runtime-specific",
+    "knownGoodExamples": [
+      "/templates/classic-storymaps/maptour?appid=20fd39888a444629bc8e40d9b6ac38cc"
+    ]
+  },
+  "viewerOnly": {
+    "builderBlocked": true,
+    "guardRules": [
+      "no-builder-routes",
+      "no-edit-actions"
+    ],
+    "notes": "Capture runtime-specific viewer-only differences as explicit patches."
+  },
+  "patches": {
+    "patchSetId": "pending-maptour-initial-import",
+    "files": [],
+    "rationale": "Minimal changes for IIS nested path and viewer-only constraints."
+  },
+  "verification": {
+    "smokeProfile": "maptour-baseline",
+    "baselineDate": "2026-03-12",
+    "baselineOperator": "product-owner"
+  },
+  "releaseMetadata": {
+    "monorepoCommit": "<sha>",
+    "deploymentTimestamp": "<iso8601>",
+    "upstreamRefAtRelease": "2e56c7e08801fc6bbfc2bc27e0d220688a7120a6"
+  }
+}

@@ -1,0 +1,332 @@
+title,body,labels,milestone,assignee
+"[S1][Phase 1] Define route contract for /templates/classic-storymaps","## Summary
+Define the site map and route contract for /templates/classic-storymaps, including landing and phase-1 app routes.
+
+## Objective
+Make route behavior explicit before implementation starts.
+
+## Dependencies
+None.
+
+## Deliverable
+Route matrix for landing and per-app pages.
+
+## Checklist
+- [ ] Document landing route and each phase-1 app route.
+- [ ] Define canonical URL format for each route.
+- [ ] Document query parameter precedence with appid-first behavior.
+- [ ] Document optional webmap support where applicable.
+- [ ] Add examples for valid and invalid URLs.
+
+## Acceptance Criteria
+- [ ] Landing route and each phase-1 app route are explicit.
+- [ ] URL parameter precedence is documented (appid-first, optional webmap where supported).
+
+## Done Evidence
+- [ ] Route matrix is committed and linked in issue comment.
+- [ ] Product owner approval is captured.
+
+## Estimate
+S (1 day)
+
+## PR Batch
+PR1","phase-1,planning,effort-s,product-owner,pr1","Classic Storymaps - Phase 1","product-owner"
+"[S2][Phase 1] Define phase-1 app adapters and responsibilities","## Summary
+Define adapter responsibilities for Map Tour, Map Journal, and Swipe/Spyglass.
+
+## Objective
+Lock per-app input support and viewer-only constraints before shared module implementation.
+
+## Dependencies
+S1.
+
+## Deliverable
+Adapter matrix for Map Tour, Map Journal, Swipe/Spyglass.
+
+## Checklist
+- [ ] Define accepted parameters per app.
+- [ ] Define unsupported input cases per app.
+- [ ] Document app-specific viewer-only policy.
+- [ ] Define guidance text categories for unsupported input.
+- [ ] Confirm adapter contract aligns with route contract.
+
+## Acceptance Criteria
+- [ ] Each app defines accepted parameters and unsupported cases.
+- [ ] Viewer-only policy is called out per app.
+
+## Done Evidence
+- [ ] Adapter matrix is committed and linked in issue comment.
+- [ ] Review sign-off is recorded.
+
+## Estimate
+S (1 day)
+
+## PR Batch
+PR1","phase-1,planning,effort-s,product-owner,pr1","Classic Storymaps - Phase 1","product-owner"
+"[S3][Phase 2] Implement shared appid/webmap validation module","## Summary
+Implement reusable parsing and validation logic for appid and webmap inputs across all app pages.
+
+## Objective
+Provide consistent validation outcomes and actionable messaging on all phase-1 app pages.
+
+## Dependencies
+S2.
+
+## Deliverable
+Reusable JS module for parsing and validating appid and webmap input.
+
+## Checklist
+- [ ] Implement parser for appid and webmap query parameters.
+- [ ] Enforce appid-first precedence.
+- [ ] Return normalized validation result structure.
+- [ ] Handle empty input with actionable message.
+- [ ] Handle malformed input with actionable message.
+- [ ] Handle unsupported input with actionable message.
+- [ ] Add integration points for per-app adapter rules.
+- [ ] Verify response consistency across app pages.
+
+## Acceptance Criteria
+- [ ] Empty, malformed, and unsupported input paths return actionable messages.
+- [ ] Validation responses are consistent across app pages.
+
+## Done Evidence
+- [ ] Module is committed and integrated into all phase-1 app pages.
+- [ ] Verification transcript is linked in issue comment.
+
+## Estimate
+M (2-3 days)
+
+## PR Batch
+PR1","phase-2,build,effort-m,validation,pr1","Classic Storymaps - Phase 2","repo-maintainer"
+"[S4][Phase 2] Implement shared page shell for app pages","## Summary
+Implement shared shell components for all pages: header, breadcrumb, help text, launch CTA, and error panel.
+
+## Objective
+Create a consistent and responsive page framework for landing and per-app pages.
+
+## Dependencies
+S1.
+
+## Deliverable
+Shared HTML, CSS, and JS shell components.
+
+## Checklist
+- [ ] Implement shared header.
+- [ ] Implement breadcrumb region.
+- [ ] Implement help text region.
+- [ ] Implement launch CTA area.
+- [ ] Implement error panel area.
+- [ ] Verify desktop layout behavior.
+- [ ] Verify mobile layout behavior.
+- [ ] Verify brand assets and thumbnails render correctly.
+
+## Acceptance Criteria
+- [ ] Desktop and mobile layouts are verified.
+- [ ] Brand assets and thumbnails render correctly.
+
+## Done Evidence
+- [ ] Shared shell is committed and referenced by page templates.
+- [ ] Verification notes are linked in issue comment.
+
+## Estimate
+M (2-3 days)
+
+## PR Batch
+PR1","phase-2,build,effort-m,ux,pr1","Classic Storymaps - Phase 2","repo-maintainer"
+"[S5][Phase 3] Build landing page with app cards and deep links","## Summary
+Build the landing page for classic storymaps with thumbnails and deep links to phase-1 app pages.
+
+## Objective
+Provide a clear entry point for users to select app viewers.
+
+## Dependencies
+S4.
+
+## Deliverable
+Landing page at /templates/classic-storymaps.
+
+## Checklist
+- [ ] Implement landing page layout using shared shell patterns.
+- [ ] Add cards for all phase-1 apps.
+- [ ] Add thumbnails and app descriptions.
+- [ ] Wire deep links to the correct app routes.
+- [ ] Validate navigation behavior on desktop and mobile.
+
+## Acceptance Criteria
+- [ ] Cards for all phase-1 apps display correctly.
+- [ ] Card links route to the right app pages.
+
+## Done Evidence
+- [ ] Landing page is committed.
+- [ ] Verification notes for links and rendering are linked in issue comment.
+
+## Estimate
+S (1 day)
+
+## PR Batch
+PR2","phase-3,build,effort-s,landing-page,pr2","Classic Storymaps - Phase 3","repo-maintainer"
+"[S6][Phase 3] Build Map Tour, Map Journal, and Swipe/Spyglass viewer pages","## Summary
+Build per-app pages with adapter-driven validation and launch behavior.
+
+## Objective
+Deliver phase-1 viewer pages with app-specific unsupported guidance and viewer-only behavior.
+
+## Dependencies
+S3, S4.
+
+## Deliverable
+Per-app pages with adapter-driven validation and launch behavior.
+
+## Checklist
+- [ ] Implement Map Tour page integration.
+- [ ] Implement Map Journal page integration.
+- [ ] Implement Swipe and Spyglass page integration.
+- [ ] Validate known-good appid launch for each app.
+- [ ] Show app-specific unsupported input guidance.
+- [ ] Provide org-search links for unsupported cases.
+- [ ] Verify viewer-only constraints per app.
+
+## Acceptance Criteria
+- [ ] Known-good appid launches correctly for each app.
+- [ ] Unsupported input shows app-specific guidance and org-search links.
+
+## Done Evidence
+- [ ] All per-app pages are committed.
+- [ ] Positive and negative verification transcript is linked in issue comment.
+
+## Estimate
+M (2-3 days)
+
+## PR Batch
+PR2","phase-3,build,effort-m,viewer-pages,pr2","Classic Storymaps - Phase 3","repo-maintainer"
+"[S7][Phase 4] Define IIS deploy boundary and publish process","## Summary
+Define package boundary and publish process for /templates/classic-storymaps.
+
+## Objective
+Ensure deployable runtime package works under nested IIS path without source-only artifacts.
+
+## Dependencies
+S5, S6.
+
+## Deliverable
+Packaging checklist and deployment notes.
+
+## Checklist
+- [ ] Define required runtime files and folders.
+- [ ] Exclude source-only files from publish package.
+- [ ] Document publish steps for target IIS path.
+- [ ] Verify static assets resolve correctly from nested path.
+- [ ] Record package validation notes.
+
+## Acceptance Criteria
+- [ ] Runtime does not require source-only files.
+- [ ] Static assets resolve correctly from nested IIS path.
+
+## Done Evidence
+- [ ] Packaging checklist is committed.
+- [ ] Deployment notes are committed and linked in issue comment.
+
+## Estimate
+XS (0.5 day)
+
+## PR Batch
+PR3","phase-4,deployment,effort-xs,build-owner,pr3","Classic Storymaps - Phase 4","repo-maintainer"
+"[S8][Phase 4] Configure IIS assets, caching, and fallback behavior","## Summary
+Configure IIS to serve landing and app pages correctly with documented cache and fallback behavior.
+
+## Objective
+Operationalize hosted behavior at /templates/classic-storymaps.
+
+## Dependencies
+S7.
+
+## Deliverable
+IIS configuration checklist and validation transcript.
+
+## Checklist
+- [ ] Configure serving path for landing and app routes.
+- [ ] Validate static asset delivery for nested routes.
+- [ ] Apply cache policy per deployment notes.
+- [ ] Validate fallback behavior does not break route loading.
+- [ ] Capture validation transcript.
+
+## Acceptance Criteria
+- [ ] Landing and all app pages serve from target path.
+- [ ] Cache behavior matches documented policy.
+
+## Done Evidence
+- [ ] IIS checklist is committed.
+- [ ] Validation transcript is attached or linked in issue comment.
+
+## Estimate
+M (2-3 days)
+
+## PR Batch
+PR3","phase-4,infra,effort-m,iis,pr3","Classic Storymaps - Phase 4","iis-admin"
+"[S9][Phase 5] Create release workflow runbook with rollback","## Summary
+Define release workflow from sync through rollback, including required release metadata.
+
+## Objective
+Make repeatable releases and recovery explicit and testable.
+
+## Dependencies
+S7, S8.
+
+## Deliverable
+Release runbook.
+
+## Checklist
+- [ ] Document sync step.
+- [ ] Document build and package step.
+- [ ] Document pre-publish test step.
+- [ ] Document publish step.
+- [ ] Document rollback step.
+- [ ] Add required release notes fields for commit SHA and deployment timestamp.
+- [ ] Validate rollback instructions with a rehearsal.
+
+## Acceptance Criteria
+- [ ] Release notes capture commit SHA and deployment timestamp.
+- [ ] Rollback instructions are explicit and tested.
+
+## Done Evidence
+- [ ] Runbook is committed.
+- [ ] Rollback rehearsal results are linked in issue comment.
+
+## Estimate
+S (1 day)
+
+## PR Batch
+PR3","phase-5,operations,effort-s,runbook,pr3","Classic Storymaps - Phase 5","repo-maintainer"
+"[S10][Phase 5] Define and baseline release smoke test suite","## Summary
+Define smoke suite for valid, invalid, missing, and unsupported input coverage for every release.
+
+## Objective
+Ensure stable launch and validation behavior before and after publication.
+
+## Dependencies
+S6, S8.
+
+## Deliverable
+Smoke checklist covering valid, invalid, missing, and unsupported input.
+
+## Checklist
+- [ ] Define positive launch checks for each phase-1 app page.
+- [ ] Define invalid input checks for each app page.
+- [ ] Define missing input checks for each app page.
+- [ ] Define unsupported input checks for each app page.
+- [ ] Define viewer-only constraint checks for each app.
+- [ ] Define pass and fail recording format for release evidence.
+
+## Acceptance Criteria
+- [ ] All phase-1 app pages pass positive and negative tests.
+- [ ] Viewer-only constraints are validated.
+
+## Done Evidence
+- [ ] Smoke checklist is committed.
+- [ ] Baseline smoke execution transcript is linked in issue comment.
+
+## Estimate
+S (1 day)
+
+## PR Batch
+PR3","phase-5,qa,effort-s,smoke-tests,pr3","Classic Storymaps - Phase 5","qa-owner"

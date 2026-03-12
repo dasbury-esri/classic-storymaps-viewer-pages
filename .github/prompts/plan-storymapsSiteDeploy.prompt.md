@@ -1,17 +1,37 @@
-## Deployment Implementation Checklist: Classic Storymaps Site on IIS
+## Deployment Implementation Checklist: Classic Storymaps Site on IIS (Import-First)
 
 ### Goal
-Deploy a multi-app Classic Storymaps landing and viewer-page experience at /templates/classic-storymaps with clear per-app launch guidance, appid-first validation, and viewer-only behavior.
+Deploy a multi-app Classic Storymaps experience at /templates/classic-storymaps by importing and reproducing proven classic runtimes from upstream repos, starting with Map Tour, then Swipe, then Map Journal.
+
+### Strategy Shift
+- Use/import the already working Map Tour repo as the seed runtime model.
+- Treat local reference assets under classic-apps as catalog/fixtures, not runtime source-of-truth.
+- Prioritize reproducibility from upstream source over manual FTP state.
+- Keep clean folder routes canonical and keep index.html paths as compatibility forms.
+
+### Task Automation and Git Hygiene
+- Prefer bash/python automation for cross-environment use (macOS/Linux/Windows Git Bash), avoid PowerShell-only scripts.
+- On task completion, create a focused commit immediately.
+- Push each task-complete commit to origin before starting the next task.
+- Use one commit per task ID where practical (for example: `S4: scaffold maptour import pipeline`).
+- Include task ID and evidence links in commit messages and issue comments.
+- Suggested helper command: `./scripts/task-complete.sh <task-id> "<commit-message>"`
+- Example: `./scripts/task-complete.sh S4 "import pinned maptour upstream and add reproducibility scripts"`
 
 ### Scope
-- In scope: landing page architecture, per-app viewer pages, shared validation UX, IIS package/deploy workflow, release smoke tests.
-- Out of scope: modifying upstream app runtimes beyond necessary viewer-only launch constraints and full legacy map rebuild automation.
+- In scope: runtime import/onboarding process, landing catalog shell, route contract, IIS package/deploy workflow, release smoke tests.
+- Out of scope: broad legacy runtime rewrites, forcing all classic apps into one shared frontend architecture, and full legacy map rebuild automation.
 
 ### Owners
-- Product owner: you (app selection, UX decisions, acceptance)
-- Build owner: repo maintainer (page templates, build/package scripts, docs)
-- Infra owner: IIS admin (publish path, caching, static content policy)
-- QA owner: shared between product owner and repo maintainer
+- Product owner: app sequencing, UX and support-state decisions, acceptance.
+- Build owner: runtime import/build/patch process, page templates, package scripts, docs.
+- Infra owner: IIS publish path, caching, static content policy.
+- QA owner: shared between product owner and repo maintainer.
+
+### App Onboarding Sequence
+1. Map Tour (first supported runtime; baseline is already working in production path).
+2. Swipe (second supported runtime; simpler model and not a container for other apps).
+3. Map Journal (after Swipe; can embed classic Swipe apps, so higher integration risk).
 
 ### Work Checklist
 
@@ -19,147 +39,254 @@ Tag legend:
 - Effort: XS (<= 0.5d), S (1d), M (2-3d), L (4-5d)
 - Depends-On: task IDs that must complete first
 
-#### Phase 1: Information Architecture and URL Contract
-- [ ] [S1] Task: Define site map and route contract for /templates/classic-storymaps.
+#### Phase 1: Baseline, Contract, and Routing
+- [x] [S1] Task: Baseline current Map Tour runtime behavior at /templates/classic-storymaps/maptour.
   - Owner: Product owner
   - Effort: S
   - Depends-On: None
-  - Deliverable: Route matrix for landing and per-app pages
+  - Deliverable: Baseline verification note and reproducibility target
+  - Status: Completed (documentation baseline) on 2026-03-12. Evidence: `docs/architecture/phase1-s1-maptour-baseline.md`.
   - Acceptance criteria:
-    - Landing route and each phase-1 app route are explicit
-    - URL param precedence is documented (appid-first, optional webmap where supported)
+    - Known-good launch behavior and negative-path behavior are documented
+    - Viewer-only expectations are explicitly captured
 
-- [ ] [S2] Task: Define phase-1 app set and adapter responsibilities.
+- [x] [S2] Task: Define runtime import/onboarding contract and runtime manifest schema.
   - Owner: Product owner
   - Effort: S
   - Depends-On: S1
-  - Deliverable: Adapter matrix for Map Tour, Map Journal, Swipe/Spyglass
+  - Deliverable: Runtime onboarding contract and runtime-manifest field spec
+  - Status: Completed (contract + schema draft) on 2026-03-12. Evidence: `docs/architecture/phase1-s2-runtime-onboarding-contract.md`.
   - Acceptance criteria:
-    - Each app defines accepted params and unsupported cases
-    - Viewer-only policy is called out per app
+    - Upstream provenance, patch policy, build, deploy, and release metadata fields are defined
+    - Contract is approved by product and build owners
 
-#### Phase 2: Shared UX and Validation Layer
-- [ ] [S3] Task: Implement shared input/validation module used by all app pages.
-  - Owner: Build owner
-  - Effort: M
-  - Depends-On: S2
-  - Deliverable: Reusable JS module for parsing and validating appid/webmap input
-  - Acceptance criteria:
-    - Empty, malformed, and unsupported input paths return actionable messages
-    - Validation responses are consistent across app pages
-
-- [ ] [S4] Task: Implement shared page shell (header, breadcrumb, help text, launch CTA, error panel).
-  - Owner: Build owner
-  - Effort: M
+- [x] [S3] Task: Define import-first route matrix and URL precedence contract.
+  - Owner: Product owner
+  - Effort: S
   - Depends-On: S1
-  - Deliverable: Shared HTML/CSS/JS shell components
+  - Deliverable: Route matrix for landing and onboarded runtime routes
+  - Status: Completed on 2026-03-12. Evidence: `docs/architecture/phase1-s3-route-matrix.md`.
   - Acceptance criteria:
-    - Desktop and mobile layouts are verified
-    - Brand assets and thumbnails render correctly
+    - Landing and runtime routes are explicit with canonical and compatibility URL forms
+    - appid-first behavior is documented with optional webmap support per runtime
 
-#### Phase 3: Landing and Per-App Pages
-- [ ] [S5] Task: Build landing page with app thumbnails and deep links.
+#### Phase 2: Seed Runtime and Landing Shell
+- [ ] [S4] Task: Import and reproduce Map Tour runtime from upstream source.
+  - Owner: Build owner
+  - Effort: M
+  - Depends-On: S2, S3
+  - Deliverable: Pinned Map Tour import, reproducible deploy output, explicit patch list
+  - Status: In progress on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build + patch verification pending. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`.
+  - Acceptance criteria:
+    - Map Tour runtime is reproducible from monorepo-managed source
+    - Differences from baseline are tracked as explicit patches
+
+- [ ] [S5] Task: Build landing catalog shell using classic-apps references.
   - Owner: Build owner
   - Effort: S
-  - Depends-On: S4
-  - Deliverable: /templates/classic-storymaps/index.html
+  - Depends-On: S3
+  - Deliverable: Landing/catalog implementation at /templates/classic-storymaps
   - Acceptance criteria:
-    - Cards for all phase-1 apps display correctly
-    - Card links route to the right app pages
+    - All classic app cards render with clear support-state messaging
+    - Supported cards deep-link to canonical routes
 
-- [ ] [S6] Task: Build Map Tour, Map Journal, and Swipe/Spyglass pages.
+#### Phase 3: Second Runtime and Journal Constraints
+- [ ] [S6] Task: Import and support Swipe as the second onboarded runtime.
   - Owner: Build owner
   - Effort: M
-  - Depends-On: S3, S4
-  - Deliverable: Per-app pages with adapter-driven validation and launch behavior
+  - Depends-On: S4, S5
+  - Deliverable: Reproducible Swipe runtime and integrated launch guidance
   - Acceptance criteria:
-    - Known good appid launches correctly for each app
-    - Unsupported input shows app-specific guidance and org-search links
+    - Known-good Swipe launch works from canonical route
+    - Unsupported and malformed input paths show actionable guidance
 
-#### Phase 4: IIS Packaging and Deployment
-- [ ] [S7] Task: Define deploy boundary and publish process for /templates/classic-storymaps.
+- [ ] [S7] Task: Define Map Journal onboarding constraints and embed policy.
+  - Owner: Product owner
+  - Effort: S
+  - Depends-On: S6
+  - Deliverable: Map Journal pre-onboarding design and risk checklist
+  - Acceptance criteria:
+    - Embedded classic Swipe behavior policy is explicit
+    - Journal onboarding risks and mitigations are approved
+
+#### Phase 4: IIS Packaging and Runtime Hosting
+- [ ] [S8] Task: Define IIS package boundary and publish assembly for landing + imported runtimes.
   - Owner: Build owner
   - Effort: XS
-  - Depends-On: S5, S6
-  - Deliverable: Packaging checklist and deployment notes
+  - Depends-On: S4, S6
+  - Deliverable: Packaging checklist and deterministic publish assembly notes
   - Acceptance criteria:
-    - Runtime does not require source-only files
-    - Static assets resolve correctly from nested IIS path
+    - Package excludes source-only files
+    - Nested-path assets resolve correctly for landing and onboarded runtimes
 
-- [ ] [S8] Task: Configure IIS for route assets, cache policy, and fallback behavior.
+- [ ] [S9] Task: Configure IIS route assets, cache policy, and fallback behavior.
   - Owner: Infra owner
   - Effort: M
-  - Depends-On: S7
-  - Deliverable: IIS config checklist and validation transcript
+  - Depends-On: S8
+  - Deliverable: IIS configuration checklist and validation transcript template
   - Acceptance criteria:
-    - Landing and all app pages serve from target path
-    - Cache behavior matches documented policy
+    - Landing and onboarded runtime routes serve correctly from target path
+    - Cache behavior matches documented policy without breaking legacy runtime assets
 
-#### Phase 5: Release and Operations
-- [ ] [S9] Task: Define release workflow (sync, build/package, test, publish, rollback).
-  - Owner: Build owner
+#### Phase 5: Release and Smoke Operations
+- [ ] [S10] Task: Define release runbook and smoke suite baseline for import-first releases.
+  - Owner: QA owner (shared with build owner)
   - Effort: S
-  - Depends-On: S7, S8
-  - Deliverable: Release runbook
+  - Depends-On: S6, S9
+  - Deliverable: Release runbook and smoke checklist matrix
   - Acceptance criteria:
-    - Release notes capture commit SHA and deployment timestamp
-    - Rollback instructions are explicit and tested
+    - Release metadata includes upstream ref, patch set, monorepo SHA, and deployment timestamp
+    - Baseline smoke suite is defined for Map Tour and Swipe, with Journal profile queued
 
-- [ ] [S10] Task: Define smoke suite for every release.
-  - Owner: QA owner
-  - Effort: S
-  - Depends-On: S6, S8
-  - Deliverable: Smoke checklist covering valid, invalid, missing, and unsupported input
-  - Acceptance criteria:
-    - All phase-1 app pages pass positive and negative tests
-    - Viewer-only constraints are validated
+### Proposed Monorepo Folder Tree (Pre-Implementation)
+```text
+apps/
+  classic-storymaps-site/
+
+runtimes/
+  maptour/
+    upstream/
+    patches/
+    build/
+    runtime-manifest.json
+  swipe/
+    upstream/
+    patches/
+    build/
+    runtime-manifest.json
+  mapjournal/
+    upstream/
+    patches/
+    build/
+    runtime-manifest.json
+
+docs/
+  architecture/
+  deployment/
+  operations/
+  testing/
+
+reference/
+  classic-app-catalog/
+  thumbnails/
+  archived-pages/
+  fixtures/
+
+publish/
+  templates/
+    classic-storymaps/
+```
+
+### Runtime Manifest Shape (Draft)
+```json
+{
+  "manifestVersion": "1.0",
+  "appId": "maptour",
+  "displayName": "Story Map Tour",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/maptour",
+  "canonicalUrlPattern": "/templates/classic-storymaps/maptour",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/maptour/index.html"
+  ],
+  "upstream": {
+    "repo": "classic-storymap-tour",
+    "owner": "dasbury-esri",
+    "refType": "commit",
+    "ref": "<pinned-ref>",
+    "sourceSubpath": "MapTour",
+    "license": "<license-id>"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": ["npm ci", "grunt"],
+    "workingDirectory": "runtimes/maptour/upstream/MapTour",
+    "outputPath": "runtimes/maptour/build"
+  },
+  "deploy": {
+    "iisTargetPath": "/templates/classic-storymaps/maptour",
+    "packageInclude": ["index.html", "app/**", "resources/**"],
+    "packageExclude": ["src/**", "node_modules/**", "tests/**"],
+    "defaultDocument": "index.html"
+  },
+  "launch": {
+    "supportedQueryParams": ["appid", "webmap"],
+    "precedenceRule": "appid-first",
+    "webmapSupport": "runtime-specific",
+    "knownGoodExamples": [
+      "/templates/classic-storymaps/maptour?appid=<sample-id>"
+    ]
+  },
+  "viewerOnly": {
+    "builderBlocked": true,
+    "guardRules": ["no-builder-routes", "no-edit-actions"],
+    "notes": "Capture per-runtime differences in patches."
+  },
+  "patches": {
+    "patchSetId": "<patch-set-id>",
+    "files": [],
+    "rationale": "Minimal changes for IIS nested path and viewer-only constraints."
+  },
+  "verification": {
+    "smokeProfile": "maptour-baseline",
+    "baselineDate": "2026-03-12",
+    "baselineOperator": "<owner>"
+  },
+  "releaseMetadata": {
+    "monorepoCommit": "<sha>",
+    "deploymentTimestamp": "<iso8601>",
+    "upstreamRefAtRelease": "<pinned-ref>"
+  }
+}
+```
 
 ### Risks and Mitigations
-- Risk: Map Tour-specific assumptions leak into other classic app pages.
-  - Mitigation: Enforce adapter interface with app-specific validation contracts.
+- Risk: Map Tour assumptions leak into Swipe or Journal onboarding.
+  - Mitigation: enforce runtime-specific manifests and patch boundaries.
 
-- Risk: IIS path handling breaks relative assets in nested routes.
-  - Mitigation: Run path/asset checks on each page in pre-release smoke tests.
+- Risk: IIS nested path breaks runtime assets.
+  - Mitigation: require nested-path checks during package validation and smoke runs.
 
-- Risk: Ambiguous input behavior (appid vs webmap) confuses users.
-  - Mitigation: Keep appid authoritative and show explicit per-app support text.
+- Risk: Map Journal embedded Swipe behavior introduces cross-runtime regressions.
+  - Mitigation: onboard Swipe first and define Journal embed policy before Journal import.
 
-- Risk: Upstream classic app drift introduces launch regressions.
-  - Mitigation: Track upstream source baseline and keep patches minimal and documented.
+- Risk: Upstream drift introduces launch regressions.
+  - Mitigation: pin upstream refs and record patch sets per release.
 
 ### Exit Criteria
-- [ ] Landing page and phase-1 app pages are deployed under /templates/classic-storymaps.
-- [ ] Shared validation and error UX is consistent and documented.
-- [ ] Viewer-only launch behavior is enforced for phase-1 apps.
-- [ ] Release runbook and smoke tests are committed.
-- [ ] Operations handoff is complete.
+- [ ] Landing catalog is deployed under /templates/classic-storymaps with explicit support-state messaging.
+- [ ] Map Tour and Swipe are reproducibly deployed from monorepo-managed source/import.
+- [ ] Runtime manifests, patch policy, and route contract are documented.
+- [ ] IIS package/process and release runbook are committed.
+- [ ] Smoke suite baseline for Map Tour + Swipe is committed and executable.
 
 ### Suggested Execution Order
-1. Phase 1 route and adapter contract
-2. Phase 2 shared UX/validation layer
-3. Phase 3 landing and per-app implementation
-4. Phase 4 IIS deployment setup
-5. Phase 5 release and recurring smoke tests
+1. Baseline and import contract (S1-S3)
+2. Map Tour reproducibility and landing shell (S4-S5)
+3. Swipe onboarding and Journal constraints (S6-S7)
+4. IIS packaging and hosting configuration (S8-S9)
+5. Release runbook and smoke baseline (S10)
 
 ### Suggested PR Batches and Merge Order
 
-#### PR1: Architecture and Shared UX Foundation
+#### PR1: Import Foundation
 - Tasks: S1, S2, S3, S4
-- Intent: lock route contract and reusable validation/page-shell layer before page-specific implementation.
+- Intent: lock baseline, contract, routes, and reproducible Map Tour seed runtime.
 - Merge gate:
-  - Adapter matrix approved
-  - Shared validation module and shell pass local checks
+  - Baseline behavior and route contract approved
+  - Map Tour reproducibility verified with explicit patch set
 
-#### PR2: Landing and Phase-1 App Pages
-- Tasks: S5, S6
-- Intent: deliver user-facing landing + per-app pages using shared foundation.
+#### PR2: Catalog + Swipe
+- Tasks: S5, S6, S7
+- Intent: deliver landing catalog, onboard Swipe as second runtime, and define Journal embed policy.
 - Merge gate:
-  - Positive and negative launch flows pass for all phase-1 apps
-  - Mobile and desktop layouts verified
+  - Landing support-state UX verified on desktop/mobile
+  - Swipe positive/negative launch flows pass
+  - Journal pre-onboarding constraints approved
 
-#### PR3: IIS Deployment and Operations
-- Tasks: S7, S8, S9, S10
-- Intent: operationalize deployment, release management, and smoke validation.
+#### PR3: IIS + Operations
+- Tasks: S8, S9, S10
+- Intent: operationalize deployment assembly, IIS behavior, and repeatable release/smoke process.
 - Merge gate:
-  - IIS smoke tests pass for landing and app routes
+  - IIS validation passes for landing + onboarded runtime routes
   - Runbook and smoke checklist are committed
