@@ -86,7 +86,7 @@ Tag legend:
   - Effort: S
   - Depends-On: S3
   - Deliverable: Landing/catalog implementation at /templates/classic-storymaps
-  - Status: Completed on 2026-03-12. Catalog shell implemented from classic-app fixtures with responsive support-state cards and canonical deep links for supported runtime routes. Evidence: `apps/classic-storymaps-site/index.html`, `apps/classic-storymaps-site/assets/images/*`, `scripts/build-classic-storymaps-landing.sh`, `publish/templates/classic-storymaps/index.html`, `docs/deployment/phase2-s5-landing-catalog-shell.md`.
+  - Status: Completed on 2026-03-12. Catalog shell implemented from classic-app fixtures with responsive support-state cards, guided launcher flow for Map Tour, and canonical route policy (`/templates/classic-storymaps`) with IIS compatibility redirects for `/templates/classic-stories`. Evidence: `apps/classic-storymaps-site/index.html`, `apps/classic-storymaps-site/maptour-launcher.html`, `apps/classic-storymaps-site/assets/images/*`, `scripts/build-classic-storymaps-landing.sh`, `publish/templates/classic-storymaps/index.html`, `publish/templates/classic-storymaps/maptour-launcher.html`, `docs/deployment/phase2-s5-landing-catalog-shell.md`.
   - Acceptance criteria:
     - All classic app cards render with clear support-state messaging
     - Supported cards deep-link to canonical routes

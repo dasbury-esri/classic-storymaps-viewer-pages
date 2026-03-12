@@ -13,4 +13,4 @@ rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR"
 cp -R "$SRC_DIR"/. "$OUT_DIR"/
 
-echo "Classic Storymaps landing build output copied to $OUT_DIR"
+echo "Classic Storymaps canonical landing build output copied to $OUT_DIR"

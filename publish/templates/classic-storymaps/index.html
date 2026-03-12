@@ -303,7 +303,8 @@
       <h1 id="catalog-title">Runtime Catalog and Support Status</h1>
       <p class="summary">
         This landing page shows current availability and launch routes for Classic Storymaps experiences hosted under
-        /templates/classic-storymaps. Supported runtimes link directly to their canonical launch routes.
+        /templates/classic-storymaps. Supported runtimes open guided launch pages that validate app IDs before opening
+        the canonical viewer routes.
       </p>
       <div class="legend" aria-label="Support state legend">
         <span class="chip supported">Supported: Launch Ready</span>
@@ -327,7 +328,8 @@
         description: "Sequential place-based story format linking photos and captions to map locations.",
         image: "assets/images/map-tour.png",
         route: "/templates/classic-storymaps/maptour",
-        action: "Launch Runtime"
+        launchRoute: "/templates/classic-storymaps/maptour-launcher.html",
+        action: "Open Launcher"
       },
       {
         title: "Story Map Swipe",
@@ -434,7 +436,7 @@
       const isQueued = app.state === "queued";
       const stateLabel = isSupported ? "Supported" : isQueued ? "Queued" : "Reference";
       const action = isSupported
-        ? `<a class="link-btn" href="${app.route}" aria-label="Launch ${app.title}">${app.action}</a>`
+        ? `<a class="link-btn" href="${app.launchRoute || app.route}" aria-label="Launch ${app.title}">${app.action}</a>`
         : `<span class="muted-btn" aria-label="${app.action}">${app.action}</span>`;
 
       return `
@@ -447,6 +449,7 @@
             <h2 class="title">${app.title}</h2>
             <p class="desc">${app.description}</p>
             <div class="action-row">${action}</div>
+            ${isSupported ? `<p class="route-note">Launcher route: ${app.launchRoute}</p>` : ""}
             <p class="route-note">Canonical route: ${app.route}</p>
           </div>
         </article>
