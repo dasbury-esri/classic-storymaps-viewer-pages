@@ -1,0 +1,357 @@
+diff --git a/runtimes/maptour/upstream/MapTour/src/app/main-app.js b/runtimes/maptour/upstream/MapTour/src/app/main-app.js
+index 8bb3481..174b25f 100644
+--- a/runtimes/maptour/upstream/MapTour/src/app/main-app.js
++++ b/runtimes/maptour/upstream/MapTour/src/app/main-app.js
+@@ -27,6 +27,11 @@ else {
+ 				require(["storymaps/core/Core", "storymaps/maptour/core/MainView", "storymaps/utils/Helper"], function(Core, MainView, Helper){
+ 					var urlParams = Helper.getUrlParams();
+ 					var isInBuilderMode = urlParams.edit != null || urlParams.fromScratch != null || urlParams.fromscratch != null || urlParams.fromGallery != null;
++					var isViewerOnlyProd = !!(window.isProduction && configOptions && configOptions.viewerOnlyInProd);
++
++					if (isViewerOnlyProd) {
++						isInBuilderMode = false;
++					}
+ 
+ 					if (isInBuilderMode) {
+ 						require(["storymaps/builder/Builder", "storymaps/maptour/builder/BuilderView"], function(Builder, BuilderView) {
+diff --git a/runtimes/maptour/upstream/MapTour/src/app/storymaps/core/Core.js b/runtimes/maptour/upstream/MapTour/src/app/storymaps/core/Core.js
+index 44b31e1..afce7db 100644
+--- a/runtimes/maptour/upstream/MapTour/src/app/storymaps/core/Core.js
++++ b/runtimes/maptour/upstream/MapTour/src/app/storymaps/core/Core.js
+@@ -511,6 +511,140 @@ define(["esri/map",
+ 
+ 		function loadWebMappingAppStep2(appId)
+ 		{
++			function getUrlParam(url, paramName)
++			{
++				if( ! url || ! paramName )
++					return "";
++
++				var re = new RegExp('[?&]' + paramName + '=([^&#]*)', 'i');
++				var match = url.match(re);
++				return match && match[1] ? decodeURIComponent(match[1]) : "";
++			}
++
++			function isSameOriginUrl(url)
++			{
++				if( ! url )
++					return false;
++
++				var parser = document.createElement('a');
++				parser.href = url;
++
++				return parser.protocol == document.location.protocol
++					&& parser.host == document.location.host;
++			}
++
++			function getWebmapFromAppData(data)
++			{
++				if( ! data )
++					return "";
++
++				if( data.values && data.values.webmap && data.values.webmap.id )
++					return data.values.webmap.id;
++
++				if( data.values && data.values.webmap )
++					return data.values.webmap;
++
++				if( data.webmap )
++					return data.webmap;
++
++				if( data.itemData && data.itemData.webmap )
++					return data.itemData.webmap;
++
++				return "";
++			}
++
++			function isMapTourItem(item)
++			{
++				var keywords = item && item.typeKeywords ? item.typeKeywords : [];
++				var keywordCsv = (keywords || []).join(',').toLowerCase();
++				var itemUrl = item && item.url ? item.url.toLowerCase() : "";
++
++				return keywordCsv.indexOf('maptour') >= 0
++					|| keywordCsv.indexOf('map tour') >= 0
++					|| itemUrl.indexOf('/apps/maptour/') >= 0;
++			}
++
++			function tryLoadWebMapFromLegacyStory(item)
++			{
++				if( ! item )
++					return false;
++
++				var directWebmapId = getUrlParam(item.url, "webmap");
++				if( directWebmapId ) {
++					console.log("maptour.core.Core - fallback loadWebMap from legacy story url param:", directWebmapId);
++					loadWebMap(directWebmapId);
++					return true;
++				}
++
++				var nestedAppId = getUrlParam(item.url, "appid");
++				if( ! nestedAppId )
++				{
++					// Keep legacy behavior for same-origin story pages where /data is empty.
++					if( item.url && isSameOriginUrl(item.url) ) {
++						$.ajax({
++							url: item.url,
++							dataType: "text",
++							success: function(html){
++								var match = (html || "").match(/[a-f0-9]{32}/i);
++								if( match && match[0] ) {
++									console.log("maptour.core.Core - fallback loadWebMap from same-origin legacy story:", match[0]);
++									loadWebMap(match[0]);
++								}
++								else
++									initError("invalidApp");
++							},
++							error: function(){
++								initError("invalidApp");
++							}
++						});
++
++						return true;
++					}
++
++					return false;
++				}
++
++				// Use sharing API instead of cross-origin HTML fetch to avoid CORS failures.
++				esriRequest({
++					url: configOptions.sharingurl + "/" + nestedAppId,
++					content: {
++						f: "json"
++					},
++					callbackParamName: "callback",
++					load: function(nestedItem){
++						if( ! isMapTourItem(nestedItem) ) {
++							initError("invalidApp");
++							return;
++						}
++
++						esriRequest({
++							url: configOptions.sharingurl + "/" + nestedAppId + "/data",
++							content: {
++								f: "json"
++							},
++							callbackParamName: "callback",
++							load: function(response){
++								var fallbackWebmapId = getWebmapFromAppData(response);
++								if( fallbackWebmapId ) {
++									console.log("maptour.core.Core - fallback loadWebMap from nested app data:", fallbackWebmapId);
++									loadWebMap(fallbackWebmapId);
++								}
++								else
++									initError("invalidApp");
++							},
++							error: function(){
++								initError("invalidApp");
++							}
++						});
++					},
++					error: function(){
++						initError("invalidApp");
++					}
++				});
++
++				return true;
++			}
++
+ 			// Get application item
+ 			var itemRq = esriRequest({
+ 				url: configOptions.sharingurl + "/" + appId + "",
+@@ -548,6 +682,11 @@ define(["esri/map",
+ 				if (!dataRq.results || !dataRq.results[0] || !itemRq.results || !itemRq.results[0]) {
+ 					if( itemRq.results && itemRq.results[1] && itemRq.results[1] && itemRq.results[1].httpCode == 403 )
+ 						initError("notAuthorized");
++					else if( itemRq.results && itemRq.results[0] && itemRq.results[0].type == "Web Map" )
++						loadWebMap(itemRq.results[0].id || appId);
++					else if( itemRq.results && itemRq.results[0] && tryLoadWebMapFromLegacyStory(itemRq.results[0]) ) {
++						return;
++					}
+ 					else
+ 						initError("invalidApp");
+ 					return;
+@@ -767,6 +906,7 @@ define(["esri/map",
+ 			var appColors = WebApplicationData.getColors();
+ 			var logoURL = WebApplicationData.getLogoURL() || APPCFG.HEADER_LOGO_URL;
+ 			var logoTarget = (logoURL == APPCFG.HEADER_LOGO_URL) ? APPCFG.HEADER_LOGO_TARGET : WebApplicationData.getLogoTarget();
++			var viewerOnlyProd = !!(isProd() && configOptions && configOptions.viewerOnlyInProd);
+ 
+ 			app.header.init(
+ 				! app.isInBuilderMode && (APPCFG.EMBED || urlParams.embed || urlParams.embed === ''),
+@@ -778,7 +918,8 @@ define(["esri/map",
+ 				! app.isInBuilderMode && (
+ 					(! isProd() && Helper.getAppID(isProd()))
+ 					|| isProd() && app.userCanEdit)
+-					&& ! urlParams.preview,
++					&& ! urlParams.preview
++					&& ! viewerOnlyProd,
+ 				WebApplicationData.getHeaderLinkText() === undefined ? APPCFG.HEADER_LINK_TEXT : WebApplicationData.getHeaderLinkText(),
+ 				WebApplicationData.getHeaderLinkURL() === undefined ? APPCFG.HEADER_LINK_URL : WebApplicationData.getHeaderLinkURL(),
+ 				WebApplicationData.getSocial()
+diff --git a/runtimes/maptour/upstream/MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js b/runtimes/maptour/upstream/MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js
+index 9f55b92..1956a85 100644
+--- a/runtimes/maptour/upstream/MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js
++++ b/runtimes/maptour/upstream/MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js
+@@ -390,7 +390,9 @@ define(["storymaps/ui/crossfader/CrossFader",
+ 					if( ! isInBuilderMode && imgDisplayedHeight )
+ 						$("#placardContainer .description").css("max-height", "inherit");
+ 
+-					if( $("#placardContainer")[0].scrollHeight > imgDisplayedHeight / 1.5 && ! _placardIsUnder ) {
++					var placardContainerNode = $("#placardContainer")[0];
++
++					if( placardContainerNode && placardContainerNode.scrollHeight > imgDisplayedHeight / 1.5 && ! _placardIsUnder ) {
+ 						$("#placard").addClass("one-line-layout");
+ 
+ 						if ( !isInBuilderMode && imgDisplayedHeight ) {
+diff --git a/runtimes/maptour/upstream/MapTour/src/app/storymaps/ui/crossfader/CrossFader.js b/runtimes/maptour/upstream/MapTour/src/app/storymaps/ui/crossfader/CrossFader.js
+index 1d9fbc5..d038780 100644
+--- a/runtimes/maptour/upstream/MapTour/src/app/storymaps/ui/crossfader/CrossFader.js
++++ b/runtimes/maptour/upstream/MapTour/src/app/storymaps/ui/crossfader/CrossFader.js
+@@ -342,8 +342,9 @@ define(["storymaps/ui/inlineFieldEdit/InlineFieldEdit",
+ 					$(_placardContainer).addClass("placardUnder");
+ 					$(_placardContainer).css("height", "auto");
+ 
++					var placardContainerNode = $("#placardContainer")[0];
+ 					var availableHeight = $(_container).height() - $(_current).height(),
+-						placardFullHeight = $("#placardContainer")[0].scrollHeight;
++						placardFullHeight = placardContainerNode ? placardContainerNode.scrollHeight : 0;
+ 
+ 					var pictureTop,
+ 						placardHeight,
+@@ -579,8 +580,14 @@ define(["storymaps/ui/inlineFieldEdit/InlineFieldEdit",
+ 				// Sad trick when placard is under picture layout
+ 				// Otherwise the textarea and container will overflow without scrollbar
+ 				if( _placardIsUnder ) {
+-					var nameHeight = $(_placard).find(".name .text_edit_label")[0].scrollHeight;
+-					var descHeight = $(_placard).find(".description .text_edit_label")[0].scrollHeight;
++					var nameNode = $(_placard).find(".name .text_edit_label")[0];
++					var descNode = $(_placard).find(".description .text_edit_label")[0];
++
++					if( ! nameNode || ! descNode )
++						return;
++
++					var nameHeight = nameNode.scrollHeight;
++					var descHeight = descNode.scrollHeight;
+ 
+ 					$(_placard).find(".name .text_edit_input").css("height", nameHeight < 96 ? "50px" : "auto");
+ 					$(_placard).find(".description .text_edit_input").css("height", descHeight < 96 ? "50px" : "auto");
+diff --git a/runtimes/maptour/upstream/MapTour/src/app/storymaps/utils/Helper.js b/runtimes/maptour/upstream/MapTour/src/app/storymaps/utils/Helper.js
+index c313784..99729ef 100644
+--- a/runtimes/maptour/upstream/MapTour/src/app/storymaps/utils/Helper.js
++++ b/runtimes/maptour/upstream/MapTour/src/app/storymaps/utils/Helper.js
+@@ -61,30 +61,45 @@ define(["dojo/cookie",
+ 			getWebmapID: function(isProd)
+ 			{
+ 				var urlParams = this.getUrlParams();
++				var allowAnyWebmap = !!(configOptions && configOptions.allowAnyWebmapInProd);
+ 
+ 				if( configOptions && configOptions.webmap )
+ 					return configOptions.webmap;
+ 
+-				if ( this.isArcGISHosted() || ! isProd )
++				// IIS/public deployment profile: allow any URL webmap in production.
++				if ( isProd && allowAnyWebmap && urlParams.webmap )
++					return urlParams.webmap;
++
++				if ( (this.isArcGISHosted() || ! isProd) && urlParams.webmap )
+ 					return urlParams.webmap;
+ 
+ 				// Only authorize URL params outside of arcgis.com if a webmap owner is specified
+-				if( configOptions.authorizedOwners && configOptions.authorizedOwners.length > 0 && configOptions.authorizedOwners[0] )
++				if( configOptions.authorizedOwners && configOptions.authorizedOwners.length > 0 && configOptions.authorizedOwners[0] && urlParams.webmap )
+ 					return urlParams.webmap;
+ 			},
+ 			getAppID: function(isProd)
+ 			{
+ 				var urlParams = this.getUrlParams();
++				var allowAnyAppId = !!(configOptions && configOptions.allowAnyAppIdInProd);
++				var defaultAppId = configOptions && configOptions.defaultAppId;
+ 
+ 				if( configOptions && configOptions.appid )
+ 					return configOptions.appid;
+ 
+-				if ( this.isArcGISHosted() || ! isProd ) //REMOVE not prod, commented out for demo
++				// IIS/public deployment profile: allow any URL appid in production.
++				if ( isProd && allowAnyAppId && urlParams.appid )
++					return urlParams.appid;
++
++				if ( (this.isArcGISHosted() || ! isProd) && urlParams.appid ) //REMOVE not prod, commented out for demo
+ 					return urlParams.appid;
+ 
+ 				// Only authorize URL params outside of arcgis.com if a webmap/app owner is specified
+-				if( configOptions.authorizedOwners && configOptions.authorizedOwners.length > 0 && configOptions.authorizedOwners[0] )
++				if( configOptions.authorizedOwners && configOptions.authorizedOwners.length > 0 && configOptions.authorizedOwners[0] && urlParams.appid )
+ 					return urlParams.appid;
++
++				// Optional fallback landing app: only used when neither appid nor webmap are supplied.
++				if( defaultAppId && ! urlParams.appid && ! urlParams.webmap )
++					return defaultAppId;
+ 			},
+ 			getSharingHost: function() {
+ 				var urlParams = this.getUrlParams();
+diff --git a/runtimes/maptour/upstream/MapTour/src/index.html b/runtimes/maptour/upstream/MapTour/src/index.html
+index 8788c08..4f14bbf 100644
+--- a/runtimes/maptour/upstream/MapTour/src/index.html
++++ b/runtimes/maptour/upstream/MapTour/src/index.html
+@@ -39,10 +39,21 @@
+ 				// - Using a Map Tour application ID created through the interactive builder in ArcGIS.com allow to reuse
+ 				//   the settings like the header configuration without having to edit any configuration here
+ 				// - Web map and application can be dynamically specified through url parameters (webmap and appid)
+-				//   if the authorizedOwners property is specified (see below)
++				//   if the authorizedOwners property is specified (see below), or if allowAnyAppIdInProd is true
+ 				// - If an application id is specified, the webmap configuration isn't used
+ 				webmap: "",
+ 				appid: "",
++				// Optional fallback app id used only when neither ?appid nor ?webmap is present.
++				defaultAppId: "2c62acf3468c4cbbba6b82f1035bfe22",
++				// Optional deployment profile for public IIS hosting: when true, production mode accepts any
++				// appid from the URL query string (e.g., ?appid=<id>) without owner filtering.
++				allowAnyAppIdInProd: true,
++				// Optional deployment profile for public IIS hosting: when true, production mode accepts any
++				// webmap from the URL query string (e.g., ?webmap=<id>) without owner filtering.
++				allowAnyWebmapInProd: true,
++				// Optional deployment profile for public IIS hosting: when true, builder entry points are disabled
++				// in production (including ?edit URL usage) and the app stays in viewer mode.
++				viewerOnlyInProd: true,
+ 				// Optional list of authorized application or web map owners
+ 				// Has to be specified when using appid or webmap url parameters (e.g. ["user1"], ["user1", "user2"])
+ 				// To authorize all users you can use ["*"]
+diff --git a/runtimes/maptour/upstream/MapTour/src/lib/jquery.exif.js b/runtimes/maptour/upstream/MapTour/src/lib/jquery.exif.js
+index 72f5f81..7717f74 100644
+--- a/runtimes/maptour/upstream/MapTour/src/lib/jquery.exif.js
++++ b/runtimes/maptour/upstream/MapTour/src/lib/jquery.exif.js
+@@ -230,16 +230,23 @@ var BinaryAjax = (function() {
+ }());
+ 
+ 
+-document.write(
+-	"<script type='text/vbscript'>\r\n"
+-	+ "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
+-	+ "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
+-	+ "End Function\r\n"
+-	+ "Function IEBinary_getLength(strBinary)\r\n"
+-	+ "	IEBinary_getLength = LenB(strBinary)\r\n"
+-	+ "End Function\r\n"
+-	+ "</script>\r\n"
+-);
++// Avoid document.write in asynchronously loaded bundles.
++if (window.VBArray && document && document.createElement) {
++	var vbScript = ""
++		+ "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
++		+ "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
++		+ "End Function\r\n"
++		+ "Function IEBinary_getLength(strBinary)\r\n"
++		+ "	IEBinary_getLength = LenB(strBinary)\r\n"
++		+ "End Function\r\n";
++
++	var vbNode = document.createElement('script');
++	vbNode.setAttribute('type', 'text/vbscript');
++	vbNode.text = vbScript;
++
++	var head = document.getElementsByTagName('head')[0] || document.documentElement;
++	head.appendChild(vbNode);
++}
+ 
+ 
+ /*var*/ EXIF = {};

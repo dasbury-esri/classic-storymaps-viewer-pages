@@ -24,15 +24,22 @@ Verified output exists under:
 - `runtimes/maptour/build/index.html`
 - `runtimes/maptour/build/app`
 - `runtimes/maptour/build/resources`
+- `runtimes/maptour/build/web.config`
+
+Deploy parity verification against known-working runtime:
+- File list parity: `d1=573`, `d2=573`, `only_d1=0`, `only_d2=0`
+- Recursive byte-level comparison (`diff -rq`) reported no differences.
 
 ## Patch Verification
-- Explicit patch set recorded as no-source-patch baseline:
-  - `runtimes/maptour/patches/0000-no-runtime-patches.md`
+- Explicit patch set recorded for production alignment:
+   - `runtimes/maptour/patches/0001-production-behavior-align.patch`
+   - `runtimes/maptour/patches/0002-iis-web-config-addition.patch`
 
 ## Acceptance Mapping
 - Reproducible import from pinned upstream source: Pass
 - Reproducible deploy output generated in monorepo build path: Pass
-- Explicit patch list tracked: Pass (no-source-patch baseline)
+- Explicit patch list tracked: Pass (production alignment patch set)
+- Functional equivalence with known-working deploy artifacts: Pass
 
 ## Conclusion
-S4 acceptance criteria are satisfied for import-first baseline.
+S4 acceptance criteria are satisfied for import-first reproducibility and known-working deploy parity.

@@ -29,7 +29,8 @@ Pinned ref currently used:
    - `index.html`
    - `app/**`
    - `resources/**`
-   - Note: when grunt generates `deploy/`, staging is sourced from `deploy/index.html`, `deploy/app`, and `deploy/resources`.
+   - `web.config`
+   - Note: when grunt generates `deploy/`, staging is sourced from `deploy/index.html`, `deploy/app`, `deploy/resources`, and `deploy/web.config` (with fallback to `src/web.config`).
 
 ## Patch Workflow
 - Place patch files in `runtimes/maptour/patches`.
@@ -37,6 +38,7 @@ Pinned ref currently used:
 - Keep patches constrained to:
   - Nested IIS path compatibility
    - Viewer-only guard behavior
+   - Known-working runtime parity deltas captured explicitly
 
 ## Verification Targets
 - Known-good launch:
@@ -50,7 +52,10 @@ Pinned ref currently used:
 - Scaffold created on 2026-03-12.
 - Upstream import executed at pinned ref `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`.
 - Runtime build execution completed; staged output verified at `runtimes/maptour/build/{index.html,app,resources}`.
+- Runtime build execution completed; staged output verified at `runtimes/maptour/build/{index.html,app,resources,web.config}`.
 - Known build caveat: legacy upstream lint warnings are expected and tolerated via `grunt --force`.
-- Explicit patch set recorded as no-source-patch baseline: `runtimes/maptour/patches/0000-no-runtime-patches.md`.
+- Explicit patch set recorded:
+   - `runtimes/maptour/patches/0001-production-behavior-align.patch`
+   - `runtimes/maptour/patches/0002-iis-web-config-addition.patch`
 - Verification transcript recorded: `docs/testing/phase2-s4-maptour-verification-transcript.md`.
 - S4 status: Completed.

@@ -511,6 +511,140 @@ define(["esri/map",
 
 		function loadWebMappingAppStep2(appId)
 		{
+			function getUrlParam(url, paramName)
+			{
+				if( ! url || ! paramName )
+					return "";
+
+				var re = new RegExp('[?&]' + paramName + '=([^&#]*)', 'i');
+				var match = url.match(re);
+				return match && match[1] ? decodeURIComponent(match[1]) : "";
+			}
+
+			function isSameOriginUrl(url)
+			{
+				if( ! url )
+					return false;
+
+				var parser = document.createElement('a');
+				parser.href = url;
+
+				return parser.protocol == document.location.protocol
+					&& parser.host == document.location.host;
+			}
+
+			function getWebmapFromAppData(data)
+			{
+				if( ! data )
+					return "";
+
+				if( data.values && data.values.webmap && data.values.webmap.id )
+					return data.values.webmap.id;
+
+				if( data.values && data.values.webmap )
+					return data.values.webmap;
+
+				if( data.webmap )
+					return data.webmap;
+
+				if( data.itemData && data.itemData.webmap )
+					return data.itemData.webmap;
+
+				return "";
+			}
+
+			function isMapTourItem(item)
+			{
+				var keywords = item && item.typeKeywords ? item.typeKeywords : [];
+				var keywordCsv = (keywords || []).join(',').toLowerCase();
+				var itemUrl = item && item.url ? item.url.toLowerCase() : "";
+
+				return keywordCsv.indexOf('maptour') >= 0
+					|| keywordCsv.indexOf('map tour') >= 0
+					|| itemUrl.indexOf('/apps/maptour/') >= 0;
+			}
+
+			function tryLoadWebMapFromLegacyStory(item)
+			{
+				if( ! item )
+					return false;
+
+				var directWebmapId = getUrlParam(item.url, "webmap");
+				if( directWebmapId ) {
+					console.log("maptour.core.Core - fallback loadWebMap from legacy story url param:", directWebmapId);
+					loadWebMap(directWebmapId);
+					return true;
+				}
+
+				var nestedAppId = getUrlParam(item.url, "appid");
+				if( ! nestedAppId )
+				{
+					// Keep legacy behavior for same-origin story pages where /data is empty.
+					if( item.url && isSameOriginUrl(item.url) ) {
+						$.ajax({
+							url: item.url,
+							dataType: "text",
+							success: function(html){
+								var match = (html || "").match(/[a-f0-9]{32}/i);
+								if( match && match[0] ) {
+									console.log("maptour.core.Core - fallback loadWebMap from same-origin legacy story:", match[0]);
+									loadWebMap(match[0]);
+								}
+								else
+									initError("invalidApp");
+							},
+							error: function(){
+								initError("invalidApp");
+							}
+						});
+
+						return true;
+					}
+
+					return false;
+				}
+
+				// Use sharing API instead of cross-origin HTML fetch to avoid CORS failures.
+				esriRequest({
+					url: configOptions.sharingurl + "/" + nestedAppId,
+					content: {
+						f: "json"
+					},
+					callbackParamName: "callback",
+					load: function(nestedItem){
+						if( ! isMapTourItem(nestedItem) ) {
+							initError("invalidApp");
+							return;
+						}
+
+						esriRequest({
+							url: configOptions.sharingurl + "/" + nestedAppId + "/data",
+							content: {
+								f: "json"
+							},
+							callbackParamName: "callback",
+							load: function(response){
+								var fallbackWebmapId = getWebmapFromAppData(response);
+								if( fallbackWebmapId ) {
+									console.log("maptour.core.Core - fallback loadWebMap from nested app data:", fallbackWebmapId);
+									loadWebMap(fallbackWebmapId);
+								}
+								else
+									initError("invalidApp");
+							},
+							error: function(){
+								initError("invalidApp");
+							}
+						});
+					},
+					error: function(){
+						initError("invalidApp");
+					}
+				});
+
+				return true;
+			}
+
 			// Get application item
 			var itemRq = esriRequest({
 				url: configOptions.sharingurl + "/" + appId + "",
@@ -548,6 +682,11 @@ define(["esri/map",
 				if (!dataRq.results || !dataRq.results[0] || !itemRq.results || !itemRq.results[0]) {
 					if( itemRq.results && itemRq.results[1] && itemRq.results[1] && itemRq.results[1].httpCode == 403 )
 						initError("notAuthorized");
+					else if( itemRq.results && itemRq.results[0] && itemRq.results[0].type == "Web Map" )
+						loadWebMap(itemRq.results[0].id || appId);
+					else if( itemRq.results && itemRq.results[0] && tryLoadWebMapFromLegacyStory(itemRq.results[0]) ) {
+						return;
+					}
 					else
 						initError("invalidApp");
 					return;
@@ -767,6 +906,7 @@ define(["esri/map",
 			var appColors = WebApplicationData.getColors();
 			var logoURL = WebApplicationData.getLogoURL() || APPCFG.HEADER_LOGO_URL;
 			var logoTarget = (logoURL == APPCFG.HEADER_LOGO_URL) ? APPCFG.HEADER_LOGO_TARGET : WebApplicationData.getLogoTarget();
+			var viewerOnlyProd = !!(isProd() && configOptions && configOptions.viewerOnlyInProd);
 
 			app.header.init(
 				! app.isInBuilderMode && (APPCFG.EMBED || urlParams.embed || urlParams.embed === ''),
@@ -778,7 +918,8 @@ define(["esri/map",
 				! app.isInBuilderMode && (
 					(! isProd() && Helper.getAppID(isProd()))
 					|| isProd() && app.userCanEdit)
-					&& ! urlParams.preview,
+					&& ! urlParams.preview
+					&& ! viewerOnlyProd,
 				WebApplicationData.getHeaderLinkText() === undefined ? APPCFG.HEADER_LINK_TEXT : WebApplicationData.getHeaderLinkText(),
 				WebApplicationData.getHeaderLinkURL() === undefined ? APPCFG.HEADER_LINK_URL : WebApplicationData.getHeaderLinkURL(),
 				WebApplicationData.getSocial()

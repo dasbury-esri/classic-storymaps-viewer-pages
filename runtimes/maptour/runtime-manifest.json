@@ -30,7 +30,8 @@
     "packageInclude": [
       "index.html",
       "app/**",
-      "resources/**"
+      "resources/**",
+      "web.config"
     ],
     "packageExclude": [
       "src/**",
@@ -59,11 +60,12 @@
     "notes": "Capture runtime-specific viewer-only differences as explicit patches."
   },
   "patches": {
-    "patchSetId": "maptour-initial-import-no-runtime-patches",
+    "patchSetId": "maptour-production-alignment-v2",
     "files": [
-      "runtimes/maptour/patches/0000-no-runtime-patches.md"
+      "runtimes/maptour/patches/0001-production-behavior-align.patch",
+      "runtimes/maptour/patches/0002-iis-web-config-addition.patch"
     ],
-    "rationale": "Initial import requires no upstream source patch files; packaging behavior is handled by monorepo scripts."
+    "rationale": "Align imported runtime behavior and IIS deploy profile with known-working production artifacts."
   },
   "verification": {
     "smokeProfile": "maptour-baseline",

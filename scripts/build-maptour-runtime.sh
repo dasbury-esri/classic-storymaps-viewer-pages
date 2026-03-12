@@ -41,10 +41,13 @@ if [[ -d "$RUNTIME_PATH/deploy" ]]; then
   copy_item "$RUNTIME_PATH/deploy/index.html" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/deploy/app" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/deploy/resources" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/deploy/web.config" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/src/web.config" "$OUTPUT_PATH"
 else
   copy_item "$RUNTIME_PATH/index.html" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/app" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/src/web.config" "$OUTPUT_PATH"
 fi
 
 echo "Map Tour build output copied to $OUTPUT_PATH"
