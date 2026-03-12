@@ -62,11 +62,11 @@
     "notes": "Capture runtime-specific viewer-only differences as explicit patches."
   },
   "patches": {
-    "patchSetId": "swipe-initial-import-no-runtime-patches",
+    "patchSetId": "swipe-owner-authorization-v1",
     "files": [
-      "runtimes/swipe/patches/0000-no-runtime-patches.md"
+      "runtimes/swipe/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch"
     ],
-    "rationale": "Initial import requires no upstream source patch files; packaging behavior is handled by monorepo scripts."
+    "rationale": "Allow hosted URL appid launches by configuring authorizedOwners wildcard in Swipe source config."
   },
   "verification": {
     "smokeProfile": "swipe-baseline",

@@ -1,0 +1,13 @@
+diff --git a/runtimes/swipe/upstream/Swipe/src/index.html b/runtimes/swipe/upstream/Swipe/src/index.html
+index d75fab6..f4ccfac 100644
+--- a/runtimes/swipe/upstream/Swipe/src/index.html
++++ b/runtimes/swipe/upstream/Swipe/src/index.html
+@@ -131,7 +131,7 @@
+ 				// whose webmaps are allowed to be viewed by this Swipe deployment
+ 				// This is the ArcGIS Online username of the webmap owner (e.g. ["user1"], ["user1", "user2"])
+ 				// To authorize all users you can use ["*"]
+-				authorizedOwners: [""]
++				authorizedOwners: ["*"]
+ 				//
+ 			};
+ 			// Optionally sharing and proxy URLs can be configured in app/swipe-config.js. This is only required
