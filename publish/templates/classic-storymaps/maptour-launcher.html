@@ -182,6 +182,13 @@
       word-break: break-word;
     }
 
+    .demo-link {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 0.84rem;
@@ -229,17 +236,19 @@
       </form>
 
       <p class="route-block">
-        Runtime target: <code>/templates/classic-storymaps/maptour/index.html?appid=&lt;appid&gt;</code>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/maptour/index.html?appid=2c62acf3468c4cbbba6b82f1035bfe22">See it in action</a>
       </p>
     </section>
   </main>
 
   <script>
     (function() {
+      var DEFAULT_APP_ID = "2c62acf3468c4cbbba6b82f1035bfe22";
       var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
       var form = document.getElementById("launch-form");
       var appIdInput = document.getElementById("appid");
       var statusEl = document.getElementById("appid-status");
+      var demoLink = document.getElementById("demo-link");
 
       function setStatus(msg, cls) {
         statusEl.textContent = msg || "";
@@ -269,6 +278,8 @@
         var encoded = encodeURIComponent(appId.toLowerCase());
         return "/templates/classic-storymaps/maptour/index.html?appid=" + encoded;
       }
+
+      demoLink.href = buildViewerUrl(DEFAULT_APP_ID);
 
       form.addEventListener("submit", function(evt) {
         evt.preventDefault();
