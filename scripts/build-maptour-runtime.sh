@@ -21,7 +21,7 @@ pushd "$RUNTIME_PATH" >/dev/null
   if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
     npm ci
   else
-    npm install --no-audit --no-fund
+    npm install --no-package-lock --no-audit --no-fund
   fi
   if [[ ! -x "node_modules/.bin/grunt" ]]; then
     npm install --no-save grunt-cli --no-audit --no-fund

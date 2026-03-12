@@ -23,7 +23,7 @@ Pinned ref currently used:
 ## Build Workflow
 1. Run:
    - `./scripts/build-maptour-runtime.sh`
-   - Behavior: uses `npm ci` when lockfile exists; otherwise falls back to `npm install --no-audit --no-fund`.
+   - Behavior: uses `npm ci` when lockfile exists; otherwise falls back to `npm install --no-package-lock --no-audit --no-fund`.
    - Behavior: runs `grunt --force` to tolerate legacy lint warnings in vendored upstream sources while still producing runtime artifacts.
 2. Verify expected runtime output exists in `runtimes/maptour/build`:
    - `index.html`
