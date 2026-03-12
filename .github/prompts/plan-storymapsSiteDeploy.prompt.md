@@ -76,7 +76,7 @@ Tag legend:
   - Effort: M
   - Depends-On: S2, S3
   - Deliverable: Pinned Map Tour import, reproducible deploy output, explicit patch list
-  - Status: In progress on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build + patch verification pending. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`.
+  - Status: In progress on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build output verified at `runtimes/maptour/build/{index.html,app,resources}`; patch list finalization pending. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`.
   - Acceptance criteria:
     - Map Tour runtime is reproducible from monorepo-managed source
     - Differences from baseline are tracked as explicit patches

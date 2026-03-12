@@ -23,10 +23,13 @@ Pinned ref currently used:
 ## Build Workflow
 1. Run:
    - `./scripts/build-maptour-runtime.sh`
+   - Behavior: uses `npm ci` when lockfile exists; otherwise falls back to `npm install --no-audit --no-fund`.
+   - Behavior: runs `grunt --force` to tolerate legacy lint warnings in vendored upstream sources while still producing runtime artifacts.
 2. Verify expected runtime output exists in `runtimes/maptour/build`:
    - `index.html`
    - `app/**`
    - `resources/**`
+   - Note: when grunt generates `deploy/`, staging is sourced from `deploy/index.html`, `deploy/app`, and `deploy/resources`.
 
 ## Patch Workflow
 - Place patch files in `runtimes/maptour/patches`.
@@ -46,4 +49,6 @@ Pinned ref currently used:
 ## Status
 - Scaffold created on 2026-03-12.
 - Upstream import executed at pinned ref `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`.
-- Pending: runtime build execution, patch set creation, and reproducibility verification transcript.
+- Runtime build execution completed; staged output verified at `runtimes/maptour/build/{index.html,app,resources}`.
+- Known build caveat: legacy upstream lint warnings are expected and tolerated via `grunt --force`.
+- Pending: explicit patch set creation and reproducibility verification transcript finalization.

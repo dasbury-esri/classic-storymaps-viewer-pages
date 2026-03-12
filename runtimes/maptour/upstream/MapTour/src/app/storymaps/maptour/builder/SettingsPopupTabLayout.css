@@ -1,0 +1,104 @@
+#settings-layout {
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 450px;
+}
+
+#settings-layout .layout-box {
+	display: block;
+	position: relative;
+	width: 100%;
+	vertical-align: top;
+	padding-top: 10px;
+	margin-top: 15px;
+	/*margin-bottom: 35px;*/
+}
+
+#settings-layout .layout-box:nth-child(2) {
+	/*padding-right: 5px;*/
+}
+
+#settings-layout .layout-box > img {
+	position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 105px;
+}
+
+#settings-layout .layout-box:nth-child(3) > img {
+	/*padding-bottom: 36px;*/
+}
+
+#settings-layout .layout-box {
+	min-height: 115px;
+}
+
+#settings-layout .layout-box .layoutOption {
+	margin-bottom: 8px;
+	font-size: 14px;
+}
+
+#settings-layout .layout-box-title {
+	font-weight: 700;
+	margin-left: 215px;
+  margin-top: 20px;
+}
+
+#settings-layout .layout-box .layoutOption input:checkbox {
+	height: 12px;
+}
+
+#settings-layout .layout-box .layoutFooter {
+	margin-left: 215px;
+	margin-top: 15px;
+	/*position: absolute;
+	bottom: 50px;
+	width: 258px;*/
+}
+
+#settings-layout .layout-box button {
+	/*display: inline-block;*/
+}
+
+#settings-layout .layout-box .selectedLayout {
+	font-weight: bold;
+	line-height: 28px;
+	display: none;
+}
+
+#settings-layout span:nth-child(2) {
+	border-right: 1px solid black;
+}
+
+#settings-layout .layout-box.selected .selectedLayout {
+	display: block;
+	margin-bottom: 2px;
+	font-size: 18px;
+	color: #2e8fd1;
+}
+
+#settings-layout .layout-box.selected button {
+	display: none;
+}
+
+#settings-layout .layoutOption {
+	text-align: center;
+	font-size: 90%;
+	margin-top: 10px;
+}
+
+#settings-layout .layoutOption .popover {
+	max-width: 245px;
+}
+
+#settings-layout .useLocBtn {
+	width: 12px;
+	vertical-align: -2px;
+}
+
+.newLayout {
+	color: red;
+  margin-left: 10px;
+  font-weight: 900;
+  font-size: 18px;
+}

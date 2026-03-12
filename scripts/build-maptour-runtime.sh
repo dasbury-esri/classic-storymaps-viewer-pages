@@ -18,8 +18,15 @@ rm -rf "$OUTPUT_PATH"
 mkdir -p "$OUTPUT_PATH"
 
 pushd "$RUNTIME_PATH" >/dev/null
-  npm ci
-  npx grunt
+  if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
+    npm ci
+  else
+    npm install --no-audit --no-fund
+  fi
+  if [[ ! -x "node_modules/.bin/grunt" ]]; then
+    npm install --no-save grunt-cli --no-audit --no-fund
+  fi
+  ./node_modules/.bin/grunt --force
 popd >/dev/null
 
 copy_item() {
@@ -30,8 +37,14 @@ copy_item() {
   fi
 }
 
-copy_item "$RUNTIME_PATH/index.html" "$OUTPUT_PATH"
-copy_item "$RUNTIME_PATH/app" "$OUTPUT_PATH"
-copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
+if [[ -d "$RUNTIME_PATH/deploy" ]]; then
+  copy_item "$RUNTIME_PATH/deploy/index.html" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/deploy/app" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/deploy/resources" "$OUTPUT_PATH"
+else
+  copy_item "$RUNTIME_PATH/index.html" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/app" "$OUTPUT_PATH"
+  copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
+fi
 
 echo "Map Tour build output copied to $OUTPUT_PATH"
