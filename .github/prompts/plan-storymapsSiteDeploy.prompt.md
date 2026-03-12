@@ -76,16 +76,17 @@ Tag legend:
   - Effort: M
   - Depends-On: S2, S3
   - Deliverable: Pinned Map Tour import, reproducible deploy output, explicit patch list
-  - Status: Completed on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build output verified at `runtimes/maptour/build/{index.html,app,resources}`; explicit patch set recorded in `runtimes/maptour/patches/0000-no-runtime-patches.md`. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`, `docs/testing/phase2-s4-maptour-verification-transcript.md`.
+  - Status: Completed on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build output verified at `runtimes/maptour/build/{index.html,app,resources,web.config}` with deploy parity against known-working runtime; explicit patch set recorded in `runtimes/maptour/patches/0001-production-behavior-align.patch` and `runtimes/maptour/patches/0002-iis-web-config-addition.patch`. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`, `docs/testing/phase2-s4-maptour-verification-transcript.md`, `docs/deployment/phase2-s4-maptour-production-patch-plan.md`.
   - Acceptance criteria:
     - Map Tour runtime is reproducible from monorepo-managed source
     - Differences from baseline are tracked as explicit patches
 
-- [ ] [S5] Task: Build landing catalog shell using classic-apps references.
+- [x] [S5] Task: Build landing catalog shell using classic-apps references.
   - Owner: Build owner
   - Effort: S
   - Depends-On: S3
   - Deliverable: Landing/catalog implementation at /templates/classic-storymaps
+  - Status: Completed on 2026-03-12. Catalog shell implemented from classic-app fixtures with responsive support-state cards and canonical deep links for supported runtime routes. Evidence: `apps/classic-storymaps-site/index.html`, `apps/classic-storymaps-site/assets/images/*`, `scripts/build-classic-storymaps-landing.sh`, `publish/templates/classic-storymaps/index.html`, `docs/deployment/phase2-s5-landing-catalog-shell.md`.
   - Acceptance criteria:
     - All classic app cards render with clear support-state messaging
     - Supported cards deep-link to canonical routes

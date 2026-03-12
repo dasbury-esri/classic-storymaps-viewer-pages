@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classic Storymaps Catalog</title>
+  <meta name="description" content="Catalog and launch surface for Classic Storymaps runtimes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #f5f2ea;
+      --bg-1: #fefcf6;
+      --ink-0: #1d1f24;
+      --ink-1: #3a3f4a;
+      --accent: #0b6f5f;
+      --accent-2: #e0793c;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --line: rgba(24, 28, 36, 0.15);
+      --ok: #2b7f42;
+      --queued: #b96810;
+      --reference: #5c6070;
+      --ring: rgba(11, 111, 95, 0.28);
+      --shadow: 0 18px 40px rgba(20, 24, 35, 0.11);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink-0);
+      font-family: "IBM Plex Sans", sans-serif;
+      background:
+        radial-gradient(1200px 600px at 7% -20%, rgba(224, 121, 60, 0.24), transparent 70%),
+        radial-gradient(1100px 700px at 95% 0%, rgba(11, 111, 95, 0.2), transparent 62%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1160px, 94vw);
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(20px, 4vw, 36px);
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72)),
+        repeating-linear-gradient(135deg, transparent 0 18px, rgba(11, 111, 95, 0.07) 18px 19px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -90px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 18px solid rgba(224, 121, 60, 0.2);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-size: 0.79rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Archivo Expanded", sans-serif;
+      font-size: clamp(1.44rem, 3.8vw, 2.2rem);
+      line-height: 1.24;
+      max-width: 18ch;
+      text-wrap: balance;
+    }
+
+    .summary {
+      margin: 14px 0 0;
+      max-width: 70ch;
+      color: var(--ink-1);
+      line-height: 1.62;
+      font-size: 1.02rem;
+    }
+
+    .legend {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .chip.supported {
+      color: var(--ok);
+      border-color: rgba(43, 127, 66, 0.35);
+    }
+
+    .chip.queued {
+      color: var(--queued);
+      border-color: rgba(185, 104, 16, 0.35);
+    }
+
+    .chip.reference {
+      color: var(--reference);
+      border-color: rgba(92, 96, 112, 0.35);
+    }
+
+    .grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      box-shadow: 0 9px 22px rgba(25, 30, 40, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: rise 0.45s ease both;
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #ece8df;
+    }
+
+    .card-body {
+      padding: 14px 14px 16px;
+      display: grid;
+      gap: 10px;
+      min-height: 225px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 5px 8px;
+      border: 1px solid;
+      background: #fff;
+    }
+
+    .badge.supported {
+      color: var(--ok);
+      border-color: rgba(43, 127, 66, 0.35);
+    }
+
+    .badge.queued {
+      color: var(--queued);
+      border-color: rgba(185, 104, 16, 0.35);
+    }
+
+    .badge.reference {
+      color: var(--reference);
+      border-color: rgba(92, 96, 112, 0.35);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.35;
+      text-wrap: balance;
+    }
+
+    .desc {
+      margin: 0;
+      color: var(--ink-1);
+      line-height: 1.5;
+      font-size: 0.93rem;
+    }
+
+    .action-row {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn,
+    .muted-btn {
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      padding: 9px 12px;
+      min-height: 36px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .link-btn {
+      color: #fff;
+      background: linear-gradient(120deg, var(--accent), #1f8b79);
+      box-shadow: 0 6px 16px rgba(11, 111, 95, 0.26);
+      outline: none;
+    }
+
+    .link-btn:hover,
+    .link-btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(11, 111, 95, 0.33);
+    }
+
+    .muted-btn {
+      color: var(--ink-1);
+      background: #fff;
+      border: 1px solid var(--line);
+      cursor: default;
+    }
+
+    .route-note {
+      margin: 0;
+      color: var(--ink-1);
+      font-size: 0.79rem;
+      word-break: break-word;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      color: var(--ink-1);
+      font-size: 0.88rem;
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .card-body {
+        min-height: 0;
+      }
+
+      .hero {
+        border-radius: 20px;
+      }
+
+      .page {
+        padding-top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="catalog-title">
+      <p class="eyebrow">Classic Storymaps</p>
+      <h1 id="catalog-title">Runtime Catalog and Support Status</h1>
+      <p class="summary">
+        This landing page shows current availability and launch routes for Classic Storymaps experiences hosted under
+        /templates/classic-storymaps. Supported runtimes link directly to their canonical launch routes.
+      </p>
+      <div class="legend" aria-label="Support state legend">
+        <span class="chip supported">Supported: Launch Ready</span>
+        <span class="chip queued">Queued: Onboarding Planned</span>
+        <span class="chip reference">Reference: Catalog Only</span>
+      </div>
+    </section>
+
+    <section class="grid" id="catalog-grid" aria-label="Classic app catalog"></section>
+
+    <p class="footer-note">
+      Route contract follows the import-first matrix: canonical landing and runtime folder routes with index.html compatibility paths.
+    </p>
+  </main>
+
+  <script>
+    const apps = [
+      {
+        title: "Story Map Tour",
+        state: "supported",
+        description: "Sequential place-based story format linking photos and captions to map locations.",
+        image: "assets/images/map-tour.png",
+        route: "/templates/classic-storymaps/maptour",
+        action: "Launch Runtime"
+      },
+      {
+        title: "Story Map Swipe",
+        state: "queued",
+        description: "Map comparison experience with slider and spyglass patterns. Second onboarding target.",
+        image: "assets/images/swipe.jpg",
+        route: "/templates/classic-storymaps/swipe",
+        action: "Queued for S6"
+      },
+      {
+        title: "Story Map Journal",
+        state: "queued",
+        description: "Narrative panel plus map canvas. Onboarding follows Swipe due to embed-policy risk.",
+        image: "assets/images/map-journal.jpg",
+        route: "/templates/classic-storymaps/mapjournal",
+        action: "Queued for S7"
+      },
+      {
+        title: "Story Map Series (Tabbed)",
+        state: "reference",
+        description: "Tabbed sequence of maps and narrative content.",
+        image: "assets/images/map-series-tabbed-viewer.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Series (Side Accordion)",
+        state: "reference",
+        description: "Accordion navigation with one map/story panel expanded at a time.",
+        image: "assets/images/map-series-side-accordion.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Series (Bulleted)",
+        state: "reference",
+        description: "Bulleted navigation for large map collections.",
+        image: "assets/images/map-series-bulleted.png",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Basic",
+        state: "reference",
+        description: "Minimal map-first viewer with optional title and legend.",
+        image: "assets/images/basic.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Shortlist",
+        state: "reference",
+        description: "Themed place list with map-extent aware tab behavior.",
+        image: "assets/images/shortlist.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Playlist",
+        state: "reference",
+        description: "Preview list plus map exploration pattern.",
+        image: "assets/images/playlist.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Countdown",
+        state: "reference",
+        description: "Location list with side-panel and locator-map behavior.",
+        image: "assets/images/countdown.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Crowdsource",
+        state: "reference",
+        description: "Public contribution workflow with moderation and approval.",
+        image: "assets/images/crowdsource.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Cascade",
+        state: "reference",
+        description: "Immersive long-form layout combining maps, media, and narrative sections.",
+        image: "assets/images/cascade.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "Story Map Custom",
+        state: "reference",
+        description: "One-off implementations for customer-specific scenarios.",
+        image: "assets/images/custom.png",
+        route: "Runtime-specific",
+        action: "Catalog Reference"
+      }
+    ];
+
+    const grid = document.getElementById("catalog-grid");
+
+    function cardTemplate(app, index) {
+      const isSupported = app.state === "supported";
+      const isQueued = app.state === "queued";
+      const stateLabel = isSupported ? "Supported" : isQueued ? "Queued" : "Reference";
+      const action = isSupported
+        ? `<a class="link-btn" href="${app.route}" aria-label="Launch ${app.title}">${app.action}</a>`
+        : `<span class="muted-btn" aria-label="${app.action}">${app.action}</span>`;
+
+      return `
+        <article class="card" style="animation-delay:${Math.min(index * 0.04, 0.36)}s">
+          <img src="${app.image}" alt="${app.title} thumbnail" loading="lazy">
+          <div class="card-body">
+            <div class="row">
+              <span class="badge ${app.state}">${stateLabel}</span>
+            </div>
+            <h2 class="title">${app.title}</h2>
+            <p class="desc">${app.description}</p>
+            <div class="action-row">${action}</div>
+            <p class="route-note">Canonical route: ${app.route}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    grid.innerHTML = apps.map(cardTemplate).join("");
+  </script>
+</body>
+</html>
