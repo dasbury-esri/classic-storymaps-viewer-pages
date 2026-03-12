@@ -92,11 +92,12 @@ Tag legend:
     - Supported cards deep-link to canonical routes
 
 #### Phase 3: Second Runtime and Journal Constraints
-- [ ] [S6] Task: Import and support Swipe as the second onboarded runtime.
+- [x] [S6] Task: Import and support Swipe as the second onboarded runtime.
   - Owner: Build owner
   - Effort: M
   - Depends-On: S4, S5
   - Deliverable: Reproducible Swipe runtime and integrated launch guidance
+  - Status: Completed on 2026-03-12. Swipe import pinned at `7e0fb19e1758638bacff788a513372b4bf4fc0c8` with fork/upstream remote model (`origin`: dasbury fork, `upstream`: Esri source), reproducible runtime build output at `runtimes/swipe/build`, and launcher-based malformed input guidance at canonical route `/templates/classic-storymaps/swipe-launcher.html`. Evidence: `runtimes/swipe/runtime-manifest.json`, `scripts/import-swipe-upstream.sh`, `scripts/build-swipe-runtime.sh`, `runtimes/swipe/patches/0000-no-runtime-patches.md`, `apps/classic-storymaps-site/swipe-launcher.html`, `publish/templates/classic-storymaps/swipe-launcher.html`, `docs/deployment/phase3-s6-swipe-import-repro.md`, `docs/testing/phase3-s6-swipe-verification-transcript.md`, `docs/deployment/runtime-fork-upstream-remote-model.md`.
   - Acceptance criteria:
     - Known-good Swipe launch works from canonical route
     - Unsupported and malformed input paths show actionable guidance

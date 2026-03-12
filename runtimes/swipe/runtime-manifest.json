@@ -1,0 +1,87 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "swipe",
+  "displayName": "Story Map Swipe",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/swipe",
+  "canonicalUrlPattern": "/templates/classic-storymaps/swipe",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/swipe/index.html"
+  ],
+  "upstream": {
+    "repo": "classic-storymap-swipe",
+    "owner": "dasbury-esri",
+    "sourceUpstreamOwner": "Esri",
+    "sourceUpstreamRepo": "storymap-swipe",
+    "refType": "commit",
+    "ref": "7e0fb19e1758638bacff788a513372b4bf4fc0c8",
+    "sourceSubpath": "Swipe",
+    "license": "Apache-2.0"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt"
+    ],
+    "workingDirectory": "runtimes/swipe/upstream/Swipe",
+    "outputPath": "runtimes/swipe/build"
+  },
+  "deploy": {
+    "iisTargetPath": "/templates/classic-storymaps/swipe",
+    "packageInclude": [
+      "index.html",
+      "app/**",
+      "resources/**"
+    ],
+    "packageExclude": [
+      "src/**",
+      "node_modules/**",
+      "tests/**"
+    ],
+    "defaultDocument": "index.html"
+  },
+  "launch": {
+    "supportedQueryParams": [
+      "appid",
+      "webmap"
+    ],
+    "precedenceRule": "appid-first",
+    "webmapSupport": "runtime-specific",
+    "knownGoodExamples": [
+      "/templates/classic-storymaps/swipe",
+      "/templates/classic-storymaps/swipe?webmap=62702544d70648e593bc05d65180fd64"
+    ]
+  },
+  "viewerOnly": {
+    "builderBlocked": true,
+    "guardRules": [
+      "no-builder-routes",
+      "no-edit-actions"
+    ],
+    "notes": "Capture runtime-specific viewer-only differences as explicit patches."
+  },
+  "patches": {
+    "patchSetId": "swipe-initial-import-no-runtime-patches",
+    "files": [
+      "runtimes/swipe/patches/0000-no-runtime-patches.md"
+    ],
+    "rationale": "Initial import requires no upstream source patch files; packaging behavior is handled by monorepo scripts."
+  },
+  "verification": {
+    "smokeProfile": "swipe-baseline",
+    "baselineDate": "2026-03-12",
+    "baselineOperator": "product-owner"
+  },
+  "releaseMetadata": {
+    "monorepoCommit": "<set-at-release>",
+    "deploymentTimestamp": "<iso8601>",
+    "upstreamRefAtRelease": "7e0fb19e1758638bacff788a513372b4bf4fc0c8"
+  },
+  "remoteModel": {
+    "origin": "https://github.com/dasbury-esri/classic-storymap-swipe.git",
+    "upstream": "https://github.com/Esri/storymap-swipe.git",
+    "pullFrom": "upstream",
+    "pushTo": "origin"
+  }
+}
