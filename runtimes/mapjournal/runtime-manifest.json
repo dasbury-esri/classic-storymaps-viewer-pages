@@ -1,0 +1,78 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "mapjournal",
+  "displayName": "Story Map Journal",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/mapjournal",
+  "canonicalUrlPattern": "/templates/classic-storymaps/mapjournal",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/mapjournal/index.html"
+  ],
+  "upstream": {
+    "repo": "classic-storymap-journal",
+    "owner": "dasbury-esri",
+    "refType": "commit",
+    "ref": "2a51369e8e0e90c10ac0340a6496219df218b73e",
+    "sourceSubpath": ".",
+    "license": "Apache-2.0"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt --force"
+    ],
+    "workingDirectory": "runtimes/mapjournal/upstream",
+    "outputPath": "runtimes/mapjournal/build"
+  },
+  "deploy": {
+    "iisTargetPath": "/templates/classic-storymaps/mapjournal",
+    "packageInclude": [
+      "index.html",
+      "app/**",
+      "resources/**",
+      "web.config"
+    ],
+    "packageExclude": [
+      "src/**",
+      "node_modules/**",
+      "tests/**"
+    ],
+    "defaultDocument": "index.html"
+  },
+  "launch": {
+    "supportedQueryParams": [
+      "appid"
+    ],
+    "precedenceRule": "appid-first",
+    "webmapSupport": "not-supported",
+    "knownGoodExamples": [
+      "/templates/classic-storymaps/mapjournal/index.html?appid=d98f4f7a3a544665a6c4f7f8f3a3b6e1"
+    ]
+  },
+  "viewerOnly": {
+    "builderBlocked": true,
+    "guardRules": [
+      "no-builder-routes",
+      "no-edit-actions"
+    ],
+    "notes": "Embedded Swipe behavior follows S7 policy and must remain viewer-only in production."
+  },
+  "patches": {
+    "patchSetId": "mapjournal-baseline-v1",
+    "files": [
+      "runtimes/mapjournal/patches/0000-no-runtime-patches.md"
+    ],
+    "rationale": "Baseline import without runtime source patches; any future changes must be explicit patch files."
+  },
+  "verification": {
+    "smokeProfile": "mapjournal-baseline",
+    "baselineDate": "2026-03-12",
+    "baselineOperator": "product-owner"
+  },
+  "releaseMetadata": {
+    "monorepoCommit": "<set-at-release>",
+    "deploymentTimestamp": "<iso8601>",
+    "upstreamRefAtRelease": "2a51369e8e0e90c10ac0340a6496219df218b73e"
+  }
+}

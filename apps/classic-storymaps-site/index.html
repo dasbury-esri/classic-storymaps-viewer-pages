@@ -299,12 +299,13 @@
 <body>
   <main class="page">
     <section class="hero" aria-labelledby="catalog-title">
-      <p class="eyebrow">Classic Storymaps</p>
-      <h1 id="catalog-title">Runtime Catalog and Support Status</h1>
+      <p class="eyebrow">Classic Esri Story Maps Viewers</p>
+      <h1 id="catalog-title">Classic Story Maps have been retired. :'(
+        But you can still view them here!</h1>
       <p class="summary">
-        This landing page shows current availability and launch routes for Classic Storymaps experiences hosted under
+        This landing page shows current availability and launch routes for Classic Esri Story Maps viewers hosted under
         /templates/classic-storymaps. Supported runtimes open guided launch pages that validate app IDs before opening
-        the canonical viewer routes.
+        the viewer routes.
       </p>
       <div class="legend" aria-label="Support state legend">
         <span class="chip supported">Supported: Launch Ready</span>
@@ -323,7 +324,7 @@
   <script>
     const apps = [
       {
-        title: "Story Map Tour",
+        title: "Classic Story Map Tour",
         state: "supported",
         description: "Sequential place-based story format linking photos and captions to map locations.",
         image: "assets/images/map-tour.png",
@@ -332,7 +333,7 @@
         action: "Open Launcher"
       },
       {
-        title: "Story Map Swipe",
+        title: "Classic Story Map Swipe",
         state: "supported",
         description: "Map comparison experience with slider and spyglass patterns.",
         image: "assets/images/swipe.jpg",
@@ -341,15 +342,16 @@
         action: "Open Launcher"
       },
       {
-        title: "Story Map Journal",
-        state: "queued",
-        description: "Narrative panel plus map canvas. Onboarding follows Swipe due to embed-policy risk.",
+        title: "Classic Story Map Journal",
+        state: "supported",
+        description: "Narrative panel plus map canvas with guided launch support for canonical appid routes.",
         image: "assets/images/map-journal.jpg",
         route: "/templates/classic-storymaps/mapjournal",
-        action: "Queued for S7"
+        launchRoute: "/templates/classic-storymaps/mapjournal-launcher.html",
+        action: "Open Launcher"
       },
       {
-        title: "Story Map Series (Tabbed)",
+        title: "Classic Story Map Series (Tabbed Layout)",
         state: "reference",
         description: "Tabbed sequence of maps and narrative content.",
         image: "assets/images/map-series-tabbed-viewer.jpg",
@@ -357,15 +359,7 @@
         action: "Catalog Reference"
       },
       {
-        title: "Story Map Series (Side Accordion)",
-        state: "reference",
-        description: "Accordion navigation with one map/story panel expanded at a time.",
-        image: "assets/images/map-series-side-accordion.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Series (Bulleted)",
+        title: "Classic Story Map Series (Bulleted Layout)",
         state: "reference",
         description: "Bulleted navigation for large map collections.",
         image: "assets/images/map-series-bulleted.png",
@@ -373,42 +367,10 @@
         action: "Catalog Reference"
       },
       {
-        title: "Story Map Basic",
+        title: "Classic Story Map Series (Side Accordion Layout)",
         state: "reference",
-        description: "Minimal map-first viewer with optional title and legend.",
-        image: "assets/images/basic.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Shortlist",
-        state: "reference",
-        description: "Themed place list with map-extent aware tab behavior.",
-        image: "assets/images/shortlist.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Playlist",
-        state: "reference",
-        description: "Preview list plus map exploration pattern.",
-        image: "assets/images/playlist.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Countdown",
-        state: "reference",
-        description: "Location list with side-panel and locator-map behavior.",
-        image: "assets/images/countdown.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Crowdsource",
-        state: "reference",
-        description: "Public contribution workflow with moderation and approval.",
-        image: "assets/images/crowdsource.jpg",
+        description: "Accordion navigation with one map/story panel expanded at a time.",
+        image: "assets/images/map-series-side-accordion.jpg",
         route: "Not yet onboarded",
         action: "Catalog Reference"
       },
@@ -421,13 +383,29 @@
         action: "Catalog Reference"
       },
       {
-        title: "Story Map Custom",
+        title: "Classic Story Map Shortlist",
         state: "reference",
-        description: "One-off implementations for customer-specific scenarios.",
-        image: "assets/images/custom.png",
-        route: "Runtime-specific",
+        description: "Themed place list with map-extent aware tab behavior.",
+        image: "assets/images/shortlist.jpg",
+        route: "Not yet onboarded",
         action: "Catalog Reference"
-      }
+      },
+      {
+        title: "Story Map Crowdsource",
+        state: "reference",
+        description: "Public contribution workflow with moderation and approval.",
+        image: "assets/images/crowdsource.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
+      {
+        title: "ClassicStory Map Basic",
+        state: "reference",
+        description: "Minimal map-first viewer with optional title and legend.",
+        image: "assets/images/basic.jpg",
+        route: "Not yet onboarded",
+        action: "Catalog Reference"
+      },
     ];
 
     const grid = document.getElementById("catalog-grid");

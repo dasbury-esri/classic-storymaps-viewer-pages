@@ -102,20 +102,33 @@ Tag legend:
     - Known-good Swipe launch works from canonical route
     - Unsupported and malformed input paths show actionable guidance
 
-- [ ] [S7] Task: Define Map Journal onboarding constraints and embed policy.
+- [x] [S7] Task: Define Map Journal onboarding constraints and embed policy.
   - Owner: Product owner
   - Effort: S
   - Depends-On: S6
   - Deliverable: Map Journal pre-onboarding design and risk checklist
+  - Status: Completed on 2026-03-12. Map Journal pre-onboarding constraints, embedded Swipe policy, and risk checklist were documented and validated for S8 handoff. Evidence: `docs/architecture/phase3-s7-mapjournal-onboarding-constraints.md`, `docs/testing/phase3-s7-mapjournal-constraints-verification-transcript.md`.
   - Acceptance criteria:
     - Embedded classic Swipe behavior policy is explicit
     - Journal onboarding risks and mitigations are approved
+
+- [x] [S7b] Task: Import and support Map Journal as the third onboarded runtime.
+  - Owner: Build owner
+  - Effort: M
+  - Depends-On: S7
+  - Deliverable: Reproducible Map Journal runtime and integrated launch guidance
+  - Status: Completed on 2026-03-12. Map Journal import pinned at `2a51369e8e0e90c10ac0340a6496219df218b73e` with fork/upstream remote model (`origin`: dasbury fork, `upstream`: Esri source), reproducible runtime build output at `runtimes/mapjournal/build`, and launcher-based malformed input guidance at canonical route `/templates/classic-storymaps/mapjournal-launcher.html`. Evidence: `runtimes/mapjournal/runtime-manifest.json`, `scripts/import-mapjournal-upstream.sh`, `scripts/build-mapjournal-runtime.sh`, `runtimes/mapjournal/patches/0000-no-runtime-patches.md`, `apps/classic-storymaps-site/mapjournal-launcher.html`, `publish/templates/classic-storymaps/mapjournal-launcher.html`, `docs/deployment/phase3-s7b-mapjournal-import-repro.md`, `docs/testing/phase3-s7b-mapjournal-verification-transcript.md`.
+  - Acceptance criteria:
+    - Known-good Map Journal launch works from canonical route
+    - Embedded Swipe behavior follows approved S7 policy
+    - Unsupported and malformed input paths show actionable guidance
+    - Runtime manifest and explicit patch set are recorded
 
 #### Phase 4: IIS Packaging and Runtime Hosting
 - [ ] [S8] Task: Define IIS package boundary and publish assembly for landing + imported runtimes.
   - Owner: Build owner
   - Effort: XS
-  - Depends-On: S4, S6
+  - Depends-On: S4, S6, S7b
   - Deliverable: Packaging checklist and deterministic publish assembly notes
   - Acceptance criteria:
     - Package excludes source-only files
@@ -130,15 +143,38 @@ Tag legend:
     - Landing and onboarded runtime routes serve correctly from target path
     - Cache behavior matches documented policy without breaking legacy runtime assets
 
+Plain-language intent for Phase 4:
+- S8 defines exactly what files are deployed to IIS and what files are never deployed.
+- S8 also confirms the final folder layout under `/templates/classic-storymaps` so relative assets resolve consistently.
+- S9 captures the IIS server behavior needed for reliable hosting (routes, headers, caching, fallbacks).
+- S9 is where we prove the hosted site behaves like local verification, including nested runtime paths.
+
 #### Phase 5: Release and Smoke Operations
 - [ ] [S10] Task: Define release runbook and smoke suite baseline for import-first releases.
   - Owner: QA owner (shared with build owner)
   - Effort: S
-  - Depends-On: S6, S9
+  - Depends-On: S6, S7b, S9
   - Deliverable: Release runbook and smoke checklist matrix
   - Acceptance criteria:
     - Release metadata includes upstream ref, patch set, monorepo SHA, and deployment timestamp
-    - Baseline smoke suite is defined for Map Tour and Swipe, with Journal profile queued
+    - Baseline smoke suite is defined for Map Tour, Swipe, and Map Journal
+
+#### Optional Backlog (Nice to Have, Not Required for Current Exit)
+- [ ] [S11] Task: Evaluate and design auth modernization for legacy Classic runtime sign-in behavior.
+  - Owner: Build owner
+  - Effort: M
+  - Depends-On: S10
+  - Deliverable: Design note and risk assessment for auth/session modernization
+  - Status: Nice to have, not necessary for current deployment acceptance.
+  - Notes:
+    - Current runtime uses legacy ArcGIS JS 3.x popup OAuth flow in `runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js`.
+    - Current viewer logic suppresses cookie access for non-owner viewer sessions in `runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js`.
+    - Any persistence/sign-in dialog modernization should be treated as a separate hardening effort, not an S6 patch.
+
+### Post-Deployment Validation Addendum (After Remaining Apps Are Deployed)
+- Add a cross-runtime validation step to confirm direct webmap launches behave as expected compared with authored app launches.
+- For Swipe specifically, validate whether direct `?webmap=` launches match authored single-map Swipe behavior.
+- If parity is required, define an explicit launch contract for layer selection rather than relying on stock webmap override behavior.
 
 ### Proposed Monorepo Folder Tree (Pre-Implementation)
 ```text
@@ -257,15 +293,15 @@ publish/
 
 ### Exit Criteria
 - [ ] Landing catalog is deployed under /templates/classic-storymaps with explicit support-state messaging.
-- [ ] Map Tour and Swipe are reproducibly deployed from monorepo-managed source/import.
+- [ ] Map Tour, Swipe, and Map Journal are reproducibly deployed from monorepo-managed source/import.
 - [ ] Runtime manifests, patch policy, and route contract are documented.
 - [ ] IIS package/process and release runbook are committed.
-- [ ] Smoke suite baseline for Map Tour + Swipe is committed and executable.
+- [ ] Smoke suite baseline for Map Tour + Swipe + Map Journal is committed and executable.
 
 ### Suggested Execution Order
 1. Baseline and import contract (S1-S3)
 2. Map Tour reproducibility and landing shell (S4-S5)
-3. Swipe onboarding and Journal constraints (S6-S7)
+3. Swipe onboarding and Journal constraints/runtime onboarding (S6-S7b)
 4. IIS packaging and hosting configuration (S8-S9)
 5. Release runbook and smoke baseline (S10)
 
@@ -279,12 +315,13 @@ publish/
   - Map Tour reproducibility verified with explicit patch set
 
 #### PR2: Catalog + Swipe
-- Tasks: S5, S6, S7
-- Intent: deliver landing catalog, onboard Swipe as second runtime, and define Journal embed policy.
+- Tasks: S5, S6, S7, S7b
+- Intent: deliver landing catalog, onboard Swipe as second runtime, define Journal embed policy, and onboard Map Journal as third runtime.
 - Merge gate:
   - Landing support-state UX verified on desktop/mobile
   - Swipe positive/negative launch flows pass
   - Journal pre-onboarding constraints approved
+  - Map Journal positive/negative launch flows pass
 
 #### PR3: IIS + Operations
 - Tasks: S8, S9, S10
