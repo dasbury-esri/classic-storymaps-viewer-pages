@@ -51,4 +51,6 @@ Pinned ref currently used:
 - Upstream import executed at pinned ref `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`.
 - Runtime build execution completed; staged output verified at `runtimes/maptour/build/{index.html,app,resources}`.
 - Known build caveat: legacy upstream lint warnings are expected and tolerated via `grunt --force`.
-- Pending: explicit patch set creation and reproducibility verification transcript finalization.
+- Explicit patch set recorded as no-source-patch baseline: `runtimes/maptour/patches/0000-no-runtime-patches.md`.
+- Verification transcript recorded: `docs/testing/phase2-s4-maptour-verification-transcript.md`.
+- S4 status: Completed.

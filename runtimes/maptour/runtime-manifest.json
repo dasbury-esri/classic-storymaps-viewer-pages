@@ -59,9 +59,11 @@
     "notes": "Capture runtime-specific viewer-only differences as explicit patches."
   },
   "patches": {
-    "patchSetId": "pending-maptour-initial-import",
-    "files": [],
-    "rationale": "Minimal changes for IIS nested path and viewer-only constraints."
+    "patchSetId": "maptour-initial-import-no-runtime-patches",
+    "files": [
+      "runtimes/maptour/patches/0000-no-runtime-patches.md"
+    ],
+    "rationale": "Initial import requires no upstream source patch files; packaging behavior is handled by monorepo scripts."
   },
   "verification": {
     "smokeProfile": "maptour-baseline",
@@ -69,7 +71,7 @@
     "baselineOperator": "product-owner"
   },
   "releaseMetadata": {
-    "monorepoCommit": "<sha>",
+    "monorepoCommit": "<set-at-release>",
     "deploymentTimestamp": "<iso8601>",
     "upstreamRefAtRelease": "2e56c7e08801fc6bbfc2bc27e0d220688a7120a6"
   }

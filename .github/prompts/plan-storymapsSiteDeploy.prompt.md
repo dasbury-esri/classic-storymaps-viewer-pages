@@ -71,12 +71,12 @@ Tag legend:
     - appid-first behavior is documented with optional webmap support per runtime
 
 #### Phase 2: Seed Runtime and Landing Shell
-- [ ] [S4] Task: Import and reproduce Map Tour runtime from upstream source.
+- [x] [S4] Task: Import and reproduce Map Tour runtime from upstream source.
   - Owner: Build owner
   - Effort: M
   - Depends-On: S2, S3
   - Deliverable: Pinned Map Tour import, reproducible deploy output, explicit patch list
-  - Status: In progress on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build output verified at `runtimes/maptour/build/{index.html,app,resources}`; patch list finalization pending. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`.
+  - Status: Completed on 2026-03-12. Upstream import pinned at `2e56c7e08801fc6bbfc2bc27e0d220688a7120a6`; build output verified at `runtimes/maptour/build/{index.html,app,resources}`; explicit patch set recorded in `runtimes/maptour/patches/0000-no-runtime-patches.md`. Evidence: `runtimes/maptour/runtime-manifest.json`, `scripts/import-maptour-upstream.sh`, `scripts/build-maptour-runtime.sh`, `docs/deployment/phase2-s4-maptour-import-repro.md`, `docs/testing/phase2-s4-maptour-verification-transcript.md`.
   - Acceptance criteria:
     - Map Tour runtime is reproducible from monorepo-managed source
     - Differences from baseline are tracked as explicit patches
