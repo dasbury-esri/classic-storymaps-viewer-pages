@@ -92,3 +92,5 @@ All `Required` checks must pass.
   - `docs/deployment/phase5-s10-release-metadata-template.md`
 - Smoke execution notes (filled copy of baseline):
   - `docs/testing/phase5-s10-smoke-suite-baseline.md`
+- Runtime troubleshooting log for hotfix sessions:
+  - `docs/testing/phase5-s10c-runtime-troubleshooting-log-2026-03-13.md`

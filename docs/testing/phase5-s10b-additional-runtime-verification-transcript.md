@@ -64,3 +64,7 @@ Publish artifacts verified:
 
 Pre-S11 additional runtime onboarding is complete for Map Series, Cascade, Shortlist, Crowdsource, and Basic.
 The only residual risk is Crowdsource legacy toolchain instability on modern Node, mitigated via deterministic source-fallback packaging.
+
+Post-S10b runtime troubleshooting and hotfix notes are tracked in:
+
+- `docs/testing/phase5-s10c-runtime-troubleshooting-log-2026-03-13.md`

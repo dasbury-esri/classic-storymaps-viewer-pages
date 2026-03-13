@@ -32,6 +32,20 @@ Define the minimum release smoke matrix that must pass after each publish to `/t
 | Headers | Static long-lived cache | js/css/png/svg/woff* samples | Yes |  |  |
 | Headers | Text asset compression present | js/css samples with `Accept-Encoding: gzip` | Yes |  |  |
 
+## Targeted Regression Checks (Post-S10b)
+
+| Area | Check | URL Pattern | Required | Pass/Fail | Notes |
+|---|---|---|---|---|---|
+| Map Tour | Public app with inaccessible optional context layers does not show generic ArcGIS sign-in prompt | `/templates/classic-storymaps/maptour/index.html?appid=d3fd1deb014f4d9f99b58221463abbf0` | Yes |  | Should load tour without blocked context layers |
+| Cascade | Deleted appid shows deleted-item specific error message | `/templates/classic-storymaps/cascade/index.html?appid=5fdca0f47f1a46498002f39894fcd26f` | No (pending verification) |  | Follow-up hardening patch landed on 2026-03-13; rerun this check to confirm deleted-item message |
+| Cascade | Deleted appid shows deleted-item specific error message | `/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259` | No (pending verification) |  | Follow-up hardening patch landed on 2026-03-13; rerun this check to confirm deleted-item message |
+| Map Series | Embedded section does not surface raw browser frame refusal for storymaps.arcgis.com CSP-blocked content | `/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` | No (known issue) |  | Repro at section 27; currently shows `storymaps.arcgis.com refused to connect` |
+| Cascade | Embedded Swipe status card aligns with direct runtime availability | `/templates/classic-storymaps/cascade/index.html?appid=7bf8056343d24fbea1b929b267b826c4` | No (known issue) |  | Current embed shows retired card while direct Swipe appid `2c272da7d1ef441b9d99898b733425c6` still loads partially |
+| Basic | Runtime respects supplied appid (not pinned to default app content) | `/templates/classic-storymaps/basic/index.html?appid=deba59dfcab54702a5a7531de6066013` | No (known issue) |  | Candidate fixes landed in repo on 2026-03-13 (default appid injection removed + wrapper-appid resolution), but this issue is deferred as low priority due to low template usage and does not block current deployment acceptance. |
+| Cascade | Embedded web map item does not false-negative as inaccessible | `/templates/classic-storymaps/cascade/index.html?appid=7bf8056343d24fbea1b929b267b826c4` | No (pending verification) |  | Follow-up fail-open patch landed on 2026-03-13 (retry with inaccessible optional layers removed); rerun to confirm card no longer false-negatives |
+| Map Journal | App launch does not stall at spinner when theme payload is null/missing | `/templates/classic-storymaps/mapjournal/index.html?appid=99c42de7d2f04d0fbd9af135cac6cd55` | No (known issue) |  | Console currently reports `TypeError: Cannot read properties of null (reading 'themes')` in `viewer-min.js?v=1.31.0` |
+| Map Journal | Section 5 embedded Map Series frame loads or presents clear fallback | `/templates/classic-storymaps/mapjournal/index.html?appid=3ca8ba42c90a41d39df64b9cd4f25f58` | No (known issue) |  | Embedded URL is `http://mountvernon.maps.arcgis.com/apps/MapSeries/index.html?appid=99c42de7d2f04d0fbd9af135cac6cd55` |
+
 ## Release Pass Criteria
 
 - All `Required = Yes` checks pass.
@@ -50,3 +64,7 @@ Define the minimum release smoke matrix that must pass after each publish to `/t
   - Stop release signoff.
   - Record failing URL, response status, and observed behavior.
   - Either remediate and rerun smoke or execute rollback.
+
+## Related Troubleshooting Evidence
+
+- `docs/testing/phase5-s10c-runtime-troubleshooting-log-2026-03-13.md`
