@@ -330,7 +330,7 @@
 
     const SUPPORT_LABEL = {
       [SUPPORT_STATE.SUPPORTED]: "Supported",
-      [SUPPORT_STATE.QUEUED]: "Queued",
+      [SUPPORT_STATE.QUEUED]: "In Progress",
       [SUPPORT_STATE.PREP]: "Coming Soon"
     };
 
@@ -385,11 +385,10 @@
       },
       {
         title: "Story Map Crowdsource",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Public contribution workflow with moderation and approval.",
+        state: SUPPORT_STATE.QUEUED,
+        description: "Public contribution workflow with moderation and approval. Viewer support is currently in progress.",
         image: "assets/images/crowdsource.jpg",
-        launchRoute: "crowdsource-launcher.html",
-        action: "Open Launcher"
+        action: "In Progress"
       },
       {
         title: "Classic Story Map Basic",
