@@ -148,6 +148,8 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						embedUrl = getParentOriginUrl(embedUrl);
 					}
 
+					embedUrl = normalizeLegacyStorytellingSwipeUrl(embedUrl);
+
 					var embedContainer = $('.embedContainer[data-src="' + (embedUrl || embedInfo.ts) + '"]');
 					if ( ! embedContainer.length ) {
 
@@ -200,6 +202,8 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 							embedUrl = getParentOriginUrl(embedUrl);
 						}
 
+						embedUrl = normalizeLegacyStorytellingSwipeUrl(embedUrl);
+
 						return embedSRC == embedUrl || embedSRC == embed.ts;
 					}).length > 0;
 
@@ -222,6 +226,29 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 			function useParentOriginUrl(embedInfo, embedUrl) {
 				return embedInfo && embedInfo.useParentOrigin && window.location.origin.match(/arcgis\.com/) &&
 					embedUrl && embedUrl.match && embedUrl.match(/arcgis\.com/);
+			}
+
+			function normalizeLegacyStorytellingSwipeUrl(storedUrl) {
+				if (!storedUrl || !window.URL) {
+					return storedUrl;
+				}
+
+				try {
+					var urlAsURL = new window.URL(storedUrl);
+					var isStorytellingSwipePath = urlAsURL.pathname.indexOf('/apps/StorytellingSwipe/') === 0;
+
+					if (isStorytellingSwipePath) {
+						return window.location.origin
+							+ '/templates/classic-storymaps/swipe/index.html'
+							+ (urlAsURL.search || '')
+							+ (urlAsURL.hash || '');
+					}
+				}
+				catch (err) {
+					return storedUrl;
+				}
+
+				return storedUrl;
 			}
 
 			function getParentOriginUrl(storedUrl) {
@@ -997,19 +1024,31 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 			function updateMainMediaEmbed(url, cfg)
 			{
+				var originalUrl = url;
+
 				if (useParentOriginUrl(cfg, url)) {
 					url = getParentOriginUrl(url);
 				}
+
+				var normalizedUrl = normalizeLegacyStorytellingSwipeUrl(url);
 				$('.mainMediaContainer').removeClass('active');
 
 				// URL can be an URL or the timestamp in case of an iframe tag
 				var embedContainer = $('.embedContainer[data-src="' + url + '"]');
 
+				if (!embedContainer.length && normalizedUrl != url) {
+					embedContainer = $('.embedContainer[data-src="' + normalizedUrl + '"]');
+				}
+
 				// Not found, must be an iframe tag
 				if ( ! embedContainer.length ) {
-					embedContainer = $('.embedContainer[data-ts="' + url + '"]');
+					embedContainer = $('.embedContainer[data-ts="' + originalUrl + '"]');
 					// The correct URL is in data-src
 					url = embedContainer.data('src');
+					normalizedUrl = normalizeLegacyStorytellingSwipeUrl(url);
+				}
+				else {
+					url = normalizedUrl;
 				}
 
 				if ( embedContainer.length ) {
