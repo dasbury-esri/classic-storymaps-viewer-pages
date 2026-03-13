@@ -223,7 +223,8 @@ Status:
 - Targeted browser verification on 2026-03-13 still reproduced `TypeError: Cannot read properties of null (reading 'themes')` in `viewer-min.js?v=1.31.0` for appid `99c42de7d2f04d0fbd9af135cac6cd55`.
 - Additional hardening patch implemented on 2026-03-13 in Map Journal `Config.getLayoutThumnail()` and `WebApplicationData` layout/theme accessors to guard unresolved layout config and null theme objects.
 - Map Journal runtime rebuilt and publish assembly regenerated on 2026-03-13 after this second null-theme hardening pass.
-- Pending manual browser verification to confirm loader no longer stalls and runtime avoids uncaught `themes` null error.
+- Verified on 2026-03-13 after second hardening pass: target appid loads without permanent spinner and no uncaught `themes` null runtime error observed.
+- Closed.
 
 #### 4.6 Map Journal embedded Map Series does not load in section 5
 
@@ -314,7 +315,7 @@ Status:
 
 | Snapshot | V-01 | V-02 | V-03 | V-04 | V-05 | V-06 | V-07 | V-08 | V-09 |
 |---|---|---|---|---|---|---|---|---|---|
-| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Pass | Pass |
+| Current | Pass | Pass | Pass | Open | Pass | Pass | Pass | Pass | Pass |
 
 ## Verification Checklist (Short Form)
 
@@ -379,11 +380,11 @@ Use this section for final manual/browser verification evidence. Keep one line i
 
 - Target: `https://storymaps.esri.com/templates/classic-storymaps/mapjournal/index.html?appid=99c42de7d2f04d0fbd9af135cac6cd55`
 - Expected: no permanent loader stall; runtime handles missing/invalid theme payload gracefully.
-- Result: [ ] Pass  [x] Fail
+- Result: [x] Pass  [ ] Fail
 - Date: 2026-03-13
 - Operator: davi6569
-- Evidence: Browser console still reports `TypeError: Cannot read properties of null (reading 'themes')` at `getColors`/`updateMainStageWithLayoutSettings` in `mapjournal/app/viewer-min.js?v=1.31.0`; viewer remains on loader.
-- Notes: Applied second hardening pass in `Config.getLayoutThumnail()` plus additional `WebApplicationData` null guards and republished; rerun targeted browser verification on latest deployed bundle, then flip to Pass if resolved.
+- Evidence: Post-patch verification shows target app initializes successfully without indefinite loader and without uncaught `TypeError: Cannot read properties of null (reading 'themes')` in browser console.
+- Notes: Second hardening pass in `Config.getLayoutThumnail()` plus additional `WebApplicationData` null guards resolved the runtime null-theme failure path.
 
 ### V-07 Issue 4.6 Map Journal embedded Map Series in section 5
 
