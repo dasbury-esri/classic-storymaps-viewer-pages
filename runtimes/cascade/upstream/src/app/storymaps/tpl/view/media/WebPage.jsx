@@ -13,6 +13,103 @@ import UIUtils from 'storymaps/tpl/utils/UI';
 const PREVIEW_THUMB = 'resources/tpl/builder/icons/media-placeholder/webpage.png';
 const PREVIEW_ICON = 'resources/tpl/builder/icons/immersive-panel/webpage.png';
 
+function isKnownShortenerHost(hostname) {
+  const normalizedHost = (hostname || '').toLowerCase();
+  return normalizedHost === 'arcg.is'
+    || normalizedHost === 'bit.ly'
+    || normalizedHost === 'www.bit.ly'
+    || normalizedHost === 'j.mp';
+}
+
+function resolveShortUrlIfNeeded(storedUrl, onResolved) {
+  if (!storedUrl || !window.URL || !window.fetch || !onResolved) {
+    onResolved && onResolved(storedUrl);
+    return;
+  }
+
+  let urlAsURL;
+  try {
+    urlAsURL = new window.URL(storedUrl, window.location.origin);
+  }
+  catch (err) {
+    onResolved(storedUrl);
+    return;
+  }
+
+  const protocol = (urlAsURL.protocol || '').toLowerCase();
+  if ((protocol !== 'http:' && protocol !== 'https:') || !isKnownShortenerHost(urlAsURL.hostname)) {
+    onResolved(storedUrl);
+    return;
+  }
+
+  let completed = false;
+  const finish = function(resultUrl) {
+    if (completed) {
+      return;
+    }
+
+    completed = true;
+    onResolved(resultUrl || storedUrl);
+  };
+
+  const timeoutId = window.setTimeout(function() {
+    finish(storedUrl);
+  }, 1500);
+
+  window.fetch(urlAsURL.href, {
+    method: 'GET',
+    mode: 'no-cors',
+    redirect: 'follow',
+    cache: 'no-store'
+  })
+    .then(function(response) {
+      window.clearTimeout(timeoutId);
+      finish(response && response.url ? response.url : urlAsURL.href);
+    }, function() {
+      window.clearTimeout(timeoutId);
+      finish(storedUrl);
+    });
+}
+
+function normalizeLegacyClassicAppUrl(storedUrl) {
+  if (!storedUrl || !window.URL) {
+    return storedUrl;
+  }
+
+  try {
+    const urlAsURL = new window.URL(storedUrl, window.location.origin);
+    const legacyRouteMap = [
+      { re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
+      { re: /^\/apps\/mapjournal(?:\/|$)/i, runtime: 'mapjournal' },
+      { re: /^\/apps\/mapseries(?:\/|$)/i, runtime: 'mapseries' },
+      { re: /^\/apps\/cascade(?:\/|$)/i, runtime: 'cascade' },
+      { re: /^\/apps\/maptour(?:\/|$)/i, runtime: 'maptour' },
+      { re: /^\/apps\/shortlist(?:\/|$)/i, runtime: 'shortlist' },
+      { re: /^\/apps\/storytellingshortlist(?:\/|$)/i, runtime: 'shortlist' }
+    ];
+
+    let runtimePath = null;
+    $.each(legacyRouteMap, function(i, routeDef) {
+      if (routeDef.re.test(urlAsURL.pathname || '')) {
+        runtimePath = routeDef.runtime;
+        return false;
+      }
+    });
+
+    if (runtimePath) {
+      return window.location.origin
+        + '/templates/classic-storymaps/' + runtimePath + '/index.html'
+        + (urlAsURL.search || '')
+        + (urlAsURL.hash || '');
+    }
+  }
+  catch (err) {
+    return storedUrl;
+  }
+
+  return storedUrl;
+}
+
 export default class WebPage extends Media {
   constructor(webpage) {
     super({
@@ -23,6 +120,7 @@ export default class WebPage extends Media {
     });
 
     this._webpage = webpage;
+    this._webpage.url = normalizeLegacyClassicAppUrl(this._webpage.url);
 
     this._nodeMedia = null;
     this._placement = null;
@@ -139,11 +237,16 @@ export default class WebPage extends Media {
 
     this._nodeMedia.parent('.webpage-container').addClass('initialized');
 
-    this._nodeMedia
-      .attr('src', this._nodeMedia.data('src'))
-      .load(function() {
-        this._fadeInMedia();
-      }.bind(this));
+    var sourceUrl = this._nodeMedia.data('src') || this._webpage.url;
+    resolveShortUrlIfNeeded(sourceUrl, function(resolvedUrl) {
+      var finalUrl = normalizeLegacyClassicAppUrl(resolvedUrl || sourceUrl);
+      this._nodeMedia
+        .off('load.webpage')
+        .on('load.webpage', function() {
+          this._fadeInMedia();
+        }.bind(this))
+        .attr('src', finalUrl);
+    }.bind(this));
     this._node.find('.interaction-container').click(this._onEnableButtonClick.bind(this));
 
     if (this._webpage.options.interaction === 'mouseover') {
