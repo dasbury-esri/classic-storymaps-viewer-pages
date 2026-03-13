@@ -102,37 +102,6 @@
       color: var(--ink-1);
     }
 
-    .legend {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .chip {
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid var(--line);
-      background: #fff;
-    }
-
-    .chip.supported {
-      color: var(--ok);
-      border-color: rgba(43, 127, 66, 0.35);
-    }
-
-    .chip.queued {
-      color: var(--queued);
-      border-color: rgba(185, 104, 16, 0.35);
-    }
-
-    .chip.prep {
-      color: var(--prep);
-      border-color: rgba(92, 96, 112, 0.35);
-    }
-
     .grid {
       margin-top: 26px;
       display: grid;
@@ -319,11 +288,6 @@
       <p class="disclaimer">
         <i>Disclaimer: This is a community project, not supported by Esri. Runtimes are imported from upstream repositories and may have limitations or issues. Viewers are provided as-is without support and with minimal maintenance.</i>
       </p>
-      <div class="legend" aria-label="Support state legend">
-        <span class="chip supported">Supported: Launch Ready</span>
-        <span class="chip queued">Queued: Onboarding Planned</span>
-        <span class="chip prep">Coming soon: In preparation</span>
-      </div>
     </section>
 
     <section class="grid" id="catalog-grid" aria-label="Classic app catalog"></section>
@@ -335,15 +299,11 @@
 
   <script>
     const SUPPORT_STATE = {
-      SUPPORTED: "supported",
-      QUEUED: "queued",
-      PREP: "prep"
+      SUPPORTED: "supported"
     };
 
     const SUPPORT_LABEL = {
-      [SUPPORT_STATE.SUPPORTED]: "Supported",
-      [SUPPORT_STATE.QUEUED]: "Queued",
-      [SUPPORT_STATE.PREP]: "Coming Soon"
+      [SUPPORT_STATE.SUPPORTED]: "Supported"
     };
 
     const apps = [
@@ -373,38 +333,43 @@
       },
       {
         title: "Classic Story Map Series (Tabbed, Bulleted or Side Accordion Layout)",
-        state: SUPPORT_STATE.PREP,
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Tabbed sequence of maps and narrative content.",
         image: "assets/images/map-series-tabbed-viewer.jpg",
-        action: "Coming Soon"
+        launchRoute: "mapseries-launcher.html",
+        action: "Open Launcher"
       },
       {
         title: "Story Map Cascade",
-        state: SUPPORT_STATE.PREP,
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Immersive long-form layout combining maps, media, and narrative sections.",
         image: "assets/images/cascade.jpg",
-        action: "Coming Soon"
+        launchRoute: "cascade-launcher.html",
+        action: "Open Launcher"
       },
       {
         title: "Classic Story Map Shortlist",
-        state: SUPPORT_STATE.PREP,
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Themed place list with map-extent aware tab behavior.",
         image: "assets/images/shortlist.jpg",
-        action: "Coming Soon"
+        launchRoute: "shortlist-launcher.html",
+        action: "Open Launcher"
       },
       {
         title: "Story Map Crowdsource",
-        state: SUPPORT_STATE.PREP,
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Public contribution workflow with moderation and approval.",
         image: "assets/images/crowdsource.jpg",
-        action: "Coming Soon"
+        launchRoute: "crowdsource-launcher.html",
+        action: "Open Launcher"
       },
       {
         title: "Classic Story Map Basic",
-        state: SUPPORT_STATE.PREP,
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Minimal map-first viewer with optional title and legend.",
         image: "assets/images/basic.jpg",
-        action: "Coming Soon"
+        launchRoute: "basic-launcher.html",
+        action: "Open Launcher"
       }
     ];
 
