@@ -220,7 +220,10 @@ Expected:
 Status:
 - Follow-up hardening patch implemented on 2026-03-13 in Map Journal `WebApplicationData.getColors()` to safely handle missing/null layout theme payloads and return deterministic fallback colors.
 - Map Journal runtime rebuilt and publish assembly regenerated on 2026-03-13 after this null-theme guard change.
-- Pending manual browser verification for target appid to confirm loader no longer stalls and runtime avoids uncaught `themes` null error.
+- Targeted browser verification on 2026-03-13 still reproduced `TypeError: Cannot read properties of null (reading 'themes')` in `viewer-min.js?v=1.31.0` for appid `99c42de7d2f04d0fbd9af135cac6cd55`.
+- Additional hardening patch implemented on 2026-03-13 in Map Journal `Config.getLayoutThumnail()` and `WebApplicationData` layout/theme accessors to guard unresolved layout config and null theme objects.
+- Map Journal runtime rebuilt and publish assembly regenerated on 2026-03-13 after this second null-theme hardening pass.
+- Pending manual browser verification to confirm loader no longer stalls and runtime avoids uncaught `themes` null error.
 
 #### 4.6 Map Journal embedded Map Series does not load in section 5
 
@@ -376,11 +379,11 @@ Use this section for final manual/browser verification evidence. Keep one line i
 
 - Target: `https://storymaps.esri.com/templates/classic-storymaps/mapjournal/index.html?appid=99c42de7d2f04d0fbd9af135cac6cd55`
 - Expected: no permanent loader stall; runtime handles missing/invalid theme payload gracefully.
-- Result: [ ] Pass  [ ] Fail
-- Date:
-- Operator:
-- Evidence:
-- Notes: Null-theme defensive fallback patch implemented on 2026-03-13; run targeted browser verification for appid `99c42de7d2f04d0fbd9af135cac6cd55`.
+- Result: [ ] Pass  [x] Fail
+- Date: 2026-03-13
+- Operator: davi6569
+- Evidence: Browser console still reports `TypeError: Cannot read properties of null (reading 'themes')` at `getColors`/`updateMainStageWithLayoutSettings` in `mapjournal/app/viewer-min.js?v=1.31.0`; viewer remains on loader.
+- Notes: Applied second hardening pass in `Config.getLayoutThumnail()` plus additional `WebApplicationData` null guards and republished; rerun targeted browser verification on latest deployed bundle, then flip to Pass if resolved.
 
 ### V-07 Issue 4.6 Map Journal embedded Map Series in section 5
 

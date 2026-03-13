@@ -16,11 +16,26 @@ define([],
 		{
 			params = params || {};
 
-			var layout = params.layout || currentLayoutCfg.id,
-				currentLayoutCfg = app.data.getLayoutStaticConfig(layout),
-				theme = params.theme || currentLayoutCfg.themes[0],
+			var fallbackLayoutCfg = app.cfg.LAYOUTS && app.cfg.LAYOUTS.length ? app.cfg.LAYOUTS[0] : null,
+				layout = params.layout || (fallbackLayoutCfg ? fallbackLayoutCfg.id : null),
+				currentLayoutCfg = app.data.getLayoutStaticConfig(layout) || fallbackLayoutCfg || {
+					id: 'side',
+					themes: [{
+						themeMajor: 'white',
+						dotNav: '#777777',
+						panel: '#FFFFFF',
+						media: '#EEEEEE',
+						text: '#000000',
+						textLink: '#555',
+						softText: '#c0c0c0',
+						softBtn: '#444',
+						esriLogo: 'black'
+					}],
+					positions: ['left']
+				},
+				theme = params.theme || (currentLayoutCfg.themes && currentLayoutCfg.themes.length ? currentLayoutCfg.themes[0] : {}),
 				options = params.options || {
-					position: currentLayoutCfg.positions[0],
+					position: currentLayoutCfg.positions && currentLayoutCfg.positions.length ? currentLayoutCfg.positions[0] : 'left',
 					size: 'medium'
 				},
 				selected = params.selected || false,
