@@ -212,7 +212,9 @@ define([
 
   function initStep2(builder) {
     on(IdentityManager, 'dialog-create', function() {
-      if (app.isLoading) {
+      // Only show the no-oauth fatal error when no OAuth app id is configured.
+      // If OAuth is configured, let the identity dialog proceed.
+      if (app.isLoading && ! app.indexCfg.oAuthAppId) {
         initError('invalidConfignoOAuth');
       }
     });
@@ -505,8 +507,8 @@ define([
   function loadWebMappingAppStep2(appId) {
     arcgisUtils.getItem(appId).then(
       function(response) {
-        if (! response) {
-          initError('appLoadingFail');
+        if (! response || ! response.item) {
+          initError('deletedApp');
           return;
         }
         var oAuthInfo = new ArcGISOAuthInfo({
@@ -547,7 +549,10 @@ define([
         }
       },
       function(error) {
-        if (error && error.httpCode == 400) {
+        if (isDeletedItemError(error)) {
+          initError('deletedApp');
+        }
+        else if (error && error.httpCode == 400) {
           initError('invalidApp');
         }
         else if (error && error.httpCode == 403) {
@@ -558,6 +563,33 @@ define([
         }
       }
     );
+  }
+
+  function isDeletedItemError(error) {
+    if (! error) {
+      return false;
+    }
+
+    var errorCode = error.httpCode || error.code || (error.error && error.error.code);
+    var errorText = [
+      error.message,
+      error.details && error.details.join ? error.details.join(' ') : '',
+      error.error && error.error.message,
+      error.error && error.error.details && error.error.details.join ? error.error.details.join(' ') : ''
+    ].join(' ').toLowerCase();
+
+    if (errorCode == 404) {
+      return true;
+    }
+
+    if (errorCode == 400) {
+      return errorText.indexOf('unable to find item') !== -1
+        || errorText.indexOf('item does not exist') !== -1
+        || errorText.indexOf('not found') !== -1
+        || errorText.indexOf('does not exist') !== -1;
+    }
+
+    return false;
   }
 
   function loadWebMappingAppStep3(response) {

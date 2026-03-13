@@ -21,6 +21,7 @@ define({
         unspecifiedConfigOwner: "Authorized owner hasn't been configured.",
         invalidConfigOwner: "Story owner is not authorized.",
         invalidConfignoOAuth: "This story requires authentication, please configure an ArcGIS OAuth ID in index.html or make the story public.",
+        deletedApp: "An error has occoured. This item has been deleted from ArcGIS Online.",
         invalidApp: "This story cannot be loaded.",
         appLoadingFail: "Something went wrong, the {TPL_NAME} did not load correctly.",
         notConfiguredDesktop: "The story is not configured yet.",
