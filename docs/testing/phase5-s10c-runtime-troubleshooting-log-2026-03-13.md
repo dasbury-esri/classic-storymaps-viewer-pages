@@ -296,14 +296,20 @@ Initial assessment:
 - This is distinct from V-02: V-02 covered classic app shortlink/legacy normalization and was validated as fixed.
 - Section 27 is a website embed policy/content compatibility case (target host framing restrictions), not a classic app route normalization regression.
 
+Follow-up patch (2026-03-13):
+- Added Map Series viewer-side embed fallback handling in `MainStage` for target URLs likely to be denied by framing policy (`frame-ancestors`/auth-wrapper patterns).
+- When detected, runtime now suppresses raw iframe refusal and shows deterministic fallback guidance with an explicit `Open in new tab` action.
+- Rebuilt Map Series runtime and regenerated publish assembly after this patch.
+
 Status:
-- Open; track as separate issue for website-embed fallback policy decision.
+- Verified on 2026-03-13: section 27 now shows deterministic fallback guidance with explicit `Open in new tab` action (no raw browser frame refusal surface).
+- Closed.
 
 ## Verification Roll-up
 
 | Snapshot | V-01 | V-02 | V-03 | V-04 | V-05 | V-06 | V-07 | V-08 | V-09 |
 |---|---|---|---|---|---|---|---|---|---|
-| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Pass | Open |
+| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Pass | Pass |
 
 ## Verification Checklist (Short Form)
 
@@ -400,10 +406,10 @@ Use this section for final manual/browser verification evidence. Keep one line i
 - Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 27)
 - Embedded website URL: `https://storymaps.arcigs.com` (target resolves/loads as `https://storymaps.arcgis.com`)
 - Expected: runtime presents deterministic fallback guidance when target website disallows iframe embedding (`frame-ancestors`/X-Frame-Options), instead of raw browser refusal UX.
-- Result: [ ] Pass  [ ] Fail
-- Date:
-- Operator:
-- Evidence:
+- Result: [x] Pass  [ ] Fail
+- Date: 2026-03-13
+- Operator: davi6569
+- Evidence: Section 27 now renders runtime fallback card with deterministic `Open in new tab` action for blocked target, replacing raw iframe refusal UX.
 - Notes:
 
 ## Follow-up Actions

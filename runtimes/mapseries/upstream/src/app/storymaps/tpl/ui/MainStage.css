@@ -292,6 +292,50 @@ body.hasTouch .legendMobileErrorExplain {
 	height: 100%;
 }
 
+.embedFallback {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 420px;
+	width: calc(100% - 32px);
+	background: rgba(20, 20, 20, 0.9);
+	color: #fff;
+	padding: 16px;
+	text-align: center;
+	border-radius: 4px;
+	z-index: 20;
+	box-sizing: border-box;
+}
+
+.embedFallback.active {
+	display: block;
+}
+
+.embedFallbackMessage {
+	font-size: 14px;
+	line-height: 1.4;
+	margin-bottom: 10px;
+}
+
+.embedFallbackLink {
+	display: inline-block;
+	padding: 6px 12px;
+	background: #fff;
+	color: #1f1f1f;
+	text-decoration: none;
+	border-radius: 3px;
+	font-family: 'open_sanssemibold', sans-serif;
+}
+
+.embedFallbackLink:hover,
+.embedFallbackLink:focus {
+	color: #1f1f1f;
+	text-decoration: none;
+	background: #f1f1f1;
+}
+
 /* invisible buttons */
 .mainMediaContainer .return-to-content {
   position: absolute;

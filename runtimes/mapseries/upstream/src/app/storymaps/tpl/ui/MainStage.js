@@ -437,6 +437,66 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				return window.location.origin + '/templates/classic-storymaps/' + runtimePath + '/index.html?appid=' + appIdMatch[1];
 			}
 
+			function isLikelyFrameDeniedByTargetPolicy(storedUrl) {
+				if (!storedUrl || !window.URL) {
+					return false;
+				}
+
+				try {
+					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var protocol = (urlAsURL.protocol || '').toLowerCase();
+					if (protocol !== 'http:' && protocol !== 'https:') {
+						return false;
+					}
+
+					var host = (urlAsURL.hostname || '').toLowerCase();
+					var path = (urlAsURL.pathname || '').toLowerCase();
+
+					if (host === 'storymaps.arcgis.com' || host === 'story.maps.arcgis.com') {
+						if (/^\/sharing\/oauth2\/authorize(?:\/|$)/.test(path)) {
+							return true;
+						}
+
+						if (!/^\/apps\/(storytellingswipe|mapjournal|mapseries|cascade|maptour|shortlist|storytellingshortlist)(?:\/|$)/.test(path)) {
+							return true;
+						}
+					}
+				}
+				catch (err) {
+					return false;
+				}
+
+				return false;
+			}
+
+			function ensureEmbedFallbackUI(embedContainer) {
+				var mainContainer = embedContainer.parent();
+				var fallback = mainContainer.find('.embedFallback');
+
+				if (!fallback.length) {
+					fallback = $('<div class="embedFallback" role="region" aria-live="polite"></div>');
+					fallback.append('<div class="embedFallbackMessage"></div>');
+					fallback.append('<a class="embedFallbackLink" target="_blank" rel="noopener noreferrer"></a>');
+					mainContainer.append(fallback);
+				}
+
+				return fallback;
+			}
+
+			function hideEmbedFallback(embedContainer) {
+				var fallback = ensureEmbedFallbackUI(embedContainer);
+				fallback.removeClass('active');
+			}
+
+			function showEmbedFallback(embedContainer, targetUrl) {
+				var fallback = ensureEmbedFallbackUI(embedContainer);
+				fallback.find('.embedFallbackMessage').text('This website cannot be displayed in an embedded frame.');
+				fallback.find('.embedFallbackLink')
+					.attr('href', targetUrl || '#')
+					.text('Open in new tab');
+				fallback.addClass('active');
+			}
+
 			function shouldLogEmbedDebug() {
 				return (/(?:\?|&)embeddebug=1(?:&|$)/i).test(window.location.search || '');
 			}
@@ -1655,6 +1715,15 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 							}
 						}
 
+						hideEmbedFallback(embedContainer);
+
+						if (isLikelyFrameDeniedByTargetPolicy(resolvedUrl)) {
+							embedContainer.removeAttr('src');
+							showEmbedFallback(embedContainer, resolvedUrl);
+							stopMainStageLoadingIndicator();
+							return;
+						}
+
 						var currentSrc = embedContainer.attr('src');
 						if (shouldLogEmbedDebug() && window.console && window.console.log) {
 							window.console.log('[MapSeriesEmbedDebug]', {
@@ -1665,7 +1734,15 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 							});
 						}
 						if (!currentSrc || currentSrc !== resolvedUrl) {
-							embedContainer.off('load').load(stopMainStageLoadingIndicator);
+							embedContainer.off('load error');
+							embedContainer.load(function() {
+								hideEmbedFallback(embedContainer);
+								stopMainStageLoadingIndicator();
+							});
+							embedContainer.error(function() {
+								showEmbedFallback(embedContainer, resolvedUrl);
+								stopMainStageLoadingIndicator();
+							});
 							startMainStageLoadingIndicator();
 							embedContainer.attr('src', resolvedUrl);
 						}
