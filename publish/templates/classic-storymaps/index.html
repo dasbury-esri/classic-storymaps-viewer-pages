@@ -20,7 +20,7 @@
       --line: rgba(24, 28, 36, 0.15);
       --ok: #2b7f42;
       --queued: #b96810;
-      --reference: #5c6070;
+      --prep: #5c6070;
       --ring: rgba(11, 111, 95, 0.28);
       --shadow: 0 18px 40px rgba(20, 24, 35, 0.11);
       --radius: 18px;
@@ -85,16 +85,21 @@
       font-family: "Archivo Expanded", sans-serif;
       font-size: clamp(1.44rem, 3.8vw, 2.2rem);
       line-height: 1.24;
-      max-width: 18ch;
+      max-width: 100%;
       text-wrap: balance;
     }
 
     .summary {
       margin: 14px 0 0;
-      max-width: 70ch;
       color: var(--ink-1);
       line-height: 1.62;
       font-size: 1.02rem;
+    }
+
+    .disclaimer {
+      margin-top: 18px;
+      font-size: 0.88rem;
+      color: var(--ink-1);
     }
 
     .legend {
@@ -123,8 +128,8 @@
       border-color: rgba(185, 104, 16, 0.35);
     }
 
-    .chip.reference {
-      color: var(--reference);
+    .chip.prep {
+      color: var(--prep);
       border-color: rgba(92, 96, 112, 0.35);
     }
 
@@ -156,9 +161,11 @@
 
     .card-body {
       padding: 14px 14px 16px;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       min-height: 225px;
+      height: 100%;
     }
 
     .row {
@@ -189,8 +196,8 @@
       border-color: rgba(185, 104, 16, 0.35);
     }
 
-    .badge.reference {
-      color: var(--reference);
+    .badge.prep {
+      color: var(--prep);
       border-color: rgba(92, 96, 112, 0.35);
     }
 
@@ -214,6 +221,7 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      padding-top: 2px;
     }
 
     .link-btn,
@@ -299,146 +307,123 @@
 <body>
   <main class="page">
     <section class="hero" aria-labelledby="catalog-title">
-      <p class="eyebrow">Classic Storymaps</p>
-      <h1 id="catalog-title">Runtime Catalog and Support Status</h1>
+      <p class="eyebrow">Classic Esri Story Maps Viewers</p>
+      <h1 id="catalog-title">Classic Story Maps have been retired.
+        But you can still view them here!</h1>
       <p class="summary">
-        This landing page shows current availability and launch routes for Classic Storymaps experiences hosted under
-        /templates/classic-storymaps. Supported runtimes open guided launch pages that validate app IDs before opening
-        the canonical viewer routes.
+        This landing page shows current availability of the Classic Esri Story Maps viewers hosted on this website.
+        Enabled apps have guided launch pages that validate app IDs before opening their respective viewers.
+        Editing a Classic Story Map is unfortunately not supported, but you can use this as a start when
+        rebuilding your stories using <a href="https://storymaps.arcgis.com">ArcGIS StoryMaps</a>.
+      </p>
+      <p class="disclaimer">
+        <i>Disclaimer: This is a community project, not supported by Esri. Runtimes are imported from upstream repositories and may have limitations or issues. Viewers are provided as-is without support and with minimal maintenance.</i>
       </p>
       <div class="legend" aria-label="Support state legend">
         <span class="chip supported">Supported: Launch Ready</span>
         <span class="chip queued">Queued: Onboarding Planned</span>
-        <span class="chip reference">Reference: Catalog Only</span>
+        <span class="chip prep">Coming soon: In preparation</span>
       </div>
     </section>
 
     <section class="grid" id="catalog-grid" aria-label="Classic app catalog"></section>
 
     <p class="footer-note">
-      Route contract follows the import-first matrix: canonical landing and runtime folder routes with index.html compatibility paths.
+      I may put a link to a GitHub repo to collect feedback and issues, following the Esri-ps assistant model.
     </p>
   </main>
 
   <script>
+    const SUPPORT_STATE = {
+      SUPPORTED: "supported",
+      QUEUED: "queued",
+      PREP: "prep"
+    };
+
+    const SUPPORT_LABEL = {
+      [SUPPORT_STATE.SUPPORTED]: "Supported",
+      [SUPPORT_STATE.QUEUED]: "Queued",
+      [SUPPORT_STATE.PREP]: "Coming Soon"
+    };
+
     const apps = [
       {
-        title: "Story Map Tour",
-        state: "supported",
+        title: "Classic Story Map Tour",
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Sequential place-based story format linking photos and captions to map locations.",
         image: "assets/images/map-tour.png",
-        route: "/templates/classic-storymaps/maptour",
-        launchRoute: "/templates/classic-storymaps/maptour-launcher.html",
+        launchRoute: "maptour-launcher.html",
         action: "Open Launcher"
       },
       {
-        title: "Story Map Swipe",
-        state: "supported",
+        title: "Classic Story Map Swipe",
+        state: SUPPORT_STATE.SUPPORTED,
         description: "Map comparison experience with slider and spyglass patterns.",
         image: "assets/images/swipe.jpg",
-        route: "/templates/classic-storymaps/swipe",
-        launchRoute: "/templates/classic-storymaps/swipe-launcher.html",
+        launchRoute: "swipe-launcher.html",
         action: "Open Launcher"
       },
       {
-        title: "Story Map Journal",
-        state: "queued",
-        description: "Narrative panel plus map canvas. Onboarding follows Swipe due to embed-policy risk.",
+        title: "Classic Story Map Journal",
+        state: SUPPORT_STATE.SUPPORTED,
+        description: "Narrative panel plus map canvas with guided launch support for canonical appid routes.",
         image: "assets/images/map-journal.jpg",
-        route: "/templates/classic-storymaps/mapjournal",
-        action: "Queued for S7"
+        launchRoute: "mapjournal-launcher.html",
+        action: "Open Launcher"
       },
       {
-        title: "Story Map Series (Tabbed)",
-        state: "reference",
+        title: "Classic Story Map Series (Tabbed, Bulleted or Side Accordion Layout)",
+        state: SUPPORT_STATE.PREP,
         description: "Tabbed sequence of maps and narrative content.",
         image: "assets/images/map-series-tabbed-viewer.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Series (Side Accordion)",
-        state: "reference",
-        description: "Accordion navigation with one map/story panel expanded at a time.",
-        image: "assets/images/map-series-side-accordion.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Series (Bulleted)",
-        state: "reference",
-        description: "Bulleted navigation for large map collections.",
-        image: "assets/images/map-series-bulleted.png",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Basic",
-        state: "reference",
-        description: "Minimal map-first viewer with optional title and legend.",
-        image: "assets/images/basic.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Shortlist",
-        state: "reference",
-        description: "Themed place list with map-extent aware tab behavior.",
-        image: "assets/images/shortlist.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Playlist",
-        state: "reference",
-        description: "Preview list plus map exploration pattern.",
-        image: "assets/images/playlist.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Countdown",
-        state: "reference",
-        description: "Location list with side-panel and locator-map behavior.",
-        image: "assets/images/countdown.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
-      },
-      {
-        title: "Story Map Crowdsource",
-        state: "reference",
-        description: "Public contribution workflow with moderation and approval.",
-        image: "assets/images/crowdsource.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Story Map Cascade",
-        state: "reference",
+        state: SUPPORT_STATE.PREP,
         description: "Immersive long-form layout combining maps, media, and narrative sections.",
         image: "assets/images/cascade.jpg",
-        route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
-        title: "Story Map Custom",
-        state: "reference",
-        description: "One-off implementations for customer-specific scenarios.",
-        image: "assets/images/custom.png",
-        route: "Runtime-specific",
-        action: "Catalog Reference"
+        title: "Classic Story Map Shortlist",
+        state: SUPPORT_STATE.PREP,
+        description: "Themed place list with map-extent aware tab behavior.",
+        image: "assets/images/shortlist.jpg",
+        action: "Coming Soon"
+      },
+      {
+        title: "Story Map Crowdsource",
+        state: SUPPORT_STATE.PREP,
+        description: "Public contribution workflow with moderation and approval.",
+        image: "assets/images/crowdsource.jpg",
+        action: "Coming Soon"
+      },
+      {
+        title: "Classic Story Map Basic",
+        state: SUPPORT_STATE.PREP,
+        description: "Minimal map-first viewer with optional title and legend.",
+        image: "assets/images/basic.jpg",
+        action: "Coming Soon"
       }
     ];
 
     const grid = document.getElementById("catalog-grid");
 
+    function getActionMarkup(app) {
+      const label = app.action || "Open Launcher";
+
+      if (app.state === SUPPORT_STATE.SUPPORTED) {
+        const route = app.launchRoute || app.route || "#";
+        return `<a class="link-btn" href="${route}" aria-label="Launch ${app.title}">${label}</a>`;
+      }
+
+      return `<span class="muted-btn" aria-label="${label}">${label}</span>`;
+    }
+
     function cardTemplate(app, index) {
-      const isSupported = app.state === "supported";
-      const isQueued = app.state === "queued";
-      const stateLabel = isSupported ? "Supported" : isQueued ? "Queued" : "Reference";
-      const action = isSupported
-        ? `<a class="link-btn" href="${app.launchRoute || app.route}" aria-label="Launch ${app.title}">${app.action}</a>`
-        : `<span class="muted-btn" aria-label="${app.action}">${app.action}</span>`;
+      const stateLabel = SUPPORT_LABEL[app.state] || "Coming Soon";
+      const action = getActionMarkup(app);
 
       return `
         <article class="card" style="animation-delay:${Math.min(index * 0.04, 0.36)}s">
@@ -450,8 +435,6 @@
             <h2 class="title">${app.title}</h2>
             <p class="desc">${app.description}</p>
             <div class="action-row">${action}</div>
-            ${isSupported ? `<p class="route-note">Launcher route: ${app.launchRoute}</p>` : ""}
-            <p class="route-note">Canonical route: ${app.route}</p>
           </div>
         </article>
       `;

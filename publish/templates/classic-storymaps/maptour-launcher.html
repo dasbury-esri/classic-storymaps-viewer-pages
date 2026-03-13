@@ -203,21 +203,23 @@
 <body>
   <main class="page">
     <section class="panel" aria-labelledby="launcher-title">
-      <p class="eyebrow">Esri Story Maps</p>
-      <h1 id="launcher-title">ClassicMap Tour Launcher</h1>
+      <p class="eyebrow">Classic Storymaps</p>
+      <h1 id="launcher-title">Story Map Tour Launcher</h1>
       <p class="lead">
-        Enter your Map Tour app ID to open the viewer.
+        Enter your Story Map Tour app ID to open the canonical runtime viewer.
+        If you already have a URL with an <code>appid</code> parameter, it will auto-fill below.
       </p>
 
       <div class="box">
         <h2>What is an app ID?</h2>
         <p>
-          It is a 32-character hexadecimal ID used to uniquely identify items in ArcGIS Online. Example:
-          <code>2c62acf3468c4cbbba6b82f1035bfe22</code>
+          It is a 32-character hexadecimal ID used in ArcGIS Story Map Tour URLs. Example:
+          <code>20fd39888a444629bc8e40d9b6ac38cc</code>
         </p>
         <ul>
-          <li>They use letters <code>a-f</code> and numbers <code>0-9</code>, without spaces, braces, or hyphens.</li>
-          <li>IDs will be checked for validity before launch.</li>
+          <li>Use letters <code>a-f</code> and numbers <code>0-9</code>.</li>
+          <li>No spaces, braces, or hyphens.</li>
+          <li>Invalid IDs are blocked before launch.</li>
         </ul>
       </div>
 
@@ -267,7 +269,7 @@
           return { ok: false, message: "Enter an app ID to continue.", type: "warn" };
         }
         if (!APP_ID_REGEX.test(value)) {
-          return { ok: false, message: "app ID must be 32 hexadecimal characters (a-f, 0-9).", type: "error" };
+          return { ok: false, message: "App ID must be 32 hexadecimal characters (a-f, 0-9).", type: "error" };
         }
         return { ok: true };
       }

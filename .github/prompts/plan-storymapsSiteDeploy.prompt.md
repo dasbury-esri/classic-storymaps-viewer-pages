@@ -125,11 +125,12 @@ Tag legend:
     - Runtime manifest and explicit patch set are recorded
 
 #### Phase 4: IIS Packaging and Runtime Hosting
-- [ ] [S8] Task: Define IIS package boundary and publish assembly for landing + imported runtimes.
+- [x] [S8] Task: Define IIS package boundary and publish assembly for landing + imported runtimes.
   - Owner: Build owner
   - Effort: XS
   - Depends-On: S4, S6, S7b
   - Deliverable: Packaging checklist and deterministic publish assembly notes
+  - Status: Completed on 2026-03-12. Deterministic assembly order and package boundary were documented and verified (`landing` then `runtime` assembly), with explicit include/exclude guidance and canonical output topology under `/templates/classic-storymaps`. Evidence: `scripts/build-classic-storymaps-landing.sh`, `scripts/build-classic-storymaps-runtime-publish.sh`, `docs/deployment/phase4-s8-package-boundary-and-assembly.md`, `docs/testing/phase4-s8-package-boundary-verification-transcript.md`.
   - Acceptance criteria:
     - Package excludes source-only files
     - Nested-path assets resolve correctly for landing and onboarded runtimes
@@ -139,6 +140,7 @@ Tag legend:
   - Effort: M
   - Depends-On: S8
   - Deliverable: IIS configuration checklist and validation transcript template
+  - Status: Checklist and validation template prepared on 2026-03-12. Pending infra execution on target IIS host for final route/cache/fallback validation. Evidence: `docs/operations/phase4-s9-iis-hosting-checklist.md`, `docs/testing/phase4-s9-iis-validation-transcript-template.md`.
   - Acceptance criteria:
     - Landing and onboarded runtime routes serve correctly from target path
     - Cache behavior matches documented policy without breaking legacy runtime assets
