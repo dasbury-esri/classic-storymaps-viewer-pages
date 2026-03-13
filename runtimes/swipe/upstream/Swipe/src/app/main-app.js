@@ -27,6 +27,11 @@ else {
 				var urlParams = Helper.getUrlParams();
 
 				var isInBuilderMode = urlParams.edit != null || urlParams.fromScratch != null || urlParams.fromscratch != null;
+				var isViewerOnlyProd = !!(window.isProduction && configOptions && configOptions.viewerOnlyInProd);
+
+				if (isViewerOnlyProd) {
+					isInBuilderMode = false;
+				}
 
 				if (isInBuilderMode) {
 					require(["storymaps/builder/Builder", "storymaps/swipe/builder/BuilderView"], function(Builder, BuilderView) {

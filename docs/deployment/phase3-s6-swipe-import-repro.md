@@ -30,10 +30,16 @@ Output staged to:
 - `runtimes/swipe/build/web.config` (if present in deploy/src)
 
 ## Launch Guidance Integration
-Landing shell now includes a Swipe launcher with appid validation:
+Landing shell now includes a Swipe launcher with appid and webmap validation:
 - `apps/classic-storymaps-site/swipe-launcher.html`
 - Canonical launcher route: `/templates/classic-storymaps/swipe-launcher.html`
-- Canonical runtime route: `/templates/classic-storymaps/swipe/index.html?appid=<appid>`
+- Canonical runtime routes:
+	- `/templates/classic-storymaps/swipe/index.html?appid=<appid>`
+	- `/templates/classic-storymaps/swipe/index.html?webmap=<webmap-id>`
+
+Production viewer-only hardening is enforced in the runtime so authentication does not expose builder controls for private authored apps.
+
+Direct `webmap` launches are supported for runtime access, but they use the deployment's default Swipe configuration. For authored single-map Swipe stories, `appid` remains the authoritative launch path because it preserves saved layer/layout choices.
 
 ## Acceptance Mapping
 - Known-good Swipe launch works from canonical route: Pass (`/templates/classic-storymaps/swipe`)

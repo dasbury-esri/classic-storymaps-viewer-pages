@@ -49,7 +49,7 @@
     "precedenceRule": "appid-first",
     "webmapSupport": "runtime-specific",
     "knownGoodExamples": [
-      "/templates/classic-storymaps/swipe",
+      "/templates/classic-storymaps/swipe?appid=4e44be0f61094d6ab36a1a1df215daed",
       "/templates/classic-storymaps/swipe?webmap=62702544d70648e593bc05d65180fd64"
     ]
   },
@@ -62,11 +62,12 @@
     "notes": "Capture runtime-specific viewer-only differences as explicit patches."
   },
   "patches": {
-    "patchSetId": "swipe-owner-authorization-v1",
+    "patchSetId": "swipe-viewer-only-and-launcher-v1",
     "files": [
-      "runtimes/swipe/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch"
+      "runtimes/swipe/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch",
+      "runtimes/swipe/patches/0002-force-viewer-only-in-production.patch"
     ],
-    "rationale": "Allow hosted URL appid launches by configuring authorizedOwners wildcard in Swipe source config."
+    "rationale": "Allow hosted URL appid and webmap launches while keeping Swipe in production viewer-only mode after authentication."
   },
   "verification": {
     "smokeProfile": "swipe-baseline",

@@ -206,27 +206,32 @@
       <p class="eyebrow">Classic Storymaps</p>
       <h1 id="launcher-title">Swipe Launcher</h1>
       <p class="lead">
-        Enter your Swipe app ID to open the canonical runtime viewer.
-        If you already have a URL with an <code>appid</code> parameter, it will auto-fill below.
+        Enter either a Swipe app ID or a web map ID to open the canonical runtime viewer.
+        If you already have a URL with an <code>appid</code> or <code>webmap</code> parameter, it will auto-fill below.
       </p>
 
       <div class="box">
-        <h2>What is an app ID?</h2>
+        <h2>What can you launch?</h2>
         <p>
-          It is a 32-character hexadecimal ID used in ArcGIS Swipe URLs. Example:
-          <code>4e4fdf6f2f2247fdb6f137f85b4a67f6</code>
+          Swipe accepts either a 32-character application ID or a 32-character web map ID.
+          For authored Swipe stories, <code>appid</code> is the preferred path because it preserves the app's saved layout and layer settings.
         </p>
         <ul>
-          <li>Use letters <code>a-f</code> and numbers <code>0-9</code>.</li>
-          <li>No spaces, braces, or hyphens.</li>
-          <li>Invalid IDs are blocked before launch.</li>
+          <li>App ID example: <code>4e44be0f61094d6ab36a1a1df215daed</code>.</li>
+          <li>Web map example: <code>62702544d70648e593bc05d65180fd64</code>.</li>
+          <li>Both values must be 32 hexadecimal characters with no spaces or hyphens.</li>
         </ul>
       </div>
 
       <form id="launch-form" novalidate>
         <label for="appid">Swipe app ID</label>
         <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-hint appid-status">
-        <p id="appid-hint" class="hint">The launcher will redirect to the runtime viewer with <code>?appid=&lt;your-id&gt;</code>.</p>
+        <p id="appid-hint" class="hint">Preferred for authored Swipe stories. The launcher will redirect with <code>?appid=&lt;your-id&gt;</code>.</p>
+
+        <label for="webmap">Web map ID</label>
+        <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID" maxlength="64" inputmode="latin" aria-describedby="webmap-hint appid-status">
+        <p id="webmap-hint" class="hint">Use this for direct map launches. If both fields are present, <code>appid</code> takes precedence.</p>
+
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
         <div class="actions">
@@ -236,17 +241,20 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/swipe/index.html?appid=4e4fdf6f2f2247fdb6f137f85b4a67f6">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/swipe/index.html?appid=4e44be0f61094d6ab36a1a1df215daed">See it in action</a>
+        <span> using the authored Swipe app configuration.</span>
       </p>
+      <p class="hint">Direct <code>webmap</code> launches use this deployment's default Swipe configuration, so they can differ from an authored app's selected swipe layer.</p>
     </section>
   </main>
 
   <script>
     (function() {
-      var DEFAULT_APP_ID = "4e4fdf6f2f2247fdb6f137f85b4a67f6";
-      var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
+      var DEFAULT_APP_ID = "4e44be0f61094d6ab36a1a1df215daed";
+      var ID_REGEX = /^[a-f0-9]{32}$/i;
       var form = document.getElementById("launch-form");
       var appIdInput = document.getElementById("appid");
+      var webMapInput = document.getElementById("webmap");
       var statusEl = document.getElementById("appid-status");
       var demoLink = document.getElementById("demo-link");
 
@@ -259,55 +267,86 @@
         return (value || "").trim();
       }
 
-      function getPrefilledAppId() {
+      function getPrefilledValues() {
         var params = new URLSearchParams(window.location.search);
-        return sanitize(params.get("appid"));
+        return {
+          appid: sanitize(params.get("appid")),
+          webmap: sanitize(params.get("webmap"))
+        };
       }
 
-      function validate(value) {
-        if (!value) {
-          return { ok: false, message: "Enter an app ID to continue.", type: "warn" };
+      function validate(appId, webMap) {
+        if (!appId && !webMap) {
+          return { ok: false, message: "Enter an app ID or a web map ID to continue.", type: "warn" };
         }
-        if (!APP_ID_REGEX.test(value)) {
+
+        if (appId && !ID_REGEX.test(appId)) {
           return { ok: false, message: "App ID must be 32 hexadecimal characters (a-f, 0-9).", type: "error" };
         }
+
+        if (webMap && !ID_REGEX.test(webMap)) {
+          return { ok: false, message: "Web map ID must be 32 hexadecimal characters (a-f, 0-9).", type: "error" };
+        }
+
         return { ok: true };
       }
 
-      function buildViewerUrl(appId) {
-        var encoded = encodeURIComponent(appId.toLowerCase());
-        return "/templates/classic-storymaps/swipe/index.html?appid=" + encoded;
+      function buildViewerUrl(appId, webMap) {
+        if (appId) {
+          return "/templates/classic-storymaps/swipe/index.html?appid=" + encodeURIComponent(appId.toLowerCase());
+        }
+
+        return "/templates/classic-storymaps/swipe/index.html?webmap=" + encodeURIComponent(webMap.toLowerCase());
       }
 
-      demoLink.href = buildViewerUrl(DEFAULT_APP_ID);
+      demoLink.href = buildViewerUrl(DEFAULT_APP_ID, "");
 
       form.addEventListener("submit", function(evt) {
         evt.preventDefault();
         var appId = sanitize(appIdInput.value);
-        var verdict = validate(appId);
+        var webMap = sanitize(webMapInput.value);
+        var verdict = validate(appId, webMap);
 
         if (!verdict.ok) {
           setStatus(verdict.message, verdict.type);
-          appIdInput.focus();
+          (appId ? appIdInput : webMap ? webMapInput : appIdInput).focus();
           return;
         }
 
-        setStatus("Launching Swipe viewer...", "warn");
-        window.location.href = buildViewerUrl(appId);
+        if (appId && webMap) {
+          setStatus("Both values were provided. Launching with appid because it preserves the authored Swipe configuration.", "warn");
+        }
+        else {
+          setStatus("Launching Swipe viewer...", "warn");
+        }
+
+        window.location.href = buildViewerUrl(appId, webMap);
       });
 
-      appIdInput.addEventListener("input", function() {
-        if (!sanitize(appIdInput.value)) {
+      function handleInputChange() {
+        if (!sanitize(appIdInput.value) && !sanitize(webMapInput.value)) {
           setStatus("");
         }
-      });
+      }
 
-      var prefilled = getPrefilledAppId();
-      if (prefilled) {
-        appIdInput.value = prefilled;
-        var verdict = validate(prefilled);
+      appIdInput.addEventListener("input", handleInputChange);
+      webMapInput.addEventListener("input", handleInputChange);
+
+      var prefilled = getPrefilledValues();
+      if (prefilled.appid) {
+        appIdInput.value = prefilled.appid;
+      }
+      if (prefilled.webmap) {
+        webMapInput.value = prefilled.webmap;
+      }
+
+      if (prefilled.appid || prefilled.webmap) {
+        var verdict = validate(prefilled.appid, prefilled.webmap);
         if (!verdict.ok) {
-          setStatus("The appid in the URL is not valid. Enter a valid 32-character ID.", "error");
+          setStatus("The identifier in the URL is not valid. Enter a valid 32-character app ID or web map ID.", "error");
+        }
+        else if (prefilled.appid && prefilled.webmap) {
+          setStatus("Both URL parameters were provided. The launcher will use appid first.", "warn");
         }
       }
     })();

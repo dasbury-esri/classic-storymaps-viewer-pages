@@ -33,8 +33,10 @@ Verified launcher output exists under:
 
 ## Launch Guidance Verification
 - Valid appid input redirects to canonical Swipe runtime URL.
-- Empty appid input displays actionable warning.
-- Malformed appid input displays actionable validation error and blocks launch.
+- Valid webmap input redirects to canonical Swipe runtime URL.
+- Empty launcher submission displays actionable warning.
+- Malformed appid or webmap input displays actionable validation error and blocks launch.
+- Authenticated access to a private appid launch remains viewer-only in production; builder affordances are suppressed.
 
 ## Acceptance Mapping
 - Reproducible import from pinned upstream source: Pass

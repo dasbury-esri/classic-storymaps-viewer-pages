@@ -116,6 +116,10 @@ define(["esri/map",
 				}
 			}
 
+			if (isViewerOnlyProd()) {
+				isInBuilderMode = false;
+			}
+
 			// If browser doesn't support history and it's direct or gallery mode where the URL will have to be rewritten later
 			// Redirect to a URL that the browser will be able to overwrite
 			// And put a token so that we don't loop in here
@@ -607,7 +611,7 @@ define(["esri/map",
 			else if (webmapId && app.isInBuilderMode)
 				loadWebMap(webmapId);
 			else if (webmapsIds && ! app.isInBuilderMode) {
-				if( app.userCanEdit ){
+				if( app.userCanEdit && ! isViewerOnlyProd() ){
 					loadingIndicator.setMessage(i18n.viewer.loading.loadBuilder);
 					setTimeout(function(){
 						app.header.switchToBuilder();
@@ -969,7 +973,7 @@ define(["esri/map",
 					appColors[0],
 					logoURL,
 					logoTarget,
-					! app.isInBuilderMode && Helper.getAppID() && (! isProd() || app.userCanEdit) && ! urlParams.preview,
+					! app.isInBuilderMode && Helper.getAppID() && (! isProd() || app.userCanEdit) && ! urlParams.preview && ! isViewerOnlyProd(),
 					WebApplicationData.getHeaderLinkText() == undefined ? APPCFG.HEADER_LINK_TEXT : WebApplicationData.getHeaderLinkText(),
 					WebApplicationData.getHeaderLinkURL() == undefined ? APPCFG.HEADER_LINK_URL : WebApplicationData.getHeaderLinkURL(),
 					WebApplicationData.getSocial()
@@ -1429,6 +1433,11 @@ define(["esri/map",
 		{
 			// Prevent the string from being replaced
 			return CONFIG.environment != ['TPL','ENV','DEV'].join('_');
+		}
+
+		function isViewerOnlyProd()
+		{
+			return !!(isProd() && configOptions && configOptions.viewerOnlyInProd);
 		}
 
 		return {

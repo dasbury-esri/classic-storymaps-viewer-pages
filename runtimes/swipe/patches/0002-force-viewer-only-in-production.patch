@@ -1,0 +1,77 @@
+diff --git a/runtimes/swipe/upstream/Swipe/src/app/main-app.js b/runtimes/swipe/upstream/Swipe/src/app/main-app.js
+index 850cdc8..f460964 100644
+--- a/runtimes/swipe/upstream/Swipe/src/app/main-app.js
++++ b/runtimes/swipe/upstream/Swipe/src/app/main-app.js
+@@ -27,6 +27,11 @@ else {
+ 				require(["storymaps/core/Core", "storymaps/swipe/core/MainView", "storymaps/utils/Helper"], function(Core, MainView, Helper){
+ 					var urlParams = Helper.getUrlParams();
+ 
+ 					var isInBuilderMode = urlParams.edit != null || urlParams.fromScratch != null || urlParams.fromscratch != null;		
++					var isViewerOnlyProd = !!(window.isProduction && configOptions && configOptions.viewerOnlyInProd);
++
++					if (isViewerOnlyProd) {
++						isInBuilderMode = false;
++					}
+ 
+ 					if (isInBuilderMode) {
+ 						require(["storymaps/builder/Builder", "storymaps/swipe/builder/BuilderView"], function(Builder, BuilderView) {
+diff --git a/runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js b/runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js
+index 7ccad6b..1339d67 100644
+--- a/runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js
++++ b/runtimes/swipe/upstream/Swipe/src/app/storymaps/core/Core.js
+@@ -116,6 +116,10 @@ define(["esri/map",
+ 				}
+ 			}
+ 
++			if (isViewerOnlyProd()) {
++				isInBuilderMode = false;
++			}
++
+ 			// If browser doesn't support history and it's direct or gallery mode where the URL will have to be rewritten later
+ 			// Redirect to a URL that the browser will be able to overwrite
+ 			// And put a token so that we don't loop in here
+@@ -607,7 +611,7 @@ define(["esri/map",
+ 			else if (webmapId && app.isInBuilderMode)
+ 				loadWebMap(webmapId);
+ 			else if (webmapsIds && ! app.isInBuilderMode) {
+-				if( app.userCanEdit ){
++				if( app.userCanEdit && ! isViewerOnlyProd() ){
+ 					loadingIndicator.setMessage(i18n.viewer.loading.loadBuilder);
+ 					setTimeout(function(){
+ 						app.header.switchToBuilder();
+@@ -969,7 +973,7 @@ define(["esri/map",
+ 					appColors[0],
+ 					logoURL,
+ 					logoTarget,
+-					! app.isInBuilderMode && Helper.getAppID() && (! isProd() || app.userCanEdit) && ! urlParams.preview,
++					! app.isInBuilderMode && Helper.getAppID() && (! isProd() || app.userCanEdit) && ! urlParams.preview && ! isViewerOnlyProd(),
+ 					WebApplicationData.getHeaderLinkText() == undefined ? APPCFG.HEADER_LINK_TEXT : WebApplicationData.getHeaderLinkText(),
+ 					WebApplicationData.getHeaderLinkURL() == undefined ? APPCFG.HEADER_LINK_URL : WebApplicationData.getHeaderLinkURL(),
+ 					WebApplicationData.getSocial()
+@@ -1431,6 +1435,11 @@ define(["esri/map",
+ 			return CONFIG.environment != ['TPL','ENV','DEV'].join('_');
+ 		}
+ 
++		function isViewerOnlyProd()
++		{
++			return !!(isProd() && configOptions && configOptions.viewerOnlyInProd);
++		}
++
+ 		return {
+ 			init: init,
+ 			isProd: isProd,
+diff --git a/runtimes/swipe/upstream/Swipe/src/index.html b/runtimes/swipe/upstream/Swipe/src/index.html
+index f4ccfac..0bd95f6 100644
+--- a/runtimes/swipe/upstream/Swipe/src/index.html
++++ b/runtimes/swipe/upstream/Swipe/src/index.html
+@@ -131,7 +131,9 @@
+ 				// whose webmaps are allowed to be viewed by this Swipe deployment
+ 				// This is the ArcGIS Online username of the webmap owner (e.g. ["user1"], ["user1", "user2"])
+ 				// To authorize all users you can use ["*"]
+-				authorizedOwners: ["*"]
++				authorizedOwners: ["*"],
++				// Keep hosted production launches in view-only mode even when the authenticated user owns the app.
++				viewerOnlyInProd: true
+ 				//
+ 			};
+ 			// Optionally sharing and proxy URLs can be configured in app/swipe-config.js. This is only required
