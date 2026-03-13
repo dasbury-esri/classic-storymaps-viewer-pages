@@ -503,7 +503,7 @@ export default class WebMap extends Media {
     // Prevent mouse wheel while map is partialy loaded
     $(mapElem).css('pointer-events', 'none');
 
-    arcgisUtils.createMap(this.id, mapElem, options).then(lang.hitch(this, function(response) {
+    let onCreateMapSuccess = lang.hitch(this, function(response) {
       var map = response.map;
 
       this._fadeInMedia();
@@ -555,20 +555,165 @@ export default class WebMap extends Media {
       this._cache[this.id].lastLayersApplied = null;
 
       this._applyConfig();
-    }), (err) => {
-      console.warn('on loading webmap ' + this.id + ', err', err);
-      this._node
-        .removeClass('media-is-loading')
-        .find('.media-loading').hide();
-      if (app.builder) {
-        this.setError({
-          showLoadingError: true
-        });
-      }
-      else {
-        this.setError({minimizeInViewer: true});
-      }
     });
+
+    let onCreateMapError = (err) => {
+      this._retryCreateMapWithoutInaccessibleLayers(mapElem, options).then(onCreateMapSuccess, () => {
+        console.warn('on loading webmap ' + this.id + ', err', err);
+        this._node
+          .removeClass('media-is-loading')
+          .find('.media-loading').hide();
+        if (app.builder) {
+          this.setError({
+            showLoadingError: true
+          });
+        }
+        else {
+          this.setError({minimizeInViewer: true});
+        }
+      });
+    };
+
+    arcgisUtils.createMap(this.id, mapElem, options).then(onCreateMapSuccess, onCreateMapError);
+  }
+
+  _retryCreateMapWithoutInaccessibleLayers(mapElem, options) {
+    if (! this.id || typeof this.id != 'string') {
+      return Promise.reject();
+    }
+
+    return arcgisUtils.getItem(this.id).then(lang.hitch(this, function(itemInfo) {
+      if (! itemInfo || ! itemInfo.item || ! itemInfo.itemData || ! itemInfo.itemData.operationalLayers) {
+        return Promise.reject();
+      }
+
+      return this._sanitizeWebMapItemData(itemInfo.itemData).then(function(sanitizedItemData) {
+        if (! sanitizedItemData || ! sanitizedItemData.operationalLayers) {
+          return Promise.reject();
+        }
+
+        var hasRemovedLayers = sanitizedItemData.operationalLayers.length < itemInfo.itemData.operationalLayers.length;
+        if (! hasRemovedLayers) {
+          return Promise.reject();
+        }
+
+        return arcgisUtils.createMap({
+          item: itemInfo.item,
+          itemData: sanitizedItemData
+        }, mapElem, options);
+      });
+    }));
+  }
+
+  _sanitizeWebMapItemData(itemData) {
+    var sanitizedData = lang.clone(itemData || {});
+    var layerChecks = [];
+
+    if (! sanitizedData.operationalLayers || ! sanitizedData.operationalLayers.length) {
+      return Promise.resolve(sanitizedData);
+    }
+
+    $.each(sanitizedData.operationalLayers, lang.hitch(this, function(index, layer) {
+      if (! layer || ! layer.url) {
+        return;
+      }
+
+      layerChecks.push(
+        this._requestLayerMetadataAnonymously(layer.url).then(lang.hitch(this, function(response) {
+          return {
+            index: index,
+            drop: this._isSkippableOperationalLayerResponse(response)
+          };
+        }), lang.hitch(this, function(error) {
+          return {
+            index: index,
+            drop: this._isSkippableOperationalLayerError(error)
+          };
+        }))
+      );
+    }));
+
+    if (! layerChecks.length) {
+      return Promise.resolve(sanitizedData);
+    }
+
+    return Promise.all(layerChecks).then(function(layerResults) {
+      var droppedByIndex = {};
+
+      $.each(layerResults, function(_, result) {
+        if (result && result.drop) {
+          droppedByIndex[result.index] = true;
+        }
+      });
+
+      sanitizedData.operationalLayers = $.grep(sanitizedData.operationalLayers, function(_, index) {
+        return ! droppedByIndex[index];
+      });
+
+      return sanitizedData;
+    });
+  }
+
+  _requestLayerMetadataAnonymously(url) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: url,
+        data: {
+          f: 'json'
+        },
+        dataType: 'jsonp',
+        jsonp: 'callback',
+        timeout: 5000
+      }).done(function(response) {
+        resolve(response);
+      }).fail(function(jqxhr, textStatus, errorThrown) {
+        reject({
+          message: errorThrown || textStatus || 'Layer metadata request failed'
+        });
+      });
+    });
+  }
+
+  _isSkippableOperationalLayerResponse(response) {
+    if (! response || ! response.error) {
+      return false;
+    }
+
+    return this._isSkippableOperationalLayerError(response.error);
+  }
+
+  _isSkippableOperationalLayerError(error) {
+    if (! error) {
+      return false;
+    }
+
+    var errorCode = error.httpCode || error.code || (error.error && error.error.code);
+    var errorText = [
+      error.message,
+      error.details && error.details.join ? error.details.join(' ') : '',
+      error.error && error.error.message,
+      error.error && error.error.details && error.error.details.join ? error.error.details.join(' ') : ''
+    ].join(' ').toLowerCase();
+
+    if (errorCode == 404) {
+      return true;
+    }
+
+    if (errorCode == 401 || errorCode == 403 || errorCode == 498 || errorCode == 499) {
+      return errorText.indexOf('token') !== -1
+        || errorText.indexOf('unauthorized') !== -1
+        || errorText.indexOf('not authorized') !== -1
+        || errorText.indexOf('forbidden') !== -1
+        || errorText.indexOf('access denied') !== -1;
+    }
+
+    if (errorCode == 400) {
+      return errorText.indexOf('not found') !== -1
+        || errorText.indexOf('does not exist') !== -1
+        || errorText.indexOf('unable to complete operation') !== -1;
+    }
+
+    return false;
   }
 
   postLoad() {

@@ -179,7 +179,8 @@ define([
       portal: null,
       builder: builder,
       isLoading: true,
-      loadingTimeout: null
+      loadingTimeout: null,
+      loadingTimeoutStartedAt: 0
     });
 
     if (app.isInBuilder && (has('ie') || has('trident') || has('edge'))) {
@@ -212,9 +213,18 @@ define([
 
   function initStep2(builder) {
     on(IdentityManager, 'dialog-create', function() {
-      // Only show the no-oauth fatal error when no OAuth app id is configured.
-      // If OAuth is configured, let the identity dialog proceed.
+      // If a viewer appid load triggers identity without OAuth configured,
+      // probe the app item anonymously so deleted items can use deletedApp.
       if (app.isLoading && ! app.indexCfg.oAuthAppId) {
+        var requestedAppId = CommonHelper.getAppID(isProd());
+
+        if (! app.isInBuilder && requestedAppId) {
+          probeAppItemState(requestedAppId).then(function(state) {
+            initError(state == 'deleted' ? 'deletedApp' : 'notAuthorized');
+          });
+          return;
+        }
+
         initError('invalidConfignoOAuth');
       }
     });
@@ -549,20 +559,76 @@ define([
         }
       },
       function(error) {
-        if (isDeletedItemError(error)) {
-          initError('deletedApp');
-        }
-        else if (error && error.httpCode == 400) {
-          initError('invalidApp');
-        }
-        else if (error && error.httpCode == 403) {
-          initError('notAuthorized');
-        }
-        else {
-          initError('appLoadingFail');
-        }
+        initError(classifyAppItemLoadError(error));
       }
     );
+  }
+
+  function probeAppItemState(appId) {
+    var result = new Deferred();
+    var itemUrl = app.indexCfg.sharingurl + '/' + appId;
+    var probeTimeout = Math.max((app && app.cfg && app.cfg.TIMEOUT_VIEWER_LOAD ? app.cfg.TIMEOUT_VIEWER_LOAD : 5000), 5000);
+    var settled = false;
+    var timeoutHandle = null;
+
+    function resolveState(state) {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
+
+      result.resolve(state);
+    }
+
+    timeoutHandle = setTimeout(function() {
+      // Ensure probe always resolves to avoid loader hangs.
+      resolveState('auth');
+    }, probeTimeout);
+
+    esriRequest({
+      url: itemUrl,
+      content: {
+        f: 'json'
+      },
+      callbackParamName: 'callback',
+      handleAs: 'json'
+    }, {
+      useProxy: false
+    }).then(function(response) {
+      if (response && response.error) {
+        resolveState(isDeletedItemError(response.error) ? 'deleted' : 'auth');
+        return;
+      }
+
+      resolveState(response && response.id ? 'exists' : 'unknown');
+    }, function(error) {
+      resolveState(isDeletedItemError(error) ? 'deleted' : 'auth');
+    });
+
+    return result;
+  }
+
+  function classifyAppItemLoadError(error) {
+    var errorCode = error && (error.httpCode || error.code || (error.error && error.error.code));
+
+    if (isDeletedItemError(error)) {
+      return 'deletedApp';
+    }
+
+    if (errorCode == 400) {
+      return 'invalidApp';
+    }
+
+    if (errorCode == 401 || errorCode == 403 || errorCode == 498 || errorCode == 499) {
+      return 'notAuthorized';
+    }
+
+    return 'appLoadingFail';
   }
 
   function isDeletedItemError(error) {
@@ -798,6 +864,8 @@ define([
   }
 
   function appInitComplete() {
+    app.isLoading = false;
+
     if (_mainView.isStoryBlank() && app.isInBuilder) {
       app.builder.appInitComplete();
       _mainView.appInitComplete();
@@ -819,6 +887,8 @@ define([
   }
 
   function initError(error, message, noDisplay) {
+    app.isLoading = false;
+
     var errorMsg = i18n.viewer.errors[error];
 
     if (error == 'notAuthorizedLicense') {
@@ -963,6 +1033,10 @@ define([
   //
 
   function startLoadingTimeout() {
+    if (! app.loadingTimeoutStartedAt) {
+      app.loadingTimeoutStartedAt = Date.now();
+    }
+
     app.loadingTimeout = setTimeout(appLoadingTimeout, app.cfg.TIMEOUT_VIEWER_LOAD);
   }
 
@@ -971,18 +1045,33 @@ define([
       clearTimeout(app.loadingTimeout);
       app.loadingTimeout = null;
     }
+
+    if (typeof app != 'undefined') {
+      app.loadingTimeoutStartedAt = 0;
+    }
   }
 
   function appLoadingTimeout() {
     // Restart the timeout if the dialog is shown or has been shown and the timeout hasn't been fired after it has been closed
     if (IdentityManager && IdentityManager.dialog && IdentityManager.dialog._alreadyInitialized && ! IdentityManager.loadingTimeoutAlreadyFired) {
-      clearTimeout(app.loadingTimeout);
-      startLoadingTimeout();
-      // Set a flag only if the dialog isn't showned now
-      if (! IdentityManager._busy) {
+      var startedAt = app && app.loadingTimeoutStartedAt ? app.loadingTimeoutStartedAt : Date.now();
+      var elapsed = Date.now() - startedAt;
+      var maxIdentityDialogWait = Math.max((app && app.cfg && app.cfg.TIMEOUT_VIEWER_LOAD ? app.cfg.TIMEOUT_VIEWER_LOAD : 5000) * 3, 15000);
+
+      // Avoid an indefinite loader when the identity dialog remains busy.
+      if (elapsed >= maxIdentityDialogWait) {
         IdentityManager.loadingTimeoutAlreadyFired = true;
       }
-      return;
+      else {
+        clearTimeout(app.loadingTimeout);
+        startLoadingTimeout();
+        // Set a flag only if the dialog isn't showned now
+        if (! IdentityManager._busy) {
+          IdentityManager.loadingTimeoutAlreadyFired = true;
+        }
+        return;
+      }
+
     }
 
     /*
@@ -999,6 +1088,21 @@ define([
     */
 
     //app.map && app.map.destroy();
+
+    if (! app || ! app.isLoading) {
+      return;
+    }
+
+    var requestedAppId = CommonHelper.getAppID(isProd());
+
+    if (! app.isInBuilder && requestedAppId) {
+      probeAppItemState(requestedAppId).then(function(state) {
+        initError(state == 'deleted' ? 'deletedApp' : 'notAuthorized');
+      });
+      return;
+    }
+
+    initError('appLoadingFail');
   }
 
   function initLocalization() {
