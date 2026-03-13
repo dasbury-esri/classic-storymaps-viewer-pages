@@ -834,35 +834,176 @@ define(["esri/map",
 				esriConfig.defaults.map.zoomDuration = 5;
 			}
 
-			arcgisUtils.createMap(webmapIdOrJSON, "mainMap", {
-				mapOptions: {
-					slider: true,
-					autoResize: false,
-					// Force the web map extent to the world to get all data from the FS
-					extent : new Extent({
-						xmax: 180,
-						xmin: -180,
-						ymax: 90,
-						ymin: -90,
-						spatialReference: {
-							wkid:4326
-						}
-					}),
-					showAttribution: true,
-					wrapAround180: false,
-					smartNavigation: false
+			sanitizeDeletedOperationalLayers(webmapIdOrJSON).then(
+				function(webmapToLoad){
+					arcgisUtils.createMap(webmapToLoad, "mainMap", {
+						mapOptions: {
+							slider: true,
+							autoResize: false,
+							// Force the web map extent to the world to get all data from the FS
+							extent : new Extent({
+								xmax: 180,
+								xmin: -180,
+								ymax: 90,
+								ymin: -90,
+								spatialReference: {
+									wkid:4326
+								}
+							}),
+							showAttribution: true,
+							wrapAround180: false,
+							smartNavigation: false
+						},
+						ignorePopups: true,
+						bingMapsKey: APPCFG.BING_MAPS_KEY,
+						layerMixins: app.data.getAppProxies()
+					}).then(
+						lang.hitch(this, function(response){
+							webMapInitCallback(response);
+						}),
+						lang.hitch(this, function(){
+							initError("createMap");
+						})
+					);
 				},
-				ignorePopups: true,
-				bingMapsKey: APPCFG.BING_MAPS_KEY,
-				layerMixins: app.data.getAppProxies()
-			}).then(
-				lang.hitch(this, function(response){
-					webMapInitCallback(response);
-				}),
-				lang.hitch(this, function(){
+				function(){
 					initError("createMap");
-				})
+				}
 			);
+		}
+
+		function sanitizeDeletedOperationalLayers(webmapIdOrJSON)
+		{
+			var resultDeferred = new Deferred();
+
+			if( ! webmapIdOrJSON || typeof webmapIdOrJSON != "string" ) {
+				resultDeferred.resolve(webmapIdOrJSON);
+				return resultDeferred;
+			}
+
+			var webmapItemRequest = esriRequest({
+				url: configOptions.sharingurl + "/" + webmapIdOrJSON,
+				content: {
+					f: "json"
+				},
+				callbackParamName: "callback"
+			});
+
+			var webmapDataRequest = esriRequest({
+				url: configOptions.sharingurl + "/" + webmapIdOrJSON + "/data",
+				content: {
+					f: "json"
+				},
+				callbackParamName: "callback"
+			});
+
+			(new DeferredList([webmapItemRequest, webmapDataRequest])).then(function(results){
+				var webmapItem = results[0] && results[0][0] ? results[0][1] : null;
+				var webmapData = results[1] && results[1][0] ? results[1][1] : null;
+
+				if( ! webmapItem || ! webmapData || ! webmapData.operationalLayers || ! webmapData.operationalLayers.length ) {
+					resultDeferred.resolve(webmapIdOrJSON);
+					return;
+				}
+
+				var layerChecks = [];
+				array.forEach(webmapData.operationalLayers, function(layer, index){
+					if( ! layer || ! layer.url )
+						return;
+
+					layerChecks.push({
+						index: index,
+						request: esriRequest({
+							url: layer.url,
+							content: {
+								f: "json"
+							},
+							callbackParamName: "callback"
+						})
+					});
+				});
+
+				if( ! layerChecks.length ) {
+					resultDeferred.resolve(webmapIdOrJSON);
+					return;
+				}
+
+				var checkRequests = array.map(layerChecks, function(entry){
+					return entry.request;
+				});
+
+				(new DeferredList(checkRequests)).then(function(layerResults){
+					var droppedIndex = {};
+					var droppedCount = 0;
+
+					array.forEach(layerResults, function(checkResult, idx){
+						var shouldDrop = false;
+
+						if( checkResult[0] && isDeletedLayerResponse(checkResult[1]) )
+							shouldDrop = true;
+						else if( ! checkResult[0] && isDeletedLayerError(checkResult[1]) )
+							shouldDrop = true;
+
+						if( shouldDrop ) {
+							droppedIndex[layerChecks[idx].index] = true;
+							droppedCount++;
+						}
+					});
+
+					if( ! droppedCount ) {
+						resultDeferred.resolve(webmapIdOrJSON);
+						return;
+					}
+
+					var sanitizedWebmap = {
+						item: lang.clone(webmapItem),
+						itemData: lang.clone(webmapData)
+					};
+
+					sanitizedWebmap.itemData.operationalLayers = array.filter(sanitizedWebmap.itemData.operationalLayers, function(layer, index){
+						return ! droppedIndex[index];
+					});
+
+					console.warn("maptour.core.Core - removed deleted operational layers:", droppedCount);
+					resultDeferred.resolve(sanitizedWebmap);
+				});
+			});
+
+			return resultDeferred;
+		}
+
+		function isDeletedLayerResponse(response)
+		{
+			if( ! response || ! response.error )
+				return false;
+
+			return isDeletedLayerError(response.error);
+		}
+
+		function isDeletedLayerError(error)
+		{
+			if( ! error )
+				return false;
+
+			var errorCode = error.httpCode || error.code || (error.error && error.error.code);
+			var errorText = [
+				error.message || "",
+				error.details && error.details.join ? error.details.join(" ") : "",
+				error.error && error.error.message || "",
+				error.error && error.error.details && error.error.details.join ? error.error.details.join(" ") : ""
+			].join(" ").toLowerCase();
+
+			if( errorCode == 404 )
+				return true;
+
+			if( errorCode == 400 ) {
+				return errorText.indexOf("not found") !== -1
+					|| errorText.indexOf("does not exist") !== -1
+					|| errorText.indexOf("unable to find") !== -1
+					|| errorText.indexOf("service") !== -1 && errorText.indexOf("doesn't exist") !== -1;
+			}
+
+			return false;
 		}
 
 		function webMapInitCallback(response)
