@@ -258,6 +258,64 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					embedUrl && embedUrl.match && embedUrl.match(/arcgis\.com/);
 			}
 
+			function isKnownShortenerHost(hostname) {
+				var normalizedHost = (hostname || '').toLowerCase();
+				return normalizedHost === 'arcg.is'
+					|| normalizedHost === 'bit.ly'
+					|| normalizedHost === 'www.bit.ly'
+					|| normalizedHost === 'j.mp';
+			}
+
+			function resolveShortUrlIfNeeded(storedUrl, onResolved) {
+				if (!storedUrl || !window.URL || !window.fetch || !onResolved) {
+					onResolved && onResolved(storedUrl);
+					return;
+				}
+
+				var urlAsURL;
+				try {
+					urlAsURL = new window.URL(storedUrl, window.location.origin);
+				}
+				catch (err) {
+					onResolved(storedUrl);
+					return;
+				}
+
+				var protocol = (urlAsURL.protocol || '').toLowerCase();
+				if ((protocol !== 'http:' && protocol !== 'https:') || !isKnownShortenerHost(urlAsURL.hostname)) {
+					onResolved(storedUrl);
+					return;
+				}
+
+				var completed = false;
+				var finish = function(resultUrl) {
+					if (completed) {
+						return;
+					}
+
+					completed = true;
+					onResolved(resultUrl || storedUrl);
+				};
+
+				var timeoutId = window.setTimeout(function() {
+					finish(storedUrl);
+				}, 1500);
+
+				window.fetch(urlAsURL.href, {
+					method: 'GET',
+					mode: 'no-cors',
+					redirect: 'follow',
+					cache: 'no-store'
+				})
+					.then(function(response) {
+						window.clearTimeout(timeoutId);
+						finish(response && response.url ? response.url : urlAsURL.href);
+					}, function() {
+						window.clearTimeout(timeoutId);
+						finish(storedUrl);
+					});
+			}
+
 			function normalizeLegacyStorytellingSwipeUrl(storedUrl) {
 				if (!storedUrl || !window.URL) {
 					return storedUrl;
@@ -265,13 +323,6 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 				try {
 					var urlAsURL = new window.URL(storedUrl, window.location.origin);
-					var shortArcgisMap = {
-						'/5TWzG': '/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259'
-					};
-
-					if ((urlAsURL.hostname || '').toLowerCase() === 'arcg.is' && shortArcgisMap[urlAsURL.pathname]) {
-						return window.location.origin + shortArcgisMap[urlAsURL.pathname];
-					}
 
 					var legacyRouteMap = [
 						{ re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
@@ -1503,33 +1554,33 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						url = atob(url);
 					}
 
-					if ( cfg.hash ) {
-						url = url + '#' + cfg.hash;
-						embedContainer.attr('src', url);
-					}
+					var applyEmbedSource = function(candidateUrl) {
+						var resolvedUrl = normalizeLegacyStorytellingSwipeUrl(candidateUrl || url);
 
-					// TODO this fail if no src attr is set on the iframe (srcdoc)
-					//  as a workaround <iframe srcdoc="http://" src="about:blank></iframe>
-					if ( ! embedContainer.attr('src') ){
-						// Loading indicator
-						embedContainer.off('load').load(stopMainStageLoadingIndicator);
-						startMainStageLoadingIndicator();
+						if (cfg.hash) {
+							resolvedUrl = resolvedUrl + '#' + cfg.hash;
+						}
 
-						// vimeo changed their player in fall 2017 to make it more... compact? idk.
-						// in any case, it screws up expected styling for "fill" layout on mainstage
-						// so we're adding a url param transparent=0 to revert to the old styling
-						if (url.match('//player.vimeo.com/video') && !url.match('transparent=0')) {
-							if (url.match(/\?/)) {
-								url = url + '&transparent=0';
-							} else {
-								url = url + '?transparent=0';
+						if (resolvedUrl.match('//player.vimeo.com/video') && !resolvedUrl.match('transparent=0')) {
+							if (resolvedUrl.match(/\?/)) {
+								resolvedUrl = resolvedUrl + '&transparent=0';
+							}
+							else {
+								resolvedUrl = resolvedUrl + '?transparent=0';
 							}
 						}
 
-						// TODO youtube recommand an origin param "&origin=" + encodeURIComponent(document.location.origin)
-						// https://developers.google.com/youtube/iframe_api_reference#Loading_a_Video_Player
-						embedContainer.attr('src', url);
-					}
+						var currentSrc = embedContainer.attr('src');
+						if (!currentSrc || currentSrc !== resolvedUrl) {
+							embedContainer.off('load').load(stopMainStageLoadingIndicator);
+							startMainStageLoadingIndicator();
+							embedContainer.attr('src', resolvedUrl);
+						}
+					};
+
+					resolveShortUrlIfNeeded(url, function(resolvedUrl) {
+						applyEmbedSource(resolvedUrl);
+					});
 
 					var width = cfg.width || '560',
 						height = cfg.height || '315';
