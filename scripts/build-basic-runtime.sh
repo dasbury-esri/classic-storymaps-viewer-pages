@@ -3,6 +3,7 @@ set -euo pipefail
 
 RUNTIME_PATH="${RUNTIME_PATH:-runtimes/basic/upstream}"
 OUTPUT_PATH="${OUTPUT_PATH:-runtimes/basic/build}"
+BASIC_DEFAULT_APPID="${BASIC_DEFAULT_APPID:-30066075caa947178f6c2ae438e7efa4}"
 
 rm -rf "$OUTPUT_PATH"
 mkdir -p "$OUTPUT_PATH"
@@ -23,5 +24,10 @@ copy_item "$RUNTIME_PATH/font" "$OUTPUT_PATH"
 copy_item "$RUNTIME_PATH/images" "$OUTPUT_PATH"
 copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
 copy_item "$RUNTIME_PATH/config" "$OUTPUT_PATH"
+
+defaults_file="$OUTPUT_PATH/config/defaults.js"
+if [[ -f "$defaults_file" ]]; then
+  sed -i "s/\"appid\": \"\"/\"appid\": \"$BASIC_DEFAULT_APPID\"/" "$defaults_file"
+fi
 
 echo "Basic runtime output copied to $OUTPUT_PATH"
