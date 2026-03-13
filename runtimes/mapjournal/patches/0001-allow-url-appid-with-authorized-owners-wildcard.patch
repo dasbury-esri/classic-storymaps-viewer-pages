@@ -1,0 +1,12 @@
+diff --git a/runtimes/mapjournal/upstream/src/index.html b/runtimes/mapjournal/upstream/src/index.html
+--- a/runtimes/mapjournal/upstream/src/index.html
++++ b/runtimes/mapjournal/upstream/src/index.html
+@@
+-				authorizedOwners: [""]
++				authorizedOwners: ["*"]
+diff --git a/runtimes/mapjournal/upstream/deploy/index.html b/runtimes/mapjournal/upstream/deploy/index.html
+--- a/runtimes/mapjournal/upstream/deploy/index.html
++++ b/runtimes/mapjournal/upstream/deploy/index.html
+@@
+-				authorizedOwners: [""]
++				authorizedOwners: ["*"]

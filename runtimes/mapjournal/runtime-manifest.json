@@ -47,7 +47,7 @@
     "precedenceRule": "appid-first",
     "webmapSupport": "not-supported",
     "knownGoodExamples": [
-      "/templates/classic-storymaps/mapjournal/index.html?appid=d98f4f7a3a544665a6c4f7f8f3a3b6e1"
+      "/templates/classic-storymaps/mapjournal/index.html?appid=4e076f0a2ca141bab12ad7f1bbdf8571"
     ]
   },
   "viewerOnly": {
@@ -59,11 +59,11 @@
     "notes": "Embedded Swipe behavior follows S7 policy and must remain viewer-only in production."
   },
   "patches": {
-    "patchSetId": "mapjournal-baseline-v1",
+    "patchSetId": "mapjournal-public-appid-v2",
     "files": [
-      "runtimes/mapjournal/patches/0000-no-runtime-patches.md"
+      "runtimes/mapjournal/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch"
     ],
-    "rationale": "Baseline import without runtime source patches; any future changes must be explicit patch files."
+    "rationale": "Allow public appid launches in IIS deployments by setting the runtime authorized owner list to wildcard."
   },
   "verification": {
     "smokeProfile": "mapjournal-baseline",
