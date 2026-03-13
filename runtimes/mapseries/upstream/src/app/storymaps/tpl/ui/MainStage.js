@@ -264,12 +264,28 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				}
 
 				try {
-					var urlAsURL = new window.URL(storedUrl);
-					var isStorytellingSwipePath = urlAsURL.pathname.indexOf('/apps/StorytellingSwipe/') === 0;
+					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var legacyRouteMap = {
+						'/apps/StorytellingSwipe/': 'swipe',
+						'/apps/MapJournal/': 'mapjournal',
+						'/apps/MapSeries/': 'mapseries',
+						'/apps/Cascade/': 'cascade',
+						'/apps/MapTour/': 'maptour',
+						'/apps/Shortlist/': 'shortlist'
+					};
 
-					if (isStorytellingSwipePath) {
+					var runtimePath = null;
+
+					$.each(Object.keys(legacyRouteMap), function(i, legacyPrefix) {
+						if (urlAsURL.pathname.indexOf(legacyPrefix) === 0) {
+							runtimePath = legacyRouteMap[legacyPrefix];
+							return false;
+						}
+					});
+
+					if (runtimePath) {
 						return window.location.origin
-							+ '/templates/classic-storymaps/swipe/index.html'
+							+ '/templates/classic-storymaps/' + runtimePath + '/index.html'
 							+ (urlAsURL.search || '')
 							+ (urlAsURL.hash || '');
 					}
