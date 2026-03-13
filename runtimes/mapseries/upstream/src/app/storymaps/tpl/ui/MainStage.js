@@ -265,6 +265,14 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 				try {
 					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var shortArcgisMap = {
+						'/5TWzG': '/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259'
+					};
+
+					if ((urlAsURL.hostname || '').toLowerCase() === 'arcg.is' && shortArcgisMap[urlAsURL.pathname]) {
+						return window.location.origin + shortArcgisMap[urlAsURL.pathname];
+					}
+
 					var legacyRouteMap = [
 						{ re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
 						{ re: /^\/apps\/mapjournal(?:\/|$)/i, runtime: 'mapjournal' },
