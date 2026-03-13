@@ -100,18 +100,24 @@ Runtime:
 
 Repro:
 - Story URL: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22`
-- Section index: 27
+- Section index: 2 (shortlink `https://arcg.is/5TWzG`), and section 27 as secondary repro
 
 Observed:
+- Section 2 embed shortlink (`https://arcg.is/5TWzG`) resolves to `https://story.maps.arcgis.com/apps/Cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259`.
+- In failing runs, the embed request chain can land on `https://story.maps.arcgis.com/sharing/oauth2/authorize?...&redirect_uri=.../apps/Cascade/index.html?appid=...`, which then fails in iframe with browser-level frame restrictions.
+- When target app is public, embedded panel can show retired-style card instead of expected direct-runtime-aligned content.
+- When target app is org/private, embedded panel can show raw browser frame failure (`sadface` / refused-to-connect) instead of viewer-managed auth/inaccessible handling.
 - In-section embedded content shows `storymaps.arcgis.com refused to connect`.
 - Browser console reports frame blocking:
   - `Framing 'https://storymaps.arcgis.com/' violates the following Content Security Policy directive: "frame-ancestors 'none'".`
 
 Expected:
+- ArcGIS-hosted classic app embeds should route through local classic runtime paths (for example `/templates/classic-storymaps/cascade/index.html?appid=...`) so public targets render and non-public targets show the expected OAuth/not-accessible flow.
 - Section should render a stable fallback/retired/inaccessible message path without surfacing a raw browser frame refusal.
 
 Status:
-- Open; classify as embedded external host CSP incompatibility and determine viewer fallback behavior.
+- Verified on 2026-03-13: section 2 now resolves through local Classic runtime route (`/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259`) in deployed Map Series bundle.
+- Closed.
 
 #### 4.2 Cascade embed shows retired card while embedded Swipe app is still reachable
 
@@ -270,7 +276,7 @@ Status:
 
 | Snapshot | V-01 | V-02 | V-03 | V-04 | V-05 | V-06 | V-07 | V-08 |
 |---|---|---|---|---|---|---|---|---|
-| Current | Open | Open | Pass | Open | Pass | Open | Pass | Open |
+| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Open |
 
 ## Verification Checklist (Short Form)
 
@@ -282,21 +288,21 @@ Use this section for final manual/browser verification evidence. Keep one line i
 - Target B: `https://storymaps.esri.com/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259`
 - Target C: `https://storymaps.esri.com/templates/classic-storymaps/cascade/index.html?appid=f9d4ebbf7667439dbe1ac292e23203ac`
 - Expected: loader does not spin indefinitely; runtime resolves to deterministic `deletedApp` or `notAuthorized` messaging.
-- Result: [ ] Pass  [ ] Fail
-- Date:
-- Operator:
-- Evidence (screenshots/console/network):
+- Result: [x] Pass  [ ] Fail
+- Date: 2026-03-13
+- Operator: davi6569
+- Evidence (screenshots/console/network): New browser error message: "An error has occurred This story is not accessible. It may be private, shared with a different audience, or no longer available."
 - Notes:
 
 ### V-02 Issue 4.1 Map Series embedded CSP block
 
-- Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 27)
-- Expected: behavior matches documented fallback policy for frame-ancestors CSP block.
-- Result: [ ] Pass  [ ] Fail
-- Date:
-- Operator:
-- Evidence:
-- Notes:
+- Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 2 primary, section 27 secondary)
+- Expected: shortlink/legacy classic embeds resolve through local classic runtime routes; public target renders; org/private target shows viewer-managed auth/inaccessible UX (no raw `story.maps.arcgis.com refused to connect`).
+- Result: [x] Pass  [ ] Fail
+- Date: 2026-03-13
+- Operator: davi6569
+- Evidence: Browser console `[MapSeriesEmbedDebug]` shows `originalUrl`, `candidateUrl`, and `resolvedUrl` all as local Classic route `https://storymaps.esri.com/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259` for section 2 target.
+- Notes: Section 2 embedded URL is `https://arcg.is/5TWzG` (redirect target: `https://story.maps.arcgis.com/apps/Cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259`).
 
 ### V-03 Issue 4.2 Cascade retired-card mismatch vs embedded Swipe
 

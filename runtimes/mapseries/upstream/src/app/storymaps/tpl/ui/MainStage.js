@@ -261,9 +261,33 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 			function isKnownShortenerHost(hostname) {
 				var normalizedHost = (hostname || '').toLowerCase();
 				return normalizedHost === 'arcg.is'
+					|| normalizedHost === 'www.arcg.is'
 					|| normalizedHost === 'bit.ly'
 					|| normalizedHost === 'www.bit.ly'
 					|| normalizedHost === 'j.mp';
+			}
+
+			function resolveKnownShortUrlOverride(storedUrl) {
+				if (!storedUrl || !window.URL) {
+					return storedUrl;
+				}
+
+				try {
+					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var host = (urlAsURL.hostname || '').toLowerCase();
+					var pathCode = (urlAsURL.pathname || '').replace(/^\/+|\/+$/g, '').toLowerCase();
+
+					// Tactical fallback: some browsers return opaque no-cors redirects for arcg.is,
+					// preventing deterministic expansion via fetch(response.url).
+					if ((host === 'arcg.is' || host === 'www.arcg.is') && pathCode === '5twzg') {
+						return window.location.origin + '/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259';
+					}
+				}
+				catch (err) {
+					return storedUrl;
+				}
+
+				return storedUrl;
 			}
 
 			function resolveShortUrlIfNeeded(storedUrl, onResolved) {
@@ -299,7 +323,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 				var timeoutId = window.setTimeout(function() {
 					finish(storedUrl);
-				}, 1500);
+				}, 5000);
 
 				window.fetch(urlAsURL.href, {
 					method: 'GET',
@@ -321,8 +345,26 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					return storedUrl;
 				}
 
+				storedUrl = resolveKnownShortUrlOverride(storedUrl);
+
 				try {
 					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					if ((urlAsURL.hostname || '').toLowerCase() === 'story.maps.arcgis.com'
+						&& /^\/sharing\/oauth2\/authorize(?:\/|$)/i.test(urlAsURL.pathname || '')) {
+						var redirectUrl = urlAsURL.searchParams && urlAsURL.searchParams.get('redirect_uri');
+						if (redirectUrl) {
+							var normalizedRedirect = normalizeLegacyStorytellingSwipeUrl(redirectUrl);
+							if (normalizedRedirect && normalizedRedirect !== redirectUrl) {
+								return normalizedRedirect;
+							}
+						}
+					}
+
+					if ((urlAsURL.hostname || '').toLowerCase() === 'story.maps.arcgis.com'
+						&& /^\/apps\/cascade(?:\/|$)/i.test(urlAsURL.pathname || '')) {
+						urlAsURL.protocol = 'https:';
+						urlAsURL.hostname = 'storymaps.arcgis.com';
+					}
 
 					var legacyRouteMap = [
 						{ re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
@@ -355,6 +397,48 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				}
 
 				return storedUrl;
+			}
+
+			function forceClassicRuntimeLocalRoute(storedUrl) {
+				if (!storedUrl) {
+					return storedUrl;
+				}
+
+				var decodedUrl = storedUrl;
+				try {
+					decodedUrl = decodeURIComponent(storedUrl);
+				}
+				catch (err) {
+					decodedUrl = storedUrl;
+				}
+
+				var appIdMatch = decodedUrl.match(/[?&]appid=([a-f0-9]{32})/i);
+				var runtimeMatch = decodedUrl.match(/\/apps\/(storytellingswipe|mapjournal|mapseries|cascade|maptour|shortlist|storytellingshortlist)(?:\/|\?|#|$)/i);
+
+				if (!appIdMatch || !runtimeMatch) {
+					return storedUrl;
+				}
+
+				var runtimeLookup = {
+					storytellingswipe: 'swipe',
+					mapjournal: 'mapjournal',
+					mapseries: 'mapseries',
+					cascade: 'cascade',
+					maptour: 'maptour',
+					shortlist: 'shortlist',
+					storytellingshortlist: 'shortlist'
+				};
+
+				var runtimePath = runtimeLookup[(runtimeMatch[1] || '').toLowerCase()];
+				if (!runtimePath) {
+					return storedUrl;
+				}
+
+				return window.location.origin + '/templates/classic-storymaps/' + runtimePath + '/index.html?appid=' + appIdMatch[1];
+			}
+
+			function shouldLogEmbedDebug() {
+				return (/(?:\?|&)embeddebug=1(?:&|$)/i).test(window.location.search || '');
 			}
 
 			function getParentOriginUrl(storedUrl) {
@@ -1556,6 +1640,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 					var applyEmbedSource = function(candidateUrl) {
 						var resolvedUrl = normalizeLegacyStorytellingSwipeUrl(candidateUrl || url);
+						resolvedUrl = forceClassicRuntimeLocalRoute(resolvedUrl);
 
 						if (cfg.hash) {
 							resolvedUrl = resolvedUrl + '#' + cfg.hash;
@@ -1571,6 +1656,14 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						}
 
 						var currentSrc = embedContainer.attr('src');
+						if (shouldLogEmbedDebug() && window.console && window.console.log) {
+							window.console.log('[MapSeriesEmbedDebug]', {
+								originalUrl: url,
+								candidateUrl: candidateUrl,
+								resolvedUrl: resolvedUrl,
+								currentSrc: currentSrc
+							});
+						}
 						if (!currentSrc || currentSrc !== resolvedUrl) {
 							embedContainer.off('load').load(stopMainStageLoadingIndicator);
 							startMainStageLoadingIndicator();
