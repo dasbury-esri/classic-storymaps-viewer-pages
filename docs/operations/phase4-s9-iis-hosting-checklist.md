@@ -30,21 +30,21 @@ Capture the IIS configuration and validation checklist required to host the asse
 
 ## Compatibility and Fallback Checklist
 
-- [ ] Compatibility redirect rule from `/templates/classic-stories/*` to `/templates/classic-storymaps/*` is active
-- [ ] Invalid launcher input produces guided error UX (no blank/500 fallback)
-- [ ] Missing/invalid runtime query parameters fail gracefully without IIS-level errors
+- [x] Compatibility redirect rule from `/templates/classic-stories/*` to `/templates/classic-storymaps/*` is active
+- [x] Invalid launcher input produces guided error UX (no blank/500 fallback)
+- [x] Missing/invalid runtime query parameters fail gracefully without IIS-level errors
 
 ## Cache Policy Checklist
 
-- [ ] HTML documents use conservative cache policy (for example no-cache or short max-age)
-- [ ] Static assets (`js`, `css`, `png`, `jpg`, `svg`, `woff*`) use long-lived cache policy
-- [ ] Cache policy does not break legacy runtime boot/loading behavior
+- [x] HTML documents use conservative cache policy (for example no-cache or short max-age)
+- [x] Static assets (`js`, `css`, `png`, `jpg`, `svg`, `woff*`) use long-lived cache policy
+- [x] Cache policy does not break legacy runtime boot/loading behavior
 
 ## Security/Header Baseline Checklist
 
-- [ ] Content type mappings are valid for runtime asset types
+- [x] Content type mappings are valid for runtime asset types
 - [ ] Compression enabled for text assets where appropriate
-- [ ] Header rules do not block same-site runtime resource loading
+- [x] Header rules do not block same-site runtime resource loading
 
 ## Validation Output
 
