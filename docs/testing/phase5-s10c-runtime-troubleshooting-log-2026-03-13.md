@@ -270,13 +270,40 @@ Initial assessment:
 - Keep classified as possible regression until side-by-side baseline comparison confirms whether previous success depended on transient host availability or prior HTTP-only behavior.
 
 Status:
-- Open; requires targeted comparison against prior known-good runtime behavior and direct host reachability checks for affected media domains.
+- Verified on 2026-03-13: previously failing media host/domain was reachable again and sample asset requests returned HTTP 200 during re-check.
+- Classified as transient external host/DNS availability behavior, not a confirmed runtime regression.
+- Closed for current release; reopen if symptom recurs.
+
+#### 4.8 Map Series embedded website blocked by target CSP/frame policy
+
+Runtime:
+- Map Series
+
+Repro:
+- Story URL: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22`
+- Section index: 27
+- Embedded website URL: `https://storymaps.arcigs.com` (navigates to/loads from `https://storymaps.arcgis.com`)
+
+Observed:
+- Browser blocks iframe load with target-site framing policy:
+  - `Framing 'https://storymaps.arcgis.com/' violates the following Content Security Policy directive: "frame-ancestors 'none'".`
+- Runtime initialization completes; failure is at browser iframe policy enforcement for target domain.
+
+Expected:
+- If target website disallows framing, runtime should avoid ambiguous behavior and present deterministic fallback guidance (for example, an open-in-new-tab link) instead of a raw browser frame refusal surface.
+
+Initial assessment:
+- This is distinct from V-02: V-02 covered classic app shortlink/legacy normalization and was validated as fixed.
+- Section 27 is a website embed policy/content compatibility case (target host framing restrictions), not a classic app route normalization regression.
+
+Status:
+- Open; track as separate issue for website-embed fallback policy decision.
 
 ## Verification Roll-up
 
-| Snapshot | V-01 | V-02 | V-03 | V-04 | V-05 | V-06 | V-07 | V-08 |
-|---|---|---|---|---|---|---|---|---|
-| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Open |
+| Snapshot | V-01 | V-02 | V-03 | V-04 | V-05 | V-06 | V-07 | V-08 | V-09 |
+|---|---|---|---|---|---|---|---|---|---|
+| Current | Pass | Pass | Pass | Open | Pass | Open | Pass | Pass | Open |
 
 ## Verification Checklist (Short Form)
 
@@ -296,7 +323,7 @@ Use this section for final manual/browser verification evidence. Keep one line i
 
 ### V-02 Issue 4.1 Map Series embedded CSP block
 
-- Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 2 primary, section 27 secondary)
+- Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 2 primary)
 - Expected: shortlink/legacy classic embeds resolve through local classic runtime routes; public target renders; org/private target shows viewer-managed auth/inaccessible UX (no raw `story.maps.arcgis.com refused to connect`).
 - Result: [x] Pass  [ ] Fail
 - Date: 2026-03-13
@@ -362,6 +389,17 @@ Use this section for final manual/browser verification evidence. Keep one line i
 
 - Target story: `https://storymaps.esri.com/templates/classic-storymaps/maptour/index.html?appid=d3fd1deb014f4d9f99b58221463abbf0`
 - Expected: tour point photos/thumbnails load when author media host is reachable; no runtime-introduced media URL regression.
+- Result: [x] Pass  [ ] Fail
+- Date: 2026-03-13
+- Operator: davi6569
+- Evidence: Re-check showed target host reachable and sample media request succeeded (`https://www.nyanc.org/storymap/D08A8971.jpg` returned HTTP 200).
+- Notes: Treat as transient external host/DNS availability issue; reopen if reproduced in future validation.
+
+### V-09 Issue 4.8 Map Series website embed blocked by target CSP
+
+- Target: `https://storymaps.esri.com/templates/classic-storymaps/mapseries/index.html?appid=6e03f762ac5e4314b87d8dc87b6d1c22` (section 27)
+- Embedded website URL: `https://storymaps.arcigs.com` (target resolves/loads as `https://storymaps.arcgis.com`)
+- Expected: runtime presents deterministic fallback guidance when target website disallows iframe embedding (`frame-ancestors`/X-Frame-Options), instead of raw browser refusal UX.
 - Result: [ ] Pass  [ ] Fail
 - Date:
 - Operator:
@@ -373,4 +411,5 @@ Use this section for final manual/browser verification evidence. Keep one line i
 1. Cascade: manually verify both failing repro appids now resolve loader hang into deterministic user-facing error text after the timeout guard patch.
 2. Smoke suite: keep regression checks for Map Tour optional context layers in release validation.
 3. Triage and fix the newly logged open issues in Map Series/Cascade/Basic/Map Journal/Map Tour, then rerun targeted regression checks.
-4. Release evidence: include this troubleshooting log in future release metadata attachments when hotfixes are involved.
+4. Map Series section 27: decide and implement website-embed fallback policy for targets that explicitly deny framing.
+5. Release evidence: include this troubleshooting log in future release metadata attachments when hotfixes are involved.
