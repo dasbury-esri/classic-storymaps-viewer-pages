@@ -20,7 +20,7 @@
       --line: rgba(24, 28, 36, 0.15);
       --ok: #2b7f42;
       --queued: #b96810;
-      --reference: #5c6070;
+      --prep: #5c6070;
       --ring: rgba(11, 111, 95, 0.28);
       --shadow: 0 18px 40px rgba(20, 24, 35, 0.11);
       --radius: 18px;
@@ -123,8 +123,8 @@
       border-color: rgba(185, 104, 16, 0.35);
     }
 
-    .chip.reference {
-      color: var(--reference);
+    .chip.prep {
+      color: var(--prep);
       border-color: rgba(92, 96, 112, 0.35);
     }
 
@@ -189,8 +189,8 @@
       border-color: rgba(185, 104, 16, 0.35);
     }
 
-    .badge.reference {
-      color: var(--reference);
+    .badge.prep {
+      color: var(--prep);
       border-color: rgba(92, 96, 112, 0.35);
     }
 
@@ -310,7 +310,7 @@
       <div class="legend" aria-label="Support state legend">
         <span class="chip supported">Supported: Launch Ready</span>
         <span class="chip queued">Queued: Onboarding Planned</span>
-        <span class="chip reference">Reference: Catalog Only</span>
+        <span class="chip prep">Coming soon: In preparation</span>
       </div>
     </section>
 
@@ -352,59 +352,59 @@
       },
       {
         title: "Classic Story Map Series (Tabbed Layout)",
-        state: "reference",
+        state: "prep",
         description: "Tabbed sequence of maps and narrative content.",
         image: "assets/images/map-series-tabbed-viewer.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Classic Story Map Series (Bulleted Layout)",
-        state: "reference",
+        state: "prep",
         description: "Bulleted navigation for large map collections.",
         image: "assets/images/map-series-bulleted.png",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Classic Story Map Series (Side Accordion Layout)",
-        state: "reference",
+        state: "prep",
         description: "Accordion navigation with one map/story panel expanded at a time.",
         image: "assets/images/map-series-side-accordion.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Story Map Cascade",
-        state: "reference",
+        state: "prep",
         description: "Immersive long-form layout combining maps, media, and narrative sections.",
         image: "assets/images/cascade.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Classic Story Map Shortlist",
-        state: "reference",
+        state: "prep",
         description: "Themed place list with map-extent aware tab behavior.",
         image: "assets/images/shortlist.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
         title: "Story Map Crowdsource",
-        state: "reference",
+        state: "prep",
         description: "Public contribution workflow with moderation and approval.",
         image: "assets/images/crowdsource.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
       {
-        title: "ClassicStory Map Basic",
-        state: "reference",
+        title: "Classic Story Map Basic",
+        state: "prep",
         description: "Minimal map-first viewer with optional title and legend.",
         image: "assets/images/basic.jpg",
         route: "Not yet onboarded",
-        action: "Catalog Reference"
+        action: "Coming Soon"
       },
     ];
 
@@ -413,7 +413,8 @@
     function cardTemplate(app, index) {
       const isSupported = app.state === "supported";
       const isQueued = app.state === "queued";
-      const stateLabel = isSupported ? "Supported" : isQueued ? "Queued" : "Reference";
+      const isPrep = app.state === "prep";
+      const stateLabel = isSupported ? "Supported" : isQueued ? "Queued" : isPrep ? "Coming Soon" : "Coming Soon";
       const action = isSupported
         ? `<a class="link-btn" href="${app.launchRoute || app.route}" aria-label="Launch ${app.title}">${app.action}</a>`
         : `<span class="muted-btn" aria-label="${app.action}">${app.action}</span>`;
