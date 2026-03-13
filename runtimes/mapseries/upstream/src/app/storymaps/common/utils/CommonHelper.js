@@ -128,6 +128,9 @@ define(["dojo/cookie",
 			{
 				var urlParams = this.getUrlParams();
 
+				if ( urlParams && urlParams.webmap )
+					return urlParams.webmap;
+
 				if( app.indexCfg && app.indexCfg.webmap )
 					return app.indexCfg.webmap;
 
@@ -141,6 +144,9 @@ define(["dojo/cookie",
 			getAppID: function(isProd)
 			{
 				var urlParams = this.getUrlParams();
+
+				if ( urlParams && urlParams.appid )
+					return urlParams.appid;
 
 				if( app.indexCfg && app.indexCfg.appid )
 					return app.indexCfg.appid;

@@ -159,6 +159,8 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						embedUrl = getParentOriginUrl(embedUrl);
 					}
 
+					embedUrl = normalizeLegacyStorytellingSwipeUrl(embedUrl);
+
 					// Encode the URL when possible
 					try {
 						embedUrl = btoa(embedUrl);
@@ -226,6 +228,8 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 							embedUrl = getParentOriginUrl(embedUrl);
 						}
 
+						embedUrl = normalizeLegacyStorytellingSwipeUrl(embedUrl);
+
 						return embedSRC == embedUrl || embedSRC == embed.ts;
 					}).length > 0;
 
@@ -252,6 +256,29 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 			function useParentOriginUrl(embedInfo, embedUrl) {
 				return embedInfo && embedInfo.useParentOrigin && window.location.origin.match(/arcgis\.com/) &&
 					embedUrl && embedUrl.match && embedUrl.match(/arcgis\.com/);
+			}
+
+			function normalizeLegacyStorytellingSwipeUrl(storedUrl) {
+				if (!storedUrl || !window.URL) {
+					return storedUrl;
+				}
+
+				try {
+					var urlAsURL = new window.URL(storedUrl);
+					var isStorytellingSwipePath = urlAsURL.pathname.indexOf('/apps/StorytellingSwipe/') === 0;
+
+					if (isStorytellingSwipePath) {
+						return window.location.origin
+							+ '/templates/classic-storymaps/swipe/index.html'
+							+ (urlAsURL.search || '')
+							+ (urlAsURL.hash || '');
+					}
+				}
+				catch (err) {
+					return storedUrl;
+				}
+
+				return storedUrl;
 			}
 
 			function getParentOriginUrl(storedUrl) {
@@ -1409,8 +1436,11 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 			{
 				var url = rawUrl;
 				if (useParentOriginUrl(cfg, url)) {
-					rawUrl = getParentOriginUrl(url);
+					rawUrl = getParentOriginUrl(rawUrl);
 				}
+
+				rawUrl = normalizeLegacyStorytellingSwipeUrl(rawUrl);
+				url = rawUrl;
 				try {
 					url = btoa(rawUrl);
 				} catch ( e ) { }
@@ -1426,9 +1456,10 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 					// The correct URL is in data-src
 					try {
-						url = btoa(embedContainer.data('src'));
+						rawUrl = normalizeLegacyStorytellingSwipeUrl(embedContainer.data('src'));
+						url = btoa(rawUrl);
 					} catch ( e ) {
-						url = embedContainer.data('src');
+						url = rawUrl;
 					}
 				}
 

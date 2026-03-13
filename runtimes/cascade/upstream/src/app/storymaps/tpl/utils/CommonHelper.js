@@ -111,6 +111,10 @@ function(
     getAppID: function(isProd) {
       var urlParams = this.getUrlParams();
 
+      if (urlParams && urlParams.appid) {
+        return urlParams.appid;
+      }
+
       if (app.indexCfg && app.indexCfg.appid) {
         return app.indexCfg.appid;
       }
@@ -126,6 +130,10 @@ function(
     },
     getWebmapID: function(isProd) {
       var urlParams = this.getUrlParams();
+
+      if (urlParams && urlParams.webmap) {
+        return urlParams.webmap;
+      }
 
       if(app.indexCfg && app.indexCfg.webmap) {
         return app.indexCfg.webmap;

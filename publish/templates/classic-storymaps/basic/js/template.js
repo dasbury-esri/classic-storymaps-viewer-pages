@@ -167,6 +167,13 @@ define([
       return deferred.promise;
     },
     _completeApplication: function () {
+      if (this.urlConfig && this.urlConfig.appid) {
+        this.config.appid = this.urlConfig.appid;
+      }
+      if (this.urlConfig && this.urlConfig.webmap) {
+        this.config.webmap = this.urlConfig.webmap;
+      }
+
       // ArcGIS.com allows you to set an application extent on the application item. Overwrite the
       // existing web map extent with the application item extent when set.
       if (this.config.appid && this.config.application_extent && this.config.application_extent.length > 0 && this.config.itemInfo && this.config.itemInfo.item && this.config.itemInfo.item.extent) {
