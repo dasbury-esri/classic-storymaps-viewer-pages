@@ -875,6 +875,7 @@ define(["esri/map",
 		function sanitizeDeletedOperationalLayers(webmapIdOrJSON)
 		{
 			var resultDeferred = new Deferred();
+			var sourceLayerId = WebApplicationData.getSourceLayer && WebApplicationData.getSourceLayer();
 
 			if( ! webmapIdOrJSON || typeof webmapIdOrJSON != "string" ) {
 				resultDeferred.resolve(webmapIdOrJSON);
@@ -908,18 +909,13 @@ define(["esri/map",
 
 				var layerChecks = [];
 				array.forEach(webmapData.operationalLayers, function(layer, index){
-					if( ! layer || ! layer.url )
+					if( ! layer || ! layer.url || isPrimaryOperationalLayer(layer, sourceLayerId) )
 						return;
 
 					layerChecks.push({
 						index: index,
-						request: esriRequest({
-							url: layer.url,
-							content: {
-								f: "json"
-							},
-							callbackParamName: "callback"
-						})
+						layer: layer,
+						request: requestLayerMetadataAnonymously(layer.url)
 					});
 				});
 
@@ -939,9 +935,9 @@ define(["esri/map",
 					array.forEach(layerResults, function(checkResult, idx){
 						var shouldDrop = false;
 
-						if( checkResult[0] && isDeletedLayerResponse(checkResult[1]) )
+						if( checkResult[0] && isSkippableOperationalLayerResponse(checkResult[1]) )
 							shouldDrop = true;
-						else if( ! checkResult[0] && isDeletedLayerError(checkResult[1]) )
+						else if( ! checkResult[0] && isSkippableOperationalLayerError(checkResult[1]) )
 							shouldDrop = true;
 
 						if( shouldDrop ) {
@@ -964,7 +960,7 @@ define(["esri/map",
 						return ! droppedIndex[index];
 					});
 
-					console.warn("maptour.core.Core - removed deleted operational layers:", droppedCount);
+					console.warn("maptour.core.Core - removed inaccessible optional operational layers:", droppedCount);
 					resultDeferred.resolve(sanitizedWebmap);
 				});
 			});
@@ -972,15 +968,48 @@ define(["esri/map",
 			return resultDeferred;
 		}
 
-		function isDeletedLayerResponse(response)
+		function requestLayerMetadataAnonymously(url)
+		{
+			var resultDeferred = new Deferred();
+
+			$.ajax({
+				url: url,
+				data: {
+					f: "json"
+				},
+				dataType: "jsonp",
+				jsonp: "callback",
+				timeout: 5000
+			}).done(function(response){
+				resultDeferred.resolve(response);
+			}).fail(function(jqxhr, textStatus, errorThrown){
+				resultDeferred.reject({
+					message: errorThrown || textStatus || "Layer metadata request failed"
+				});
+			});
+
+			return resultDeferred;
+		}
+
+		function isPrimaryOperationalLayer(layer, sourceLayerId)
+		{
+			if( ! layer || ! layer.id || ! sourceLayerId )
+				return false;
+
+			return layer.id === sourceLayerId
+				|| sourceLayerId.indexOf(layer.id + "_") === 0
+				|| layer.id.indexOf(sourceLayerId + "_") === 0;
+		}
+
+		function isSkippableOperationalLayerResponse(response)
 		{
 			if( ! response || ! response.error )
 				return false;
 
-			return isDeletedLayerError(response.error);
+			return isSkippableOperationalLayerError(response.error);
 		}
 
-		function isDeletedLayerError(error)
+		function isSkippableOperationalLayerError(error)
 		{
 			if( ! error )
 				return false;
@@ -995,6 +1024,14 @@ define(["esri/map",
 
 			if( errorCode == 404 )
 				return true;
+
+			if( errorCode == 401 || errorCode == 403 || errorCode == 498 || errorCode == 499 ) {
+				return errorText.indexOf("token") !== -1
+					|| errorText.indexOf("unauthorized") !== -1
+					|| errorText.indexOf("not authorized") !== -1
+					|| errorText.indexOf("forbidden") !== -1
+					|| errorText.indexOf("access denied") !== -1;
+			}
 
 			if( errorCode == 400 ) {
 				return errorText.indexOf("not found") !== -1
