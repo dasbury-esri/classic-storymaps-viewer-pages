@@ -2,10 +2,10 @@
 
 ## Environment
 
-- Date:
-- Operator:
-- IIS host:
-- Site/app path:
+- Date: 2026-03-12
+- Operator: David Asbury
+- IIS host: storymaps.esri.com (Default Web Site)
+- Site/app path: https://localhost/templates/classic-storymaps
 - Package commit SHA:
 
 ## Route Validation

@@ -15,15 +15,15 @@ Capture the IIS configuration and validation checklist required to host the asse
 
 ## Route and Asset Checklist
 
-- [ ] Site/app root in IIS maps to package root for `/templates/classic-storymaps`
-- [ ] Default document includes `index.html`
-- [ ] Canonical landing route resolves:
+- [x] Site/app root in IIS maps to package root for `/templates/classic-storymaps`
+- [x] Default document includes `index.html`
+- [x] Canonical landing route resolves:
   - `/templates/classic-storymaps/`
-- [ ] Launcher routes resolve:
+- [x] Launcher routes resolve:
   - `/templates/classic-storymaps/maptour-launcher.html`
   - `/templates/classic-storymaps/swipe-launcher.html`
   - `/templates/classic-storymaps/mapjournal-launcher.html`
-- [ ] Runtime routes resolve:
+- [x] Runtime routes resolve:
   - `/templates/classic-storymaps/maptour/index.html`
   - `/templates/classic-storymaps/swipe/index.html`
   - `/templates/classic-storymaps/mapjournal/index.html`

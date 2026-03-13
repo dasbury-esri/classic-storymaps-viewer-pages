@@ -140,7 +140,7 @@ Tag legend:
   - Effort: M
   - Depends-On: S8
   - Deliverable: IIS configuration checklist and validation transcript template
-  - Status: Checklist and validation template prepared on 2026-03-12. Pending infra execution on target IIS host for final route/cache/fallback validation. Evidence: `docs/operations/phase4-s9-iis-hosting-checklist.md`, `docs/testing/phase4-s9-iis-validation-transcript-template.md`.
+  - Status: Infra execution run completed on 2026-03-13. Route checks passed on target host, with remaining gaps to close before task completion: compatibility redirect (`/templates/classic-stories/*` -> `/templates/classic-storymaps/*`), long-lived static asset caching, and text asset compression. Evidence: `docs/operations/phase4-s9-iis-hosting-checklist.md`, `docs/testing/phase4-s9-iis-validation-transcript-template.md`, `docs/testing/phase4-s9-iis-validation-transcript.md`.
   - Acceptance criteria:
     - Landing and onboarded runtime routes serve correctly from target path
     - Cache behavior matches documented policy without breaking legacy runtime assets
