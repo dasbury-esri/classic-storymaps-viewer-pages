@@ -326,6 +326,26 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				return storedUrl;
 			}
 
+			function normalizeSecureArcGisEmbedUrl(storedUrl) {
+				if (!storedUrl || !window.URL || window.location.protocol !== 'https:') {
+					return storedUrl;
+				}
+
+				try {
+					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var isArcGisHost = /(^|\.)arcgis\.com$/i.test(urlAsURL.hostname || '');
+
+					if (urlAsURL.protocol !== 'http:' || !isArcGisHost) {
+						return storedUrl;
+					}
+
+					return Helper.forceHttps(urlAsURL.href);
+				}
+				catch (err) {
+					return storedUrl;
+				}
+			}
+
 			function getParentOriginUrl(storedUrl) {
 				var urlAsURL = new window.URL(storedUrl);
 				return window.location.origin + urlAsURL.pathname + urlAsURL.search;
@@ -1138,6 +1158,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 					var applyEmbedSource = function(candidateUrl) {
 						var resolvedUrl = normalizeLegacyStorytellingSwipeUrl(candidateUrl || url);
+						resolvedUrl = normalizeSecureArcGisEmbedUrl(resolvedUrl);
 
 						if (cfg.hash) {
 							resolvedUrl = resolvedUrl + '#' + cfg.hash;
