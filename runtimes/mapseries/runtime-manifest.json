@@ -1,0 +1,28 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "mapseries",
+  "displayName": "Story Map Series",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/mapseries",
+  "canonicalUrlPattern": "/templates/classic-storymaps/mapseries",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/mapseries/index.html"
+  ],
+  "upstream": {
+    "repo": "storymap-series",
+    "owner": "Esri",
+    "refType": "commit",
+    "ref": "109e94458da8f297cd21b7ed877832b8a8ce9867",
+    "sourceSubpath": ".",
+    "license": "Apache-2.0"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt --force"
+    ],
+    "workingDirectory": "runtimes/mapseries/upstream",
+    "outputPath": "runtimes/mapseries/build"
+  }
+}

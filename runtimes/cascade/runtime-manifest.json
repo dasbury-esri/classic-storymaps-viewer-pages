@@ -1,0 +1,28 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "cascade",
+  "displayName": "Story Map Cascade",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/cascade",
+  "canonicalUrlPattern": "/templates/classic-storymaps/cascade",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/cascade/index.html"
+  ],
+  "upstream": {
+    "repo": "storymap-cascade",
+    "owner": "Esri",
+    "refType": "commit",
+    "ref": "df47322cf31bbf1d72768c829349477fce0514a9",
+    "sourceSubpath": ".",
+    "license": "Apache-2.0"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt --force"
+    ],
+    "workingDirectory": "runtimes/cascade/upstream",
+    "outputPath": "runtimes/cascade/build"
+  }
+}

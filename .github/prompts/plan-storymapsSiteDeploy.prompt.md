@@ -162,6 +162,17 @@ Plain-language intent for Phase 4:
     - Release metadata includes upstream ref, patch set, monorepo SHA, and deployment timestamp
     - Baseline smoke suite is defined for Map Tour, Swipe, and Map Journal
 
+- [x] [S10b] Task: Clone, build, deploy, and smoke-verify additional runtimes before S11.
+  - Owner: Build owner
+  - Effort: M
+  - Depends-On: S10
+  - Deliverable: Imported/runtime-manifested Map Series, Cascade, Shortlist, Crowdsource, and Basic with publish inclusion
+  - Status: Completed on 2026-03-13. Additional runtimes were imported at pinned refs, built into monorepo runtime outputs, and assembled into publish output under `/templates/classic-storymaps/<app-id>`. Crowdsource legacy npm/grunt incompatibility on modern Node is mitigated with a source-fallback build path that materializes `index.html` from `index.ejs` when needed. Evidence: `runtimes/mapseries/runtime-manifest.json`, `runtimes/cascade/runtime-manifest.json`, `runtimes/shortlist/runtime-manifest.json`, `runtimes/crowdsource/runtime-manifest.json`, `runtimes/basic/runtime-manifest.json`, `scripts/import-mapseries-upstream.sh`, `scripts/import-cascade-upstream.sh`, `scripts/import-shortlist-upstream.sh`, `scripts/import-crowdsource-upstream.sh`, `scripts/import-basic-upstream.sh`, `scripts/build-mapseries-runtime.sh`, `scripts/build-cascade-runtime.sh`, `scripts/build-shortlist-runtime.sh`, `scripts/build-crowdsource-runtime.sh`, `scripts/build-basic-runtime.sh`, `scripts/build-classic-storymaps-runtime-publish.sh`, `docs/deployment/phase5-s10b-additional-runtime-import-repro.md`, `docs/testing/phase5-s10b-additional-runtime-verification-transcript.md`.
+  - Acceptance criteria:
+    - Additional runtimes (Map Series, Cascade, Shortlist, Crowdsource, Basic) are imported at pinned refs and have runtime manifests
+    - Build output for each additional runtime includes a deployable `index.html`
+    - Publish assembly includes each additional runtime route under `/templates/classic-storymaps`
+
 #### Optional Backlog (Nice to Have, Not Required for Current Exit)
 - [ ] [S11] Task: Evaluate and design auth modernization for legacy Classic runtime sign-in behavior.
   - Owner: Build owner

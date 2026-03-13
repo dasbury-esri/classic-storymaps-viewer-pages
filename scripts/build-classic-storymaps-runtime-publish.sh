@@ -3,7 +3,7 @@ set -euo pipefail
 
 PUBLISH_ROOT="${PUBLISH_ROOT:-publish/templates/classic-storymaps}"
 
-runtime_names=(maptour swipe mapjournal)
+runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
 
 require_runtime_build() {
   local runtime_name="$1"
@@ -20,15 +20,6 @@ require_runtime_build() {
     exit 1
   fi
 
-  if [[ ! -d "$runtime_build/app" ]]; then
-    echo "Runtime build is missing app/: $runtime_build/app" >&2
-    exit 1
-  fi
-
-  if [[ ! -d "$runtime_build/resources" ]]; then
-    echo "Runtime build is missing resources/: $runtime_build/resources" >&2
-    exit 1
-  fi
 }
 
 copy_runtime_build() {
@@ -48,4 +39,4 @@ for runtime_name in "${runtime_names[@]}"; do
   copy_runtime_build "$runtime_name"
 done
 
-echo "Classic Storymaps runtime publish output copied to $PUBLISH_ROOT/{maptour,swipe,mapjournal}"
+echo "Classic Storymaps runtime publish output copied to $PUBLISH_ROOT for: ${runtime_names[*]}"

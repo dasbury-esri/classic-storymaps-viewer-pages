@@ -1,0 +1,28 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "shortlist",
+  "displayName": "Story Map Shortlist",
+  "supportStage": "supported",
+  "route": "/templates/classic-storymaps/shortlist",
+  "canonicalUrlPattern": "/templates/classic-storymaps/shortlist",
+  "compatibilityUrlPatterns": [
+    "/templates/classic-storymaps/shortlist/index.html"
+  ],
+  "upstream": {
+    "repo": "storymap-shortlist",
+    "owner": "Esri",
+    "refType": "commit",
+    "ref": "882acb573fc415a04f5fb56c63ccb58bfcba15c9",
+    "sourceSubpath": ".",
+    "license": "Apache-2.0"
+  },
+  "build": {
+    "tool": "grunt",
+    "commands": [
+      "npm ci",
+      "grunt --force"
+    ],
+    "workingDirectory": "runtimes/shortlist/upstream",
+    "outputPath": "runtimes/shortlist/build"
+  }
+}
