@@ -236,7 +236,7 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/cascade/index.html?appid=4e076f0a2ca141bab12ad7f1bbdf8571&ownership=[*]">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/cascade/index.html?appid=4e076f0a2ca141bab12ad7f1bbdf8571">See it in action</a>
       </p>
     </section>
   </main>
@@ -275,7 +275,7 @@
       }
 
       function buildViewerUrl(appId) {
-        return "/templates/classic-storymaps/cascade/index.html?appid=" + encodeURIComponent(appId.toLowerCase()) + "&ownership=[*]"
+        return "/templates/classic-storymaps/cascade/index.html?appid=" + encodeURIComponent(appId.toLowerCase()) + ""
       }
 
       demoLink.href = buildViewerUrl(DEFAULT_APP_ID);
