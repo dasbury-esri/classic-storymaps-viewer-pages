@@ -236,7 +236,7 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4&ownership=[*]">See it in action</a>
       </p>
     </section>
   </main>
@@ -275,7 +275,7 @@
       }
 
       function buildViewerUrl(appId) {
-        return "/templates/classic-storymaps/crowdsource/index.html?appid=" + encodeURIComponent(appId.toLowerCase());
+        return "/templates/classic-storymaps/crowdsource/index.html?appid=" + encodeURIComponent(appId.toLowerCase()) + "&ownership=[*]"
       }
 
       demoLink.href = buildViewerUrl(DEFAULT_APP_ID);

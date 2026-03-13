@@ -236,7 +236,7 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/shortlist/index.html?appid=20fd39888a444629bc8e40d9b6ac38cc">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/shortlist/index.html?appid=20fd39888a444629bc8e40d9b6ac38cc&ownership=[*]">See it in action</a>
       </p>
     </section>
   </main>
@@ -275,7 +275,7 @@
       }
 
       function buildViewerUrl(appId) {
-        return "/templates/classic-storymaps/shortlist/index.html?appid=" + encodeURIComponent(appId.toLowerCase());
+        return "/templates/classic-storymaps/shortlist/index.html?appid=" + encodeURIComponent(appId.toLowerCase()) + "&ownership=[*]"
       }
 
       demoLink.href = buildViewerUrl(DEFAULT_APP_ID);
