@@ -152,11 +152,12 @@ Plain-language intent for Phase 4:
 - S9 is where we prove the hosted site behaves like local verification, including nested runtime paths.
 
 #### Phase 5: Release and Smoke Operations
-- [ ] [S10] Task: Define release runbook and smoke suite baseline for import-first releases.
+- [x] [S10] Task: Define release runbook and smoke suite baseline for import-first releases.
   - Owner: QA owner (shared with build owner)
   - Effort: S
   - Depends-On: S6, S7b, S9
   - Deliverable: Release runbook and smoke checklist matrix
+  - Status: Completed on 2026-03-13. Release execution workflow, smoke matrix baseline, and release metadata template were documented for import-first operations across Map Tour, Swipe, and Map Journal. Evidence: `docs/operations/phase5-s10-release-runbook.md`, `docs/testing/phase5-s10-smoke-suite-baseline.md`, `docs/deployment/phase5-s10-release-metadata-template.md`.
   - Acceptance criteria:
     - Release metadata includes upstream ref, patch set, monorepo SHA, and deployment timestamp
     - Baseline smoke suite is defined for Map Tour, Swipe, and Map Journal
@@ -297,8 +298,8 @@ publish/
 - [ ] Landing catalog is deployed under /templates/classic-storymaps with explicit support-state messaging.
 - [ ] Map Tour, Swipe, and Map Journal are reproducibly deployed from monorepo-managed source/import.
 - [ ] Runtime manifests, patch policy, and route contract are documented.
-- [ ] IIS package/process and release runbook are committed.
-- [ ] Smoke suite baseline for Map Tour + Swipe + Map Journal is committed and executable.
+- [x] IIS package/process and release runbook are committed.
+- [x] Smoke suite baseline for Map Tour + Swipe + Map Journal is committed and executable.
 
 ### Suggested Execution Order
 1. Baseline and import contract (S1-S3)
