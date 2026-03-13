@@ -218,7 +218,9 @@ Expected:
 - Runtime should fail gracefully for missing/invalid theme payloads and avoid permanent loading spinner.
 
 Status:
-- Open; investigate Map Journal layout/theme initialization assumptions and add defensive null handling.
+- Follow-up hardening patch implemented on 2026-03-13 in Map Journal `WebApplicationData.getColors()` to safely handle missing/null layout theme payloads and return deterministic fallback colors.
+- Map Journal runtime rebuilt and publish assembly regenerated on 2026-03-13 after this null-theme guard change.
+- Pending manual browser verification for target appid to confirm loader no longer stalls and runtime avoids uncaught `themes` null error.
 
 #### 4.6 Map Journal embedded Map Series does not load in section 5
 
@@ -378,7 +380,7 @@ Use this section for final manual/browser verification evidence. Keep one line i
 - Date:
 - Operator:
 - Evidence:
-- Notes:
+- Notes: Null-theme defensive fallback patch implemented on 2026-03-13; run targeted browser verification for appid `99c42de7d2f04d0fbd9af135cac6cd55`.
 
 ### V-07 Issue 4.6 Map Journal embedded Map Series in section 5
 

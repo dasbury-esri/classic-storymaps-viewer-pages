@@ -258,23 +258,46 @@ define(["dojo/_base/lang", 'storymaps/tpl/core/Helper'],
 			},
 			getColors: function()
 			{
-				var cfgColors = this.getTheme().colors;
+				var cfgColors = this.getTheme().colors,
+					layoutProperties = this.getLayoutProperties(),
+					layoutThemes = layoutProperties && layoutProperties.themes ? layoutProperties.themes : null,
+					fallbackLayout = app.cfg.LAYOUTS && app.cfg.LAYOUTS.length ? app.cfg.LAYOUTS[0] : null,
+					fallbackTheme = {
+						name: 'fallback-default',
+						themeMajor: 'white',
+						dotNav: '#777777',
+						panel: '#FFFFFF',
+						media: '#EEEEEE',
+						text: '#000000',
+						textLink: '#555',
+						softText: '#c0c0c0',
+						softBtn: '#444',
+						esriLogo: 'black'
+					};
+
+				if ((!layoutThemes || !layoutThemes.length) && fallbackLayout && fallbackLayout.themes && fallbackLayout.themes.length)
+					layoutThemes = fallbackLayout.themes;
+
+				if (layoutThemes && layoutThemes.length)
+					fallbackTheme = layoutThemes[0];
 
 				// If colors are defined, check if that theme is present in the config file
 				// If present reuse the values from config, else use the values from the item
 				// This allow an user to override his theme from the config file as well as administrator update
 				if ( cfgColors && cfgColors.name ) {
-					var matchedTheme = $.grep(this.getLayoutProperties().themes, function(theme) {
+					var matchedTheme = $.grep(layoutThemes || [], function(theme) {
 						return theme.name == cfgColors.name;
 					});
 
 					if ( matchedTheme && matchedTheme.length )
 						return matchedTheme[0];
 					else
-						return cfgColors;
+						return lang.mixin({}, fallbackTheme, cfgColors);
 				}
+				else if ( cfgColors )
+					return lang.mixin({}, fallbackTheme, cfgColors);
 				else
-					return this.getLayoutProperties().themes[0];
+					return fallbackTheme;
 			},
 			getFonts: function()
 			{
