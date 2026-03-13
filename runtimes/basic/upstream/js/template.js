@@ -170,6 +170,9 @@ define([
       if (this.urlConfig && this.urlConfig.appid) {
         this.config.appid = this.urlConfig.appid;
       }
+      if (this.config.resolvedAppid) {
+        this.config.appid = this.config.resolvedAppid;
+      }
       if (this.urlConfig && this.urlConfig.webmap) {
         this.config.webmap = this.urlConfig.webmap;
       }
@@ -491,7 +494,9 @@ define([
       // to overwrite the application defaults.
       var deferred = new Deferred();
       if (this.config.appid) {
-        arcgisUtils.getItem(this.config.appid).then(lang.hitch(this, function (response) {
+        this._queryApplicationById(this.config.appid, 0).then(lang.hitch(this, function (result) {
+          var response = result.response;
+          var resolvedAppid = result.resolvedAppid || this.config.appid;
           var cfg = {};
           if (response.item && response.itemData && response.itemData.values) {
             // get app config values - we'll merge them with config later.
@@ -499,6 +504,8 @@ define([
             // save response
             cfg.appResponse = response;
           }
+          cfg.resolvedAppid = resolvedAppid;
+          cfg.requestedAppid = this.config.appid;
           // get the extent for the application item. This can be used to override the default web map extent
           if (response.item && response.item.extent) {
             cfg.application_extent = response.item.extent;
@@ -527,6 +534,47 @@ define([
         deferred.resolve();
       }
       return deferred.promise;
+    },
+    _queryApplicationById: function (appid, depth) {
+      var deferred = new Deferred();
+      arcgisUtils.getItem(appid).then(lang.hitch(this, function (response) {
+        var referencedAppid = this._extractReferencedAppId(response);
+        if (referencedAppid && referencedAppid !== appid && depth < 1) {
+          this._queryApplicationById(referencedAppid, depth + 1).then(function (result) {
+            deferred.resolve(result);
+          }, function (error) {
+            deferred.reject(error);
+          });
+          return;
+        }
+        deferred.resolve({
+          response: response,
+          resolvedAppid: appid
+        });
+      }), function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _extractReferencedAppId: function (response) {
+      var urlObject,
+        appid;
+      if (!response || !response.item || !response.item.url) {
+        return null;
+      }
+      urlObject = urlUtils.urlToObject(response.item.url);
+      if (!urlObject || !urlObject.query || !urlObject.query.appid) {
+        return null;
+      }
+      appid = urlObject.query.appid;
+      if (typeof appid !== "string") {
+        return null;
+      }
+      appid = esriLang.stripTags(appid);
+      if (!/^[a-f0-9]{32}$/i.test(appid)) {
+        return null;
+      }
+      return appid;
     },
     queryOrganization: function () {
       var deferred = new Deferred();

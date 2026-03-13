@@ -18,7 +18,7 @@
 define({
   //Default configuration settings for the application. This is where you'll define things like a bing maps key,
   //default web map, default app color theme and more. These values can be overwritten by template configuration settings and url parameters.
-  "appid": "30066075caa947178f6c2ae438e7efa4",
+  "appid": "",
   "webmap": "24e01ef45d40423f95300ad2abc5038a",
   "oauthappid": null, //"AFTKRmv16wj14N3z",
   //Group templates must support a group url parameter. This will contain the id of the group.
