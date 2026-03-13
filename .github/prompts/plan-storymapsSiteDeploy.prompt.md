@@ -135,12 +135,12 @@ Tag legend:
     - Package excludes source-only files
     - Nested-path assets resolve correctly for landing and onboarded runtimes
 
-- [ ] [S9] Task: Configure IIS route assets, cache policy, and fallback behavior.
+- [x] [S9] Task: Configure IIS route assets, cache policy, and fallback behavior.
   - Owner: Infra owner
   - Effort: M
   - Depends-On: S8
   - Deliverable: IIS configuration checklist and validation transcript template
-  - Status: Infra execution run completed on 2026-03-13. Route, fallback, and cache checks passed on target host; remaining gap before full completion is text-asset compression in sampled responses. Evidence: `docs/operations/phase4-s9-iis-hosting-checklist.md`, `docs/testing/phase4-s9-iis-validation-transcript-template.md`, `docs/testing/phase4-s9-iis-validation-transcript.md`.
+  - Status: Completed on 2026-03-13. IIS route, fallback, cache, MIME, and sampled text-asset compression checks passed on target host. Evidence: `docs/operations/phase4-s9-iis-hosting-checklist.md`, `docs/testing/phase4-s9-iis-validation-transcript-template.md`, `docs/testing/phase4-s9-iis-validation-transcript.md`.
   - Acceptance criteria:
     - Landing and onboarded runtime routes serve correctly from target path
     - Cache behavior matches documented policy without breaking legacy runtime assets

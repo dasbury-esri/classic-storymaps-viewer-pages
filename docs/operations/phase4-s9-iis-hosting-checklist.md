@@ -43,7 +43,7 @@ Capture the IIS configuration and validation checklist required to host the asse
 ## Security/Header Baseline Checklist
 
 - [x] Content type mappings are valid for runtime asset types
-- [ ] Compression enabled for text assets where appropriate
+- [x] Compression enabled for text assets where appropriate
 - [x] Header rules do not block same-site runtime resource loading
 
 ## Validation Output

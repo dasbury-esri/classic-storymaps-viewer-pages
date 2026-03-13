@@ -34,7 +34,7 @@
 
 - [x] HTML uses conservative cache policy
 - [x] Static assets use long-lived cache policy
-- [ ] Compression enabled for sampled text assets
+- [x] Compression enabled for sampled text assets
 - [x] Required asset MIME types are correct
 - [x] Header rules do not block same-site runtime resources
 - Notes:
@@ -61,7 +61,7 @@ Executed with PowerShell 2.0 script: scripts/run-phase4-s9-iis-checklist.ps1
 | Fallback | Invalid runtime input: /templates/classic-storymaps/mapjournal/index.html?appid=bad | Yes | 200 | Expected non-500 status, got 200 |
 | Cache | HTML uses conservative cache policy | Yes | 200 | Cache-Control='no-cache' |
 | Cache | Static assets use long-lived cache policy | Yes |  | /templates/classic-storymaps/maptour/app/maptour-viewer-min.js => status=200, cache='public, max-age=604800', encoding=''; /templates/classic-storymaps/maptour/app/maptour-min.css => status=200, cache='public, max-age=604800', encoding=''; /templates/classic-storymaps/maptour/resources/icons/esri-logo.png => status=200, cache='public, max-age=604800', encoding='' |
-| Headers | Compression enabled for sampled text assets | No |  | /templates/classic-storymaps/maptour/app/maptour-viewer-min.js => status=200, cache='public, max-age=604800', encoding=''; /templates/classic-storymaps/maptour/app/maptour-min.css => status=200, cache='public, max-age=604800', encoding=''; /templates/classic-storymaps/maptour/resources/icons/esri-logo.png => status=200, cache='public, max-age=604800', encoding='' |
+| Headers | Compression enabled for sampled text assets | Yes |  | /templates/classic-storymaps/maptour/app/maptour-viewer-min.js => status=200, cache='public, max-age=604800', encoding='gzip'; /templates/classic-storymaps/maptour/app/maptour-min.css => status=200, cache='public, max-age=604800', encoding='gzip' |
 | Headers | Required asset MIME types are correct | Yes |  | js => status=200, content-type='application/x-javascript'; css => status=200, content-type='text/css'; png => status=200, content-type='image/png'; svg => status=200, content-type='image/svg+xml'; woff2 => status=200, content-type='font/woff2' |
 | Headers | Header rules do not block same-site runtime resources | Yes |  | No same-site resource blocks detected in sampled requests (non-authoritative, sampled check). |
 
