@@ -95,8 +95,8 @@
       border-radius: 10px;
       min-height: 34px;
       padding: 6px 12px;
-      background: #fff;
-      color: var(--ink-1);
+      background: #28ACDB;
+      color: #fff;
       font: inherit;
       font-weight: 700;
       font-size: 0.82rem;
@@ -105,19 +105,22 @@
       z-index: 1;
     }
 
+    .auth-btn.auth-btn--logged-in {
+      background: #fff;
+      color: var(--ink-1);
+    }
+
+    .auth-btn.auth-btn--logged-out {
+      background: #28ACDB;
+      color: #fff;
+      border-color: rgba(102, 171, 255, 0.7);
+    }
+
     .auth-btn:hover,
     .auth-btn:focus-visible {
       outline: none;
       border-color: rgba(11, 111, 95, 0.45);
       box-shadow: 0 0 0 3px var(--ring);
-    }
-
-    .auth-status {
-      margin: 0 0 10px;
-      color: var(--ink-1);
-      font-size: 0.78rem;
-      text-align: right;
-      min-height: 1.1em;
     }
 
     h1 {
@@ -398,7 +401,6 @@
         <p class="eyebrow">Classic Esri Story Maps Viewers</p>
         <div class="auth-wrap">
           <button id="auth-button" class="auth-btn" type="button">Log In</button>
-          <p id="auth-status" class="auth-status" aria-live="polite"></p>
         </div>
       </div>
       <h1 id="catalog-title">Classic Story Maps have been retired.
@@ -506,7 +508,6 @@
 
     const grid = document.getElementById("catalog-grid");
     const authButton = document.getElementById("auth-button");
-    const authStatus = document.getElementById("auth-status");
     const omniForm = document.getElementById("omni-form");
     const omniInput = document.getElementById("omni-appid");
     const omniStatus = document.getElementById("omni-status");
@@ -542,6 +543,14 @@
       }
     }
 
+    function clearStoredToken() {
+      try {
+        sessionStorage.removeItem(AUTH_STORAGE_KEY);
+      } catch {
+        // Ignore session storage failures in locked-down environments.
+      }
+    }
+
     function clearUrlHash() {
       if (window.location.hash) {
         const cleanUrl = window.location.pathname + window.location.search;
@@ -564,19 +573,21 @@
 
     function setAuthUi(token) {
       if (token) {
-        authButton.textContent = "Signed In";
-        authButton.setAttribute("aria-label", "Signed in to ArcGIS Online");
-        authStatus.textContent = "ArcGIS Online token found for this session.";
+        authButton.textContent = "Sign Out";
+        authButton.setAttribute("aria-label", "Sign out of ArcGIS Online");
+        authButton.classList.remove("auth-btn--logged-out");
+        authButton.classList.add("auth-btn--logged-in");
       } else {
         authButton.textContent = "Log In";
         authButton.setAttribute("aria-label", "Log in to ArcGIS Online");
-        authStatus.textContent = "";
+        authButton.classList.remove("auth-btn--logged-in");
+        authButton.classList.add("auth-btn--logged-out");
       }
     }
 
     function beginArcgisLogin() {
       if (!AUTH_CONFIG.clientId) {
-        authStatus.textContent = "Login is not configured yet. Set __CLASSIC_STORYMAPS_CLIENT_ID__.";
+        alert("Login is not configured yet. Set __CLASSIC_STORYMAPS_CLIENT_ID__.");
         return;
       }
 
@@ -721,7 +732,15 @@
       window.open(viewerUrl, "_blank", "noopener,noreferrer");
     }
 
-    authButton.addEventListener("click", beginArcgisLogin);
+    authButton.addEventListener("click", function() {
+      if (getStoredToken()) {
+        clearStoredToken();
+        setAuthUi(null);
+        return;
+      }
+
+      beginArcgisLogin();
+    });
 
     const tokenFromHash = getTokenFromHash();
     if (tokenFromHash) {
