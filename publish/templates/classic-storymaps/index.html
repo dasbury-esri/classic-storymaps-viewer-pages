@@ -419,6 +419,7 @@
         <input id="omni-appid" class="omni-input" name="appid" type="text" maxlength="64" autocomplete="off" inputmode="latin" placeholder="Enter a 32-character Classic Story Map app ID from ArcGIS Online" aria-describedby="omni-status">
         <button class="omni-btn" type="submit">Open Viewer</button>
       </form>
+      <p id="omni-status" class="omni-status" role="status" aria-live="polite"></p>
 
     </section>
 
@@ -605,6 +606,9 @@
     }
 
     function setOmniStatus(message, kind) {
+      if (!omniStatus) {
+        return;
+      }
       omniStatus.textContent = message || "";
       omniStatus.className = "omni-status" + (kind ? " " + kind : "");
     }
