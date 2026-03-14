@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Swipe Launcher | Classic Storymaps</title>
   <meta name="description" content="Guided launcher for Classic Storymaps Swipe viewer.">
+    <meta property="og:image" content="assets/images/swipe.jpg" />
     <link rel="icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +81,33 @@
       border-radius: 14px;
       background: #fff;
       padding: 14px;
+    }
+
+    .appid-box-layout {
+      display: grid;
+      grid-template-columns: minmax(120px, 33%) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .appid-box-image-wrap {
+      margin: -6px 0 -2px -6px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(24, 28, 36, 0.08);
+      background: #f8f6f1;
+      align-self: center;
+    }
+
+    .appid-box-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .appid-box-content {
+      min-width: 0;
     }
 
     .box h2 {
@@ -199,36 +227,53 @@
     @media (max-width: 620px) {
       .page { padding-top: 18px; }
       .panel { border-radius: 18px; }
+
+      .appid-box-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .appid-box-image-wrap {
+        margin: -4px 0 4px;
+        max-width: 240px;
+      }
     }
   </style>
 </head>
 <body>
   <main class="page">
     <section class="panel" aria-labelledby="launcher-title">
-      <p class="eyebrow">Classic Storymaps</p>
+      <p class="eyebrow">Classic Story Maps</p>
       <h1 id="launcher-title">Swipe Launcher</h1>
       <p class="lead">
-        Enter either a Swipe app ID or a web map ID to open the canonical runtime viewer.
-        If you already have a URL with an <code>appid</code> or <code>webmap</code> parameter, it will auto-fill below.
+        Enter either a Swipe app ID or a web map ID below to open the viewer.<br>
+        To locate Classic Story Map app IDs, you can search your My Content page in ArcGIS Online with this query: <code>type:"Web Mapping Application" and tags:"Story Map"</code><br>
+        Or you can use <a href="https://classic-story-search.netlify.app/">this tool</a>.
       </p>
 
       <div class="box">
-        <h2>What can you launch?</h2>
-        <p>
-          Swipe accepts either a 32-character application ID or a 32-character web map ID.
-          For authored Swipe stories, <code>appid</code> is the preferred path because it preserves the app's saved layout and layer settings.
-        </p>
-        <ul>
-          <li>App ID example: <code>4e44be0f61094d6ab36a1a1df215daed</code>.</li>
-          <li>Web map example: <code>62702544d70648e593bc05d65180fd64</code>.</li>
-          <li>Both values must be 32 hexadecimal characters with no spaces or hyphens.</li>
-        </ul>
+        <div class="appid-box-layout">
+          <div class="appid-box-image-wrap" aria-hidden="true">
+            <img class="appid-box-image" src="assets/images/swipe.jpg" alt="">
+          </div>
+
+          <div class="appid-box-content">
+            <h2>What can you launch?</h2>
+            <p>
+              Swipe accepts either a 32-character application ID or a 32-character web map ID.<br>
+              For authored Swipe or Spyglass stories, <code>appid</code> is the preferred path because it preserves the app's saved layout and layer settings.
+            </p>
+            <ul>
+              <li>App ID example: <code>4e44be0f61094d6ab36a1a1df215daed</code>.</li>
+              <li>Web map example: <code>62702544d70648e593bc05d65180fd64</code>.</li>
+              <li>Both values must be 32 hexadecimal characters with no spaces, braces or hyphens.</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <form id="launch-form" novalidate>
         <label for="appid">Swipe app ID</label>
-        <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-hint appid-status">
-        <p id="appid-hint" class="hint">Preferred for authored Swipe stories. The launcher will redirect with <code>?appid=&lt;your-id&gt;</code>.</p>
+        <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-status">
 
         <label for="webmap">Web map ID</label>
         <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID" maxlength="64" inputmode="latin" aria-describedby="webmap-hint appid-status">
@@ -243,7 +288,7 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/swipe/index.html?appid=4e44be0f61094d6ab36a1a1df215daed">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/swipe/index.html?appid=4e44be0f61094d6ab36a1a1df215daed">If you just want to view an example, click here</a>
         <span> using the authored Swipe app configuration.</span>
       </p>
       <p class="hint">Direct <code>webmap</code> launches use this deployment's default Swipe configuration, so they can differ from an authored app's selected swipe layer.</p>

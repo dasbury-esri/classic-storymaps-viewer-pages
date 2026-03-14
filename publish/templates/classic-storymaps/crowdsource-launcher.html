@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crowdsource Launcher | Classic Storymaps</title>
   <meta name="description" content="Guided launcher for Classic Storymaps Crowdsource viewer.">
+    <meta property="og:image" content="assets/images/crowdsource.jpg" />
     <link rel="icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +81,33 @@
       border-radius: 14px;
       background: #fff;
       padding: 14px;
+    }
+
+    .appid-box-layout {
+      display: grid;
+      grid-template-columns: minmax(120px, 33%) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .appid-box-image-wrap {
+      margin: -6px 0 -2px -6px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(24, 28, 36, 0.08);
+      background: #f8f6f1;
+      align-self: center;
+    }
+
+    .appid-box-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .appid-box-content {
+      min-width: 0;
     }
 
     .box h2 {
@@ -199,36 +227,52 @@
     @media (max-width: 620px) {
       .page { padding-top: 18px; }
       .panel { border-radius: 18px; }
+
+      .appid-box-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .appid-box-image-wrap {
+        margin: -4px 0 4px;
+        max-width: 240px;
+      }
     }
   </style>
 </head>
 <body>
   <main class="page">
     <section class="panel" aria-labelledby="launcher-title">
-      <p class="eyebrow">Classic Storymaps</p>
+      <p class="eyebrow">Classic Story Maps</p>
       <h1 id="launcher-title">Crowdsource Launcher</h1>
       <p class="lead">
-        Enter your Crowdsource app ID to open the canonical runtime viewer.
-        If you already have a URL with an <code>appid</code> parameter, it will auto-fill below.
+        Enter your Crowdsource app ID below to open the viewer.<br>
+        To locate Classic Story Map app IDs, you can search your My Content page in ArcGIS Online with this query: <code>type:"Web Mapping Application" and tags:"Story Map"</code><br>
+        Or you can use <a href="https://classic-story-search.netlify.app/">this tool</a>.
       </p>
 
       <div class="box">
-        <h2>What is an app ID?</h2>
-        <p>
-          It is a 32-character hexadecimal ID used in ArcGIS Crowdsource URLs. Example:
-          <code>c7ad1a55de0247a68454a76f251225a4</code>
-        </p>
-        <ul>
-          <li>Use letters <code>a-f</code> and numbers <code>0-9</code>.</li>
-          <li>No spaces, braces, or hyphens.</li>
-          <li>Invalid IDs are blocked before launch.</li>
-        </ul>
+        <div class="appid-box-layout">
+          <div class="appid-box-image-wrap" aria-hidden="true">
+            <img class="appid-box-image" src="assets/images/crowdsource.jpg" alt="">
+          </div>
+
+          <div class="appid-box-content">
+            <h2>What is an app ID?</h2>
+            <p>
+              It is a 32-character hexadecimal ID used to identify Crowdsource stories in ArcGIS Online.<br>
+              Example: <code>c7ad1a55de0247a68454a76f251225a4</code>
+            </p>
+            <ul>
+              <li>They use letters <code>a-f</code> and numbers <code>0-9</code> without spaces, braces or hyphens.</li>
+              <li>Invalid IDs will be checked before launch.</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <form id="launch-form" novalidate>
         <label for="appid">Crowdsource app ID</label>
-        <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-hint appid-status">
-        <p id="appid-hint" class="hint">The launcher will redirect with <code>?appid=&lt;your-id&gt;</code>.</p>
+        <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-status">
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
         <div class="actions">
@@ -238,7 +282,7 @@
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4">See it in action</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4">If you just want to view an example, click here</a>
       </p>
     </section>
   </main>
