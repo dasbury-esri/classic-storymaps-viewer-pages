@@ -197,9 +197,13 @@ define(["dojo/_base/lang", 'storymaps/tpl/core/Helper'],
 			getLayoutProperties: function(layoutId)
 			{
 				var layout = layoutId || this.getLayoutId(),
-					layoutCfg = $.grep(app.cfg.LAYOUTS, function(l){ return l.id == layout; });
+					layoutList = app.cfg.LAYOUTS || [],
+					layoutCfg = $.grep(layoutList, function(l){ return l.id == layout; });
 
-				return layoutCfg && layoutCfg.length ? layoutCfg[0] : null;
+				if ( layoutCfg && layoutCfg.length )
+					return layoutCfg[0];
+
+				return layoutList.length ? layoutList[0] : null;
 			},
 
 
@@ -249,7 +253,9 @@ define(["dojo/_base/lang", 'storymaps/tpl/core/Helper'],
 			 */
 			getTheme: function()
 			{
-				return this.getSettings().theme || {};
+				var theme = this.getSettings().theme;
+
+				return theme && typeof theme === 'object' ? theme : {};
 			},
 			setTheme: function(theme)
 			{
@@ -258,7 +264,8 @@ define(["dojo/_base/lang", 'storymaps/tpl/core/Helper'],
 			},
 			getColors: function()
 			{
-				var cfgColors = this.getTheme().colors,
+				var theme = this.getTheme(),
+					cfgColors = theme.colors,
 					layoutProperties = this.getLayoutProperties(),
 					layoutThemes = layoutProperties && layoutProperties.themes ? layoutProperties.themes : null,
 					fallbackLayout = app.cfg.LAYOUTS && app.cfg.LAYOUTS.length ? app.cfg.LAYOUTS[0] : null,
