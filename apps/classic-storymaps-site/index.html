@@ -74,6 +74,13 @@
       pointer-events: none;
     }
 
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .eyebrow {
       margin: 0 0 10px;
       color: var(--accent);
@@ -81,6 +88,36 @@
       letter-spacing: 0.09em;
       text-transform: uppercase;
       font-size: 0.79rem;
+    }
+
+    .auth-btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      min-height: 34px;
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--ink-1);
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .auth-btn:hover,
+    .auth-btn:focus-visible {
+      outline: none;
+      border-color: rgba(11, 111, 95, 0.45);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .auth-status {
+      margin: 0 0 10px;
+      color: var(--ink-1);
+      font-size: 0.78rem;
+      text-align: right;
+      min-height: 1.1em;
     }
 
     h1 {
@@ -103,6 +140,74 @@
       margin-top: 18px;
       font-size: 0.88rem;
       color: var(--ink-1);
+    }
+
+    .omni-panel {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 12px;
+    }
+
+    .omni-label {
+      display: block;
+      margin: 0 0 8px;
+      font-size: 0.86rem;
+      color: var(--ink-1);
+      font-weight: 600;
+    }
+
+    .omni-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .omni-input {
+      flex: 1 1 300px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font: inherit;
+      color: var(--ink-0);
+      background: #fff;
+    }
+
+    .omni-input:focus {
+      outline: none;
+      border-color: rgba(11, 111, 95, 0.45);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .omni-btn {
+      border: none;
+      border-radius: 10px;
+      min-height: 38px;
+      padding: 8px 12px;
+      background: linear-gradient(120deg, var(--accent), #1f8b79);
+      color: #fff;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .omni-status {
+      margin: 8px 0 0;
+      font-size: 0.84rem;
+      color: var(--ink-1);
+      min-height: 1.2em;
+    }
+
+    .omni-status.error {
+      color: #b42318;
+    }
+
+    .omni-status.ok {
+      color: var(--ok);
     }
 
     .grid {
@@ -266,6 +371,16 @@
         min-height: 0;
       }
 
+      .hero-top {
+        align-items: flex-start;
+      }
+
+      .auth-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
       .hero {
         border-radius: 20px;
       }
@@ -279,7 +394,13 @@
 <body>
   <main class="page">
     <section class="hero" aria-labelledby="catalog-title">
-      <p class="eyebrow">Classic Esri Story Maps Viewers</p>
+      <div class="hero-top">
+        <p class="eyebrow">Classic Esri Story Maps Viewers</p>
+        <div class="auth-wrap">
+          <button id="auth-button" class="auth-btn" type="button">Log In</button>
+          <p id="auth-status" class="auth-status" aria-live="polite"></p>
+        </div>
+      </div>
       <h1 id="catalog-title">Classic Story Maps have been retired.
         But you can still view them here!</h1>
       <p class="summary">
@@ -291,6 +412,12 @@
       <p class="disclaimer">
         <i>Disclaimer: This is a community project, not supported by Esri. Runtimes are imported from upstream repositories and may have limitations or issues. Viewers are provided as-is without support and with minimal maintenance.</i>
       </p>
+
+      <form id="omni-form" class="omni-row" novalidate>
+        <input id="omni-appid" class="omni-input" name="appid" type="text" maxlength="64" autocomplete="off" inputmode="latin" placeholder="Enter a 32-character Classic Story Map app ID from ArcGIS Online" aria-describedby="omni-status">
+        <button class="omni-btn" type="submit">Open Viewer</button>
+      </form>
+
     </section>
 
     <section class="grid" id="catalog-grid" aria-label="Classic app catalog"></section>
@@ -378,6 +505,234 @@
     ];
 
     const grid = document.getElementById("catalog-grid");
+    const authButton = document.getElementById("auth-button");
+    const authStatus = document.getElementById("auth-status");
+    const omniForm = document.getElementById("omni-form");
+    const omniInput = document.getElementById("omni-appid");
+    const omniStatus = document.getElementById("omni-status");
+    const AUTH_STORAGE_KEY = "arcgis_access_token";
+    const APP_ID_REGEX = /^[a-f0-9]{32}$/i;
+    const AUTH_CONFIG = {
+      clientId: window.__CLASSIC_STORYMAPS_CLIENT_ID__ || "4ZanYdCYK0mWsFLz",
+      redirectUri: window.__CLASSIC_STORYMAPS_REDIRECT_URI__ || (window.location.origin + window.location.pathname)
+    };
+    const RUNTIME_VIEWER_BY_APP = {
+      maptour: "/templates/classic-storymaps/maptour/index.html",
+      swipe: "/templates/classic-storymaps/swipe/index.html",
+      mapjournal: "/templates/classic-storymaps/mapjournal/index.html",
+      mapseries: "/templates/classic-storymaps/mapseries/index.html",
+      cascade: "/templates/classic-storymaps/cascade/index.html",
+      shortlist: "/templates/classic-storymaps/shortlist/index.html",
+      basic: "/templates/classic-storymaps/basic/index.html"
+    };
+
+    function getStoredToken() {
+      try {
+        return sessionStorage.getItem(AUTH_STORAGE_KEY);
+      } catch {
+        return null;
+      }
+    }
+
+    function storeToken(token) {
+      try {
+        sessionStorage.setItem(AUTH_STORAGE_KEY, token);
+      } catch {
+        // Ignore session storage failures in locked-down environments.
+      }
+    }
+
+    function clearUrlHash() {
+      if (window.location.hash) {
+        const cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState({}, "", cleanUrl);
+      }
+    }
+
+    function getTokenFromHash() {
+      const hash = window.location.hash.startsWith("#")
+        ? window.location.hash.substring(1)
+        : window.location.hash;
+
+      if (!hash) {
+        return null;
+      }
+
+      const params = new URLSearchParams(hash);
+      return params.get("access_token") || params.get("token");
+    }
+
+    function setAuthUi(token) {
+      if (token) {
+        authButton.textContent = "Signed In";
+        authButton.setAttribute("aria-label", "Signed in to ArcGIS Online");
+        authStatus.textContent = "ArcGIS Online token found for this session.";
+      } else {
+        authButton.textContent = "Log In";
+        authButton.setAttribute("aria-label", "Log in to ArcGIS Online");
+        authStatus.textContent = "";
+      }
+    }
+
+    function beginArcgisLogin() {
+      if (!AUTH_CONFIG.clientId) {
+        authStatus.textContent = "Login is not configured yet. Set __CLASSIC_STORYMAPS_CLIENT_ID__.";
+        return;
+      }
+
+      const state = encodeURIComponent(window.location.pathname + window.location.search);
+      const redirect = encodeURIComponent(AUTH_CONFIG.redirectUri);
+      const authUrl =
+        "https://www.arcgis.com/sharing/rest/oauth2/authorize" +
+        "?client_id=" + encodeURIComponent(AUTH_CONFIG.clientId) +
+        "&response_type=token" +
+        "&expiration=20160" +
+        "&redirect_uri=" + redirect +
+        "&state=" + state;
+
+      window.location.assign(authUrl);
+    }
+
+    function setOmniStatus(message, kind) {
+      omniStatus.textContent = message || "";
+      omniStatus.className = "omni-status" + (kind ? " " + kind : "");
+    }
+
+    function normalizeId(value) {
+      return (value || "").trim().toLowerCase();
+    }
+
+    function classifyClassicRuntime(item) {
+      const keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
+      const normalizedKeywords = keywords.map(function(keyword) {
+        return String(keyword || "").toLowerCase();
+      });
+      const itemType = String((item && item.type) || "").toLowerCase();
+      const itemUrl = String((item && item.url) || "").toLowerCase();
+
+      function hasKeyword(fragment) {
+        return normalizedKeywords.some(function(keyword) {
+          return keyword.indexOf(fragment) !== -1;
+        });
+      }
+
+      if (hasKeyword("story map tour") || itemUrl.indexOf("/maptour/") !== -1) {
+        return "maptour";
+      }
+      if (hasKeyword("story map swipe") || hasKeyword("story map spyglass") || itemUrl.indexOf("/swipe/") !== -1) {
+        return "swipe";
+      }
+      if (hasKeyword("story map journal") || itemUrl.indexOf("/mapjournal/") !== -1) {
+        return "mapjournal";
+      }
+      if (hasKeyword("story map series") || itemUrl.indexOf("/mapseries/") !== -1) {
+        return "mapseries";
+      }
+      if (hasKeyword("story map cascade") || itemUrl.indexOf("/cascade/") !== -1) {
+        return "cascade";
+      }
+      if (hasKeyword("story map shortlist") || itemUrl.indexOf("/shortlist/") !== -1) {
+        return "shortlist";
+      }
+      if (hasKeyword("story map basic") || itemUrl.indexOf("/basic/") !== -1) {
+        return "basic";
+      }
+      if (hasKeyword("story map crowdsource") || itemUrl.indexOf("/crowdsource/") !== -1) {
+        return "crowdsource";
+      }
+
+      if (itemType === "web mapping application" && hasKeyword("story map")) {
+        return "unknown-classic";
+      }
+
+      return null;
+    }
+
+    async function fetchArcgisItem(itemId, token) {
+      const params = new URLSearchParams();
+      params.set("f", "json");
+      if (token) {
+        params.set("token", token);
+      }
+
+      const response = await fetch("https://www.arcgis.com/sharing/rest/content/items/" + encodeURIComponent(itemId) + "?" + params.toString());
+      const json = await response.json();
+      return json;
+    }
+
+    async function handleOmniSubmit(evt) {
+      evt.preventDefault();
+
+      const appId = normalizeId(omniInput.value);
+      if (!APP_ID_REGEX.test(appId)) {
+        setOmniStatus("App ID must be exactly 32 hexadecimal characters (a-f, 0-9).", "error");
+        omniInput.focus();
+        return;
+      }
+
+      setOmniStatus("Checking ArcGIS Online item...", "");
+
+      const token = getStoredToken();
+      let item;
+      try {
+        item = await fetchArcgisItem(appId, token);
+      } catch (error) {
+        setOmniStatus("Could not reach ArcGIS Online. Please try again.", "error");
+        return;
+      }
+
+      if (item && item.error) {
+        if (!token && item.error.code === 400) {
+          setOmniStatus("Item could be private or org-restricted. Log in and try again.", "error");
+          return;
+        }
+        if (token && (item.error.code === 498 || item.error.code === 499)) {
+          setOmniStatus("Session token expired. Please log in again.", "error");
+          return;
+        }
+        setOmniStatus("Item was not found or is not accessible.", "error");
+        return;
+      }
+
+      const runtime = classifyClassicRuntime(item);
+      if (!runtime) {
+        setOmniStatus("This item is not recognized as a Classic Story Map application.", "error");
+        return;
+      }
+
+      if (runtime === "crowdsource") {
+        setOmniStatus("Crowdsource is currently marked In Progress on this site.", "error");
+        return;
+      }
+
+      if (runtime === "unknown-classic") {
+        setOmniStatus("Classic Story Map detected, but runtime type could not be classified.", "error");
+        return;
+      }
+
+      const viewerBase = RUNTIME_VIEWER_BY_APP[runtime];
+      if (!viewerBase) {
+        setOmniStatus("Detected runtime is not supported by this deployment.", "error");
+        return;
+      }
+
+      const viewerUrl = viewerBase + "?appid=" + encodeURIComponent(appId);
+      setOmniStatus("Opening " + runtime + " viewer in a new tab...", "ok");
+      window.open(viewerUrl, "_blank", "noopener,noreferrer");
+    }
+
+    authButton.addEventListener("click", beginArcgisLogin);
+
+    const tokenFromHash = getTokenFromHash();
+    if (tokenFromHash) {
+      storeToken(tokenFromHash);
+      clearUrlHash();
+      setAuthUi(tokenFromHash);
+    } else {
+      setAuthUi(getStoredToken());
+    }
+
+    omniForm.addEventListener("submit", handleOmniSubmit);
 
     function getActionMarkup(app) {
       const label = app.action || "Open Launcher";
