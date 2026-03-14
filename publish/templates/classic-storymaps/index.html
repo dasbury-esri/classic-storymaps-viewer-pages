@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Classic Storymaps Catalog</title>
-  <meta name="description" content="Catalog and launch surface for Classic Storymaps runtimes.">
+  <title>Classic Story Maps Viewers</title>
+  <meta name="description" content="Classic Story Maps have retired. But you can still view them here!">
+  <meta property="og:image" content="https://storymaps.esri.com/templates/classic-storymaps/assets/images/custom.png" />   
   <link rel="icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,30 +103,6 @@
       margin-top: 18px;
       font-size: 0.88rem;
       color: var(--ink-1);
-    }
-
-    .chip {
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid var(--line);
-      background: #fff;
-    }
-
-    .chip.supported {
-      color: var(--ok);
-      border-color: rgba(43, 127, 66, 0.35);
-    }
-
-    .chip.queued {
-      color: var(--queued);
-      border-color: rgba(185, 104, 16, 0.35);
-    }
-
-    .chip.prep {
-      color: var(--prep);
-      border-color: rgba(92, 96, 112, 0.35);
     }
 
     .grid {
@@ -326,14 +303,12 @@
   <script>
     const SUPPORT_STATE = {
       SUPPORTED: "supported",
-      QUEUED: "queued",
-      PREP: "prep"
+      QUEUED: "queued"
     };
 
     const SUPPORT_LABEL = {
       [SUPPORT_STATE.SUPPORTED]: "Supported",
-      [SUPPORT_STATE.QUEUED]: "In Progress",
-      [SUPPORT_STATE.PREP]: "Coming Soon"
+      [SUPPORT_STATE.QUEUED]: "In Progress"
     };
 
     const apps = [
