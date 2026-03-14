@@ -536,12 +536,42 @@
       }
     }
 
+    function setEsriAuthCookie(token) {
+      if (!token) {
+        return;
+      }
+
+      try {
+        const cookiePayload = encodeURIComponent(JSON.stringify({
+          token: token,
+          ssl: window.location.protocol === "https:",
+          expires: Date.now() + (14 * 24 * 60 * 60 * 1000)
+        }));
+        const attrs = ["Path=/", "SameSite=Lax"];
+        if (window.location.protocol === "https:") {
+          attrs.push("Secure");
+        }
+        document.cookie = "esri_auth=" + cookiePayload + "; " + attrs.join("; ");
+      } catch {
+        // Ignore cookie write failures in restricted environments.
+      }
+    }
+
+    function clearEsriAuthCookie() {
+      const attrs = ["Path=/", "SameSite=Lax", "Expires=Thu, 01 Jan 1970 00:00:00 GMT"];
+      if (window.location.protocol === "https:") {
+        attrs.push("Secure");
+      }
+      document.cookie = "esri_auth=; " + attrs.join("; ");
+    }
+
     function storeToken(token) {
       try {
         sessionStorage.setItem(AUTH_STORAGE_KEY, token);
       } catch {
         // Ignore session storage failures in locked-down environments.
       }
+      setEsriAuthCookie(token);
     }
 
     function clearStoredToken() {
@@ -550,6 +580,7 @@
       } catch {
         // Ignore session storage failures in locked-down environments.
       }
+      clearEsriAuthCookie();
     }
 
     function clearUrlHash() {
@@ -752,7 +783,11 @@
       clearUrlHash();
       setAuthUi(tokenFromHash);
     } else {
-      setAuthUi(getStoredToken());
+      const storedToken = getStoredToken();
+      if (storedToken) {
+        setEsriAuthCookie(storedToken);
+      }
+      setAuthUi(storedToken);
     }
 
     omniForm.addEventListener("submit", handleOmniSubmit);
