@@ -47,8 +47,8 @@ Suggested checks:
 
 - [x] Run:
   - `gh api -X PUT repos/dasbury-esri/classic-storymaps-viewer-pages/pages -f cname=classicstorymaps.com -F https_enforced=true`
-- [ ] If response is `The certificate does not exist yet`, wait 15 minutes and retry.
-- [ ] Retry up to 8 times (about 2 hours).
+- [x] If response is `The certificate does not exist yet`, wait 15 minutes and retry. (Not needed in final successful run)
+- [x] Retry up to 8 times (about 2 hours). (Not needed in final successful run)
 
 5) Verify cert gate
 
@@ -58,7 +58,7 @@ Suggested checks:
 
 Go/No-Go B
 
-- [ ] If cert is still not issued after 2 hours, stop retries and open GitHub Support with:
+- [x] If cert is still not issued after 2 hours, stop retries and open GitHub Support with: (Not triggered; cert issued and HTTPS enforced)
   - repo name
   - custom domain
   - timestamps
@@ -94,7 +94,7 @@ Scope for this section:
 2) Compatibility redirects
 
 - [x] Add static redirect stubs for `/templates/classic-stories/*` to `/templates/classic-storymaps/*` with query preservation.
-- [ ] Validate representative old links map to correct new routes.
+- [x] Validate representative old links map to correct new routes.
 
 3) Launcher and loader consistency
 
@@ -106,11 +106,11 @@ Scope for this section:
 - [x] Rebuild affected runtimes.
 - [x] Rebuild landing.
 - [x] Publish artifacts.
-- [ ] Push and wait for Pages workflow success.
+- [x] Push and wait for Pages workflow success.
 
 Go/No-Go C
 
-- [ ] Continue only if build and deploy are green.
+- [x] Continue only if build and deploy are green.
 
 Section C execution notes (2026-03-16)
 
@@ -118,6 +118,8 @@ Section C execution notes (2026-03-16)
 - Redirect stubs preserve query string and hash while remapping `/templates/classic-stories` to `/templates/classic-storymaps`.
 - Updated launcher runtime inference in `apps/classic-storymaps-site/assets/js/classic-story-loader.js` to detect runtime folder from any base path (no hard-coded `/classic-storymaps` dependency).
 - Rebuilt landing and republished runtime artifacts locally.
+- Pushed commit `93a59bd` and verified GitHub Actions deploy workflow `23165031897` completed successfully.
+- Validated representative legacy route mappings preserve query/hash and translate to canonical `/templates/classic-storymaps/*` targets.
 
 ### Section D: Post-Hardening Smoke Suite
 
