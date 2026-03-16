@@ -276,86 +276,20 @@
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
         <div class="actions">
-          <button type="submit">Open Crowdsource</button>
+          <button type="submit">Load Story</button>
           <a class="text-link" href="/templates/classic-storymaps">Back to Catalog</a>
         </div>
       </form>
 
       <p class="route-block">
-        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4">If you just want to view an example, click here</a>
+        <a id="demo-link" class="demo-link" href="/templates/classic-storymaps/crowdsource/index.html?appid=c7ad1a55de0247a68454a76f251225a4">If you'd like to view an example Story Map Crowdsource, click here</a>
       </p>
     </section>
   </main>
-
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="assets/js/classic-story-loader.js"></script>
   <script>
-    (function() {
-      var DEFAULT_APP_ID = "c7ad1a55de0247a68454a76f251225a4";
-      var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
-      var form = document.getElementById("launch-form");
-      var appIdInput = document.getElementById("appid");
-      var statusEl = document.getElementById("appid-status");
-      var demoLink = document.getElementById("demo-link");
-
-      function setStatus(msg, cls) {
-        statusEl.textContent = msg || "";
-        statusEl.className = "status" + (cls ? " " + cls : "");
-      }
-
-      function sanitize(value) {
-        return (value || "").trim();
-      }
-
-      function getPrefilledAppId() {
-        var params = new URLSearchParams(window.location.search);
-        return sanitize(params.get("appid"));
-      }
-
-      function validate(value) {
-        if (!value) {
-          return { ok: false, message: "Enter an app ID to continue.", type: "warn" };
-        }
-        if (!APP_ID_REGEX.test(value)) {
-          return { ok: false, message: "App ID must be 32 hexadecimal characters (a-f, 0-9).", type: "error" };
-        }
-        return { ok: true };
-      }
-
-      function buildViewerUrl(appId) {
-        return "/templates/classic-storymaps/crowdsource/index.html?appid=" + encodeURIComponent(appId.toLowerCase()) + ""
-      }
-
-      demoLink.href = buildViewerUrl(DEFAULT_APP_ID);
-
-      form.addEventListener("submit", function(evt) {
-        evt.preventDefault();
-        var appId = sanitize(appIdInput.value);
-        var verdict = validate(appId);
-
-        if (!verdict.ok) {
-          setStatus(verdict.message, verdict.type);
-          appIdInput.focus();
-          return;
-        }
-
-        setStatus("Launching Crowdsource viewer...", "warn");
-        window.location.href = buildViewerUrl(appId);
-      });
-
-      appIdInput.addEventListener("input", function() {
-        if (!sanitize(appIdInput.value)) {
-          setStatus("");
-        }
-      });
-
-      var prefilled = getPrefilledAppId();
-      if (prefilled) {
-        appIdInput.value = prefilled;
-        var verdict = validate(prefilled);
-        if (!verdict.ok) {
-          setStatus("The appid in the URL is not valid. Enter a valid 32-character ID.", "error");
-        }
-      }
-    })();
+    window.ClassicStoryLoader && window.ClassicStoryLoader.init();
   </script>
 </body>
 </html>
