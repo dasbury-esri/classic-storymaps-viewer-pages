@@ -607,8 +607,19 @@
       viewerPath = split[0] || "";
     }
 
-    var runtimeMatch = viewerPath.match(/\/classic-storymaps\/([^\/]+)\/index\.html$/i);
-    var runtimeId = runtimeMatch ? runtimeMatch[1].toLowerCase() : null;
+    var runtimeId = null;
+    if (viewerPath) {
+      try {
+        var parsedUrl = new URL(viewerPath, window.location.origin);
+        var segments = parsedUrl.pathname.split('/').filter(Boolean);
+        var lastSegment = segments.length ? segments[segments.length - 1].toLowerCase() : '';
+        if (lastSegment === 'index.html' && segments.length >= 2) {
+          runtimeId = segments[segments.length - 2].toLowerCase();
+        }
+      } catch (_) {
+        runtimeId = null;
+      }
+    }
 
     return {
       defaultAppId: appId,

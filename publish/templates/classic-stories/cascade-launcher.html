@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting...</title>
+  <script>
+    (function() {
+      var fromPrefix = '/templates/classic-stories';
+      var toPrefix = '/templates/classic-storymaps';
+      var path = String(window.location.pathname || '');
+      var lowerPath = path.toLowerCase();
+      var lowerFrom = fromPrefix.toLowerCase();
+      var targetPath = toPrefix + '/';
+
+      if (lowerPath === lowerFrom || lowerPath === lowerFrom + '/') {
+        targetPath = toPrefix + '/';
+      } else if (lowerPath.indexOf(lowerFrom + '/') === 0) {
+        targetPath = toPrefix + path.substring(fromPrefix.length);
+      }
+
+      var destination = targetPath + window.location.search + window.location.hash;
+      window.location.replace(destination);
+    })();
+  </script>
+</head>
+<body>
+  Redirecting to the canonical Classic Story Maps route...
+</body>
+</html>

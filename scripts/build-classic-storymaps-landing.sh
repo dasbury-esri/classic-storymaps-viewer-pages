@@ -3,6 +3,7 @@ set -euo pipefail
 
 SRC_DIR="${SRC_DIR:-apps/classic-storymaps-site}"
 OUT_DIR="${OUT_DIR:-publish/templates/classic-storymaps}"
+COMPAT_OUT_DIR="${COMPAT_OUT_DIR:-publish/templates/classic-stories}"
 ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-apps/classic-storymaps-site/root-index.html}"
 ROOT_PAGE_OUT="${ROOT_PAGE_OUT:-publish/index.html}"
 ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/Classic Apps WebPage - Jun 2016 Internet Archive.html}"
@@ -10,6 +11,7 @@ ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/classic-apps-2016-06.html}
 
 # Keep this list aligned with scripts/build-classic-storymaps-runtime-publish.sh.
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
+launcher_files=(maptour-launcher.html swipe-launcher.html mapjournal-launcher.html mapseries-launcher.html cascade-launcher.html shortlist-launcher.html crowdsource-launcher.html basic-launcher.html)
 
 is_runtime_dir() {
   local candidate="$1"
@@ -47,6 +49,44 @@ sanitize_wayback_html() {
   rm -f "$tmp_file"
 }
 
+write_compat_redirect_stub() {
+  local out_file="$1"
+  mkdir -p "$(dirname "$out_file")"
+
+  cat > "$out_file" <<'EOF'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting...</title>
+  <script>
+    (function() {
+      var fromPrefix = '/templates/classic-stories';
+      var toPrefix = '/templates/classic-storymaps';
+      var path = String(window.location.pathname || '');
+      var lowerPath = path.toLowerCase();
+      var lowerFrom = fromPrefix.toLowerCase();
+      var targetPath = toPrefix + '/';
+
+      if (lowerPath === lowerFrom || lowerPath === lowerFrom + '/') {
+        targetPath = toPrefix + '/';
+      } else if (lowerPath.indexOf(lowerFrom + '/') === 0) {
+        targetPath = toPrefix + path.substring(fromPrefix.length);
+      }
+
+      var destination = targetPath + window.location.search + window.location.hash;
+      window.location.replace(destination);
+    })();
+  </script>
+</head>
+<body>
+  Redirecting to the canonical Classic Story Maps route...
+</body>
+</html>
+EOF
+}
+
 if [[ ! -d "$SRC_DIR" ]]; then
   echo "Source landing app directory not found: $SRC_DIR" >&2
   exit 1
@@ -76,5 +116,18 @@ if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ARCHIVE_PAGE_OUT")"
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
 fi
+
+rm -rf "$COMPAT_OUT_DIR"
+mkdir -p "$COMPAT_OUT_DIR"
+
+write_compat_redirect_stub "$COMPAT_OUT_DIR/index.html"
+
+for runtime_name in "${runtime_names[@]}"; do
+  write_compat_redirect_stub "$COMPAT_OUT_DIR/$runtime_name/index.html"
+done
+
+for launcher_file in "${launcher_files[@]}"; do
+  write_compat_redirect_stub "$COMPAT_OUT_DIR/$launcher_file"
+done
 
 echo "Classic Storymaps canonical landing build output copied to $OUT_DIR"
