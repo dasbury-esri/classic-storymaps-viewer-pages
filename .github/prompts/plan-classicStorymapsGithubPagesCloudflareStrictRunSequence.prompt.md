@@ -32,7 +32,7 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 - [ ] Configure Cloudflare DNS (`www` CNAME and apex flattening) and SSL Full strict.
 - [ ] Keep CDN caching conservative.
 - [ ] Go/No-Go checkpoint passed: DNS records are correct and certificate issuance begins.
-- [ ] Rollback if needed: remove custom domain in Pages to recover the default Pages hostname as the demo endpoint.
+- [x] Rollback if needed: remove custom domain in Pages to recover the default Pages hostname as the demo endpoint.
 
 5. 11:00 PM to 11:30 PM — Nightly smoke gate
 - [ ] Smoke test default Pages hostname.
@@ -44,22 +44,22 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 ### Tomorrow Morning
 
 6. 7:00 AM to 8:00 AM — Propagation and cert recheck
-- [ ] Re-validate DNS and HTTPS on apex + `www`.
+- [x] Re-validate DNS and HTTPS on apex + `www`.
 - [ ] Purge Cloudflare cache once after successful validation.
 - [ ] Go/No-Go checkpoint passed: HTTPS + canonical path works on custom domain.
 - [ ] Rollback if needed: use default Pages hostname or full fallback to `storymaps.esri.com`.
 
 7. 8:00 AM to 9:00 AM — Final content smoke and rehearsal
-- [ ] Run strict smoke set on selected demo endpoint.
-- [ ] Validate catalog root canonical URL.
-- [ ] Validate 2 launcher pages.
-- [ ] Validate 2 runtime appid URLs.
+- [x] Run strict smoke set on selected demo endpoint.
+- [x] Validate catalog root canonical URL.
+- [x] Validate 2 launcher pages.
+- [x] Validate 2 runtime appid URLs.
 - [ ] Confirm no blocking console/runtime errors.
 - [ ] Go/No-Go checkpoint passed: all tested routes pass on selected demo endpoint.
 - [ ] Rollback if needed: switch endpoint in order: custom domain -> default Pages hostname -> `storymaps.esri.com/templates/classic-stories/*`.
 
 8. 9:00 AM to 10:15 AM — Lock demo endpoint and freeze changes
-- [ ] Choose one endpoint as source of truth for demo.
+- [x] Choose one endpoint as source of truth for demo.
 - [ ] Freeze code and DNS edits except critical fixes.
 - [ ] Prepare short backup script with fallback URLs.
 - [ ] Go/No-Go checkpoint passed: chosen endpoint has 100% pass on smoke set.
@@ -81,11 +81,16 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 ### Hard Stop Rules
 
 - [ ] If Pages deploy fails twice consecutively, stop infra changes and lock fallback plan.
-- [ ] If custom domain HTTPS is not clean by 8:30 AM PT, do not use it as primary demo endpoint.
+- [x] If custom domain HTTPS is not clean by 8:30 AM PT, do not use it as primary demo endpoint.
 - [ ] If both custom domain and default Pages hostname are unstable by 9:30 AM PT, run demo entirely on current production fallback.
 
 ### Demo Endpoint Decision Rule
 
 - [ ] Primary: `https://classicstorymaps.com/templates/classic-storymaps/` only if fully green by 9:00 AM PT.
-- [ ] Secondary: default GitHub Pages hostname canonical path, but only if the custom domain is removed from Pages first.
+- [x] Secondary: default GitHub Pages hostname canonical path, but only if the custom domain is removed from Pages first.
 - [ ] Tertiary fallback: `https://storymaps.esri.com/templates/classic-stories/*`.
+
+### Current Morning Decision Snapshot
+
+- Selected demo endpoint (secondary): `https://dasbury-esri.github.io/classic-storymaps-viewer-pages/templates/classic-storymaps/`
+- Primary custom domain remains blocked for demo use this morning due to certificate/HTTPS readiness.

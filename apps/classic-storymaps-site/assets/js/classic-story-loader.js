@@ -4,16 +4,17 @@
   var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
   var AUTH_STORAGE_KEY = "arcgis_access_token";
   var ARC_BASE = "https://www.arcgis.com/sharing/rest";
+  var DEFAULT_STORY_ROOT = "/templates/classic-storymaps";
 
   var VIEWER_BY_APP = {
-    maptour: "/templates/classic-storymaps/maptour/index.html",
-    swipe: "/templates/classic-storymaps/swipe/index.html",
-    mapjournal: "/templates/classic-storymaps/mapjournal/index.html",
-    mapseries: "/templates/classic-storymaps/mapseries/index.html",
-    cascade: "/templates/classic-storymaps/cascade/index.html",
-    shortlist: "/templates/classic-storymaps/shortlist/index.html",
-    crowdsource: "/templates/classic-storymaps/crowdsource/index.html",
-    basic: "/templates/classic-storymaps/basic/index.html"
+    maptour: "maptour",
+    swipe: "swipe",
+    mapjournal: "mapjournal",
+    mapseries: "mapseries",
+    cascade: "cascade",
+    shortlist: "shortlist",
+    crowdsource: "crowdsource",
+    basic: "basic"
   };
 
   var APP_LABEL_BY_ID = {
@@ -44,6 +45,41 @@
 
   function normalizeId(value) {
     return sanitize(value).toLowerCase();
+  }
+
+  function trimTrailingSlash(value) {
+    return String(value || "").replace(/\/+$/, "") || "/";
+  }
+
+  function normalizePathPrefix(value) {
+    var str = trimTrailingSlash(value || "");
+    if (!str || str === ".") {
+      return DEFAULT_STORY_ROOT;
+    }
+    if (str.charAt(0) !== "/") {
+      str = "/" + str;
+    }
+    return str;
+  }
+
+  function inferBasePathFromLocation() {
+    var pathname = String(window.location.pathname || "");
+    var marker = "/templates/classic-storymaps";
+    var idx = pathname.toLowerCase().indexOf(marker);
+
+    if (idx !== -1) {
+      return trimTrailingSlash(pathname.slice(0, idx) + marker);
+    }
+
+    return DEFAULT_STORY_ROOT;
+  }
+
+  function getStoryBasePath() {
+    var configured = window.CLASSIC_STORY_BASE_PATH;
+    if (typeof configured === "string" && configured.trim()) {
+      return normalizePathPrefix(configured);
+    }
+    return inferBasePathFromLocation();
   }
 
   function encodePath(path) {
@@ -282,11 +318,13 @@
   }
 
   function getViewerUrl(classicType, appId) {
-    var base = VIEWER_BY_APP[classicType];
-    if (!base) {
+    var runtimeFolder = VIEWER_BY_APP[classicType];
+    if (!runtimeFolder) {
       return null;
     }
-    return base + "?appid=" + encodeURIComponent(normalizeId(appId));
+
+    var basePath = getStoryBasePath();
+    return basePath + "/" + runtimeFolder + "/index.html?appid=" + encodeURIComponent(normalizeId(appId));
   }
 
   function isLikelyImageUrl(value) {
@@ -846,6 +884,7 @@
     var backToCatalog = form.querySelector(".text-link");
     if (backToCatalog) {
       backToCatalog.textContent = "Back to Catalog";
+      backToCatalog.setAttribute("href", getStoryBasePath());
     }
 
     ui.openBtn.textContent = "Open " + launcherAppLabel + " Viewer";
