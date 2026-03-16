@@ -50,9 +50,9 @@ jobs:
           set -euo pipefail
           test -f publish/index.html
           test -f publish/archive/classic-apps-2016-06.html
-          test -f publish/templates/classic-storymaps/index.html
+          test -f publish/viewers/index.html
           for runtime in maptour swipe mapjournal mapseries cascade shortlist crowdsource basic; do
-            test -f "publish/templates/classic-storymaps/$runtime/index.html"
+            test -f "publish/viewers/$runtime/index.html"
           done
 
       - name: Upload Pages artifact

@@ -4,7 +4,7 @@
   var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
   var AUTH_STORAGE_KEY = "arcgis_access_token";
   var ARC_BASE = "https://www.arcgis.com/sharing/rest";
-  var DEFAULT_STORY_ROOT = "/templates/classic-storymaps";
+  var DEFAULT_STORY_ROOT = "/viewers";
 
   var VIEWER_BY_APP = {
     maptour: "maptour",
@@ -64,11 +64,16 @@
 
   function inferBasePathFromLocation() {
     var pathname = String(window.location.pathname || "");
-    var marker = "/templates/classic-storymaps";
-    var idx = pathname.toLowerCase().indexOf(marker);
+    var markers = ["/viewers", "/templates/classic-storymaps"];
+    var lowerPath = pathname.toLowerCase();
+    var i;
 
-    if (idx !== -1) {
-      return trimTrailingSlash(pathname.slice(0, idx) + marker);
+    for (i = 0; i < markers.length; i += 1) {
+      var marker = markers[i];
+      var idx = lowerPath.indexOf(marker);
+      if (idx !== -1) {
+        return trimTrailingSlash(pathname.slice(0, idx) + marker);
+      }
     }
 
     return DEFAULT_STORY_ROOT;

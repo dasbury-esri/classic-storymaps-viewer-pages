@@ -18,12 +18,12 @@ Rebuild a historical-facing classicstorymaps.com experience from the 2017-12-10 
 Estimated phase effort: M (2-3 days)
 
 Focused tasks
-- [ ] Define canonical route contract as /viewers for landing, launchers, and app runtimes.
+- [x] Define canonical route contract as /viewers for landing, launchers, and app runtimes.
 	- Priority: P0
 	- Dependencies: none
 	- Estimate: S
 	- Output: final route table with canonical and compatibility paths
-- [ ] Preserve legacy /templates/classic-storymaps as compatibility redirects.
+- [x] Preserve legacy /templates/classic-storymaps as compatibility redirects.
 	- Priority: P0
 	- Dependencies: canonical route contract defined
 	- Estimate: S
@@ -33,7 +33,7 @@ Focused tasks
 	- Dependencies: canonical route contract, compatibility redirect matrix
 	- Estimate: S
 	- Output: updated docs/architecture and docs/deployment references
-- [ ] Add GitHub Pages-compatible redirect strategy for production-safe HTTP behavior.
+- [x] Add GitHub Pages-compatible redirect strategy for production-safe HTTP behavior.
 	- Priority: P0
 	- Dependencies: compatibility redirect matrix
 	- Estimate: M
@@ -50,8 +50,8 @@ Focused tasks
 	- Output: checklist criteria and runbook updates
 
 Phase checklist
-- [ ] Canonical and compatibility contracts are documented and reviewed.
-- [ ] Redirect strategy is documented for IIS and non-IIS fallback.
+- [x] Canonical and compatibility contracts are documented and reviewed.
+- [x] Redirect strategy is documented for IIS and non-IIS fallback.
 - [ ] Release checklist includes /viewers-specific validations.
 
 ## Phase 2: Viewer Hub Canonicalization (/viewers)
@@ -59,35 +59,35 @@ Phase checklist
 Estimated phase effort: L (3-5 days)
 
 Focused tasks
-- [ ] Repoint landing and launcher path generation from /templates/classic-storymaps to /viewers.
+- [x] Repoint landing and launcher path generation from /templates/classic-storymaps to /viewers.
 	- Priority: P0
 	- Dependencies: Phase 1 canonical route contract
 	- Estimate: M
 	- Output: unified base-path usage in landing and launcher code
-- [ ] Update launcher pages and shared loader logic so all catalog/sample/runtime URLs resolve under /viewers.
+- [x] Update launcher pages and shared loader logic so all catalog/sample/runtime URLs resolve under /viewers.
 	- Priority: P0
 	- Dependencies: landing/launcher path generation repointed
 	- Estimate: M
 	- Output: launcher and loader path updates
-- [ ] Adjust build scripts so publish output produces /viewers as first-class output.
+- [x] Adjust build scripts so publish output produces /viewers as first-class output.
 	- Priority: P0
 	- Dependencies: loader and launcher path updates
 	- Estimate: M
 	- Output: build outputs under publish/viewers
-- [ ] Emit legacy compatibility redirects from /templates/classic-storymaps to /viewers.
+- [x] Emit legacy compatibility redirects from /templates/classic-storymaps to /viewers.
 	- Priority: P1
 	- Dependencies: publish/viewers output in place
 	- Estimate: S
 	- Output: generated redirect stubs and/or rewrite rules
-- [ ] Update workflow validation to assert canonical files at publish/viewers and legacy redirect validity.
+- [x] Update workflow validation to assert canonical files at publish/viewers and legacy redirect validity.
 	- Priority: P1
 	- Dependencies: build outputs and redirect artifacts finalized
 	- Estimate: S
 	- Output: CI checks and expected artifacts
 
 Phase checklist
-- [ ] /viewers landing and launcher pages are generated and navigable.
-- [ ] Legacy /templates routes redirect as expected.
+- [x] /viewers landing and launcher pages are generated and navigable.
+- [x] Legacy /templates routes redirect as expected.
 - [ ] CI validation passes with new canonical path expectations.
 
 ## Phase 3: Archived Site Reconstruction (2017-12-10)
@@ -199,7 +199,6 @@ Phase checklist
 
 ## Relevant Files
 - apps/classic-storymaps-site/index.html - landing card route map and runtime path targets to canonicalize to /viewers.
-- apps/classic-storymaps-site/root-index.html - root site shell to evolve into archived-site home with banner CTA to /viewers.
 - apps/classic-storymaps-site/maptour-launcher.html - representative launcher with hard-coded catalog/route links to migrate.
 - apps/classic-storymaps-site/mapjournal-launcher.html - launcher link/path migration pattern.
 - apps/classic-storymaps-site/mapseries-launcher.html - launcher link/path migration pattern.

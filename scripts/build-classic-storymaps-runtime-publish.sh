@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PUBLISH_ROOT="${PUBLISH_ROOT:-publish/templates/classic-storymaps}"
+PUBLISH_ROOT="${PUBLISH_ROOT:-publish/viewers}"
 
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
 

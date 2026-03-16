@@ -2,9 +2,10 @@
 set -euo pipefail
 
 SRC_DIR="${SRC_DIR:-apps/classic-storymaps-site}"
-OUT_DIR="${OUT_DIR:-publish/templates/classic-storymaps}"
-COMPAT_OUT_DIR="${COMPAT_OUT_DIR:-publish/templates/classic-stories}"
-ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-apps/classic-storymaps-site/root-index.html}"
+OUT_DIR="${OUT_DIR:-publish/viewers}"
+COMPAT_OUT_DIR_STORIES="${COMPAT_OUT_DIR_STORIES:-publish/templates/classic-stories}"
+COMPAT_OUT_DIR_STORYMAPS="${COMPAT_OUT_DIR_STORYMAPS:-publish/templates/classic-storymaps}"
+ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-}"
 ROOT_PAGE_OUT="${ROOT_PAGE_OUT:-publish/index.html}"
 ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/Classic Apps WebPage - Jun 2016 Internet Archive.html}"
 ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/classic-apps-2016-06.html}"
@@ -51,9 +52,10 @@ sanitize_wayback_html() {
 
 write_compat_redirect_stub() {
   local out_file="$1"
+  local from_prefix="$2"
   mkdir -p "$(dirname "$out_file")"
 
-  cat > "$out_file" <<'EOF'
+  cat > "$out_file" <<EOF
 <!doctype html>
 <html lang="en">
 <head>
@@ -62,8 +64,8 @@ write_compat_redirect_stub() {
   <title>Redirecting...</title>
   <script>
     (function() {
-      var fromPrefix = '/templates/classic-stories';
-      var toPrefix = '/templates/classic-storymaps';
+      var fromPrefix = '${from_prefix}';
+      var toPrefix = '/viewers';
       var path = String(window.location.pathname || '');
       var lowerPath = path.toLowerCase();
       var lowerFrom = fromPrefix.toLowerCase();
@@ -107,7 +109,7 @@ shopt -u dotglob nullglob
 
 cp -R "$SRC_DIR"/. "$OUT_DIR"/
 
-if [[ -f "$ROOT_PAGE_SRC" ]]; then
+if [[ -n "$ROOT_PAGE_SRC" && -f "$ROOT_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ROOT_PAGE_OUT")"
   cp "$ROOT_PAGE_SRC" "$ROOT_PAGE_OUT"
 fi
@@ -117,17 +119,27 @@ if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
 fi
 
-rm -rf "$COMPAT_OUT_DIR"
-mkdir -p "$COMPAT_OUT_DIR"
+compat_specs=(
+  "$COMPAT_OUT_DIR_STORIES:/templates/classic-stories"
+  "$COMPAT_OUT_DIR_STORYMAPS:/templates/classic-storymaps"
+)
 
-write_compat_redirect_stub "$COMPAT_OUT_DIR/index.html"
+for compat_spec in "${compat_specs[@]}"; do
+  compat_out_dir="${compat_spec%%:*}"
+  compat_prefix="${compat_spec#*:}"
 
-for runtime_name in "${runtime_names[@]}"; do
-  write_compat_redirect_stub "$COMPAT_OUT_DIR/$runtime_name/index.html"
-done
+  rm -rf "$compat_out_dir"
+  mkdir -p "$compat_out_dir"
 
-for launcher_file in "${launcher_files[@]}"; do
-  write_compat_redirect_stub "$COMPAT_OUT_DIR/$launcher_file"
+  write_compat_redirect_stub "$compat_out_dir/index.html" "$compat_prefix"
+
+  for runtime_name in "${runtime_names[@]}"; do
+    write_compat_redirect_stub "$compat_out_dir/$runtime_name/index.html" "$compat_prefix"
+  done
+
+  for launcher_file in "${launcher_files[@]}"; do
+    write_compat_redirect_stub "$compat_out_dir/$launcher_file" "$compat_prefix"
+  done
 done
 
 echo "Classic Storymaps canonical landing build output copied to $OUT_DIR"
