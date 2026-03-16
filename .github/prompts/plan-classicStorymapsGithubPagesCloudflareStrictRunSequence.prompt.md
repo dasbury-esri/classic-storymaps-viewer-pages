@@ -94,3 +94,17 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 
 - Selected demo endpoint (secondary): `https://dasbury-esri.github.io/classic-storymaps-viewer-pages/templates/classic-storymaps/`
 - Primary custom domain remains blocked for demo use this morning due to certificate/HTTPS readiness.
+
+### Post-Demo Final State (2026-03-16)
+
+- [x] Final primary endpoint for public/external access: `https://classicstorymaps.com/templates/classic-storymaps/`.
+- [x] Final enterprise-network fallback endpoint: `https://storymaps.esri.com/templates/classic-stories/*`.
+- [x] Custom domain certificate/API state is healthy in GitHub Pages (`https_enforced: true`, approved cert), with enterprise-network access still blocked.
+- [x] ServiceNow request submitted to Esri IST for `classicstorymaps.com` unblock (expected response ~1 week).
+- [x] Compatibility redirect stubs for `/templates/classic-stories/*` are deployed from static Pages artifacts.
+- [x] Non-critical code/DNS changes re-frozen after Section E handoff recording.
+
+### Effective Rollback Order (Post-Demo)
+
+- [x] Preferred: use `https://classicstorymaps.com/templates/classic-storymaps/` when reachable.
+- [x] Enterprise fallback: use `https://storymaps.esri.com/templates/classic-stories/*` until IST unblock completes.

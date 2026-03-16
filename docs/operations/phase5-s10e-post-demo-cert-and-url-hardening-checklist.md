@@ -150,13 +150,20 @@ Section D execution notes (2026-03-16)
 
 ### Section E: Final Lock and Handoff
 
-- [ ] Record final primary endpoint decision.
-- [ ] Record fallback endpoint decision.
-- [ ] Freeze non-critical changes.
-- [ ] Update strict run-sequence checklist with final states.
+- [x] Record final primary endpoint decision.
+- [x] Record fallback endpoint decision.
+- [x] Freeze non-critical changes.
+- [x] Update strict run-sequence checklist with final states.
+
+Section E execution notes (2026-03-16)
+
+- Final primary endpoint decision: `https://classicstorymaps.com/templates/classic-storymaps/` for public/external access.
+- Final fallback endpoint decision: `https://storymaps.esri.com/templates/classic-stories/` for enterprise-network continuity while unblock is pending.
+- Operational caveat: enterprise-network TLS access to `classicstorymaps.com` remains blocked locally; ServiceNow request is open with Esri IST (expected response ~1 week).
+- Change control: non-critical code and DNS edits are now frozen pending IST unblock outcome and follow-up validation.
 
 Done criteria:
 
-- [ ] Custom-domain HTTPS is healthy OR documented as blocked with support case.
+- [x] Custom-domain HTTPS is healthy OR documented as blocked with support case.
 - [ ] Runtime embed behavior matches expected classic behavior on chosen endpoint.
-- [ ] Compatibility redirects validated.
+- [x] Compatibility redirects validated.
