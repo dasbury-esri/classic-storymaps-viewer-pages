@@ -1,0 +1,59 @@
+name: Deploy Classic Storymaps Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build landing and publish runtimes
+        run: |
+          set -euo pipefail
+          bash scripts/build-classic-storymaps-landing.sh
+          bash scripts/build-classic-storymaps-runtime-publish.sh
+
+      - name: Add Pages deploy metadata
+        run: |
+          set -euo pipefail
+          touch publish/.nojekyll
+          printf '%s\n' 'classicstorymaps.com' > publish/CNAME
+
+      - name: Validate publish artifact structure
+        run: |
+          set -euo pipefail
+          test -f publish/templates/classic-storymaps/index.html
+          for runtime in maptour swipe mapjournal mapseries cascade shortlist crowdsource basic; do
+            test -f "publish/templates/classic-storymaps/$runtime/index.html"
+          done
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
