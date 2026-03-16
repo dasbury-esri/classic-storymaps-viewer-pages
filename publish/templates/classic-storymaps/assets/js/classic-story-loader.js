@@ -144,14 +144,23 @@
       return joined.indexOf(fragment) !== -1;
     }
 
-    if (has("story map tour") || url.indexOf("/maptour/") !== -1) return "maptour";
-    if (has("story map swipe") || has("story map spyglass") || url.indexOf("/swipe/") !== -1) return "swipe";
-    if (has("story map journal") || url.indexOf("/mapjournal/") !== -1) return "mapjournal";
-    if (has("story map series") || url.indexOf("/mapseries/") !== -1) return "mapseries";
-    if (has("story map cascade") || url.indexOf("/cascade/") !== -1) return "cascade";
-    if (has("story map shortlist") || url.indexOf("/shortlist/") !== -1) return "shortlist";
-    if (has("story map crowdsource") || url.indexOf("/crowdsource/") !== -1) return "crowdsource";
-    if (has("story map basic") || url.indexOf("/basic/") !== -1) return "basic";
+    function hasAny(fragments) {
+      for (var i = 0; i < fragments.length; i += 1) {
+        if (has(fragments[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    if (hasAny(["story map tour", "storymaptour", "maptour"]) || url.indexOf("/maptour/") !== -1) return "maptour";
+    if (hasAny(["story map swipe", "story map spyglass", "storymapswipe", "storymapspyglass", "mapswipe", "mapspyglass"]) || url.indexOf("/swipe/") !== -1) return "swipe";
+    if (hasAny(["story map journal", "storymapjournal", "mapjournal"]) || url.indexOf("/mapjournal/") !== -1) return "mapjournal";
+    if (hasAny(["story map series", "storymapseries", "mapseries"]) || url.indexOf("/mapseries/") !== -1) return "mapseries";
+    if (hasAny(["story map cascade", "storymapcascade", "mapcascade"]) || url.indexOf("/cascade/") !== -1) return "cascade";
+    if (hasAny(["story map shortlist", "storymapshortlist", "mapshortlist", "shortlist"]) || url.indexOf("/shortlist/") !== -1) return "shortlist";
+    if (hasAny(["story map crowdsource", "storymapcrowdsource", "mapcrowdsource", "crowdsource"]) || url.indexOf("/crowdsource/") !== -1) return "crowdsource";
+    if (hasAny(["story map basic", "storymapbasic", "mapbasic"]) || url.indexOf("/basic/") !== -1) return "basic";
 
     if (type === "web mapping application" && has("story map")) {
       return "unknown-classic";
