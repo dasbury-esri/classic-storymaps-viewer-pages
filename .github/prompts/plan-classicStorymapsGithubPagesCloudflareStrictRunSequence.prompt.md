@@ -19,7 +19,7 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 - [ ] Rollback if needed: keep current production unchanged and defer demo to fallback host.
 
 3. 9:00 PM to 10:00 PM — Deploy workflow + first Pages publish
-- [ ] Trigger minimal Pages pipeline publish.
+- [x] Trigger minimal Pages pipeline publish.
 - [ ] Confirm Pages artifact deployment completes successfully.
 - [ ] Validate default Pages hostname serves canonical path content.
 - [ ] Go/No-Go checkpoint passed: default Pages URL is stable for landing + 2 launchers + 2 runtime URLs.
