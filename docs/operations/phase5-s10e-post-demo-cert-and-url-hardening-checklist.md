@@ -125,19 +125,26 @@ Section C execution notes (2026-03-16)
 
 Run on selected endpoint(s):
 
-- [ ] Catalog root
-- [ ] 2 launcher pages
-- [ ] 2 runtime appid links
-- [ ] Embedded app links inside Map Series
-- [ ] Embedded app links inside Map Journal
-- [ ] Embedded app links inside Cascade
-- [ ] Legacy `/templates/classic-stories/*` compatibility links
+- [x] Catalog root
+- [x] 2 launcher pages
+- [x] 2 runtime appid links
+- [x] Embedded app links inside Map Series
+- [x] Embedded app links inside Map Journal
+- [x] Embedded app links inside Cascade
+- [x] Legacy `/templates/classic-stories/*` compatibility links
 
 Required result:
 
 - [ ] No blocking 404s for runtime assets.
 - [ ] No TLS errors on custom domain (if cert gate passed).
 - [ ] No blocking console errors in tested paths.
+
+Section D execution notes (2026-03-16)
+
+- Direct local curl checks to `classicstorymaps.com` continue to fail with TLS handshake reset from this network (`curl: (35)`), so local status-only probes are not representative.
+- External reachability checks were executed via remote fetch proxy (`r.jina.ai`) and confirmed content retrieval for catalog, two launchers, two runtime appid URLs, and embedded candidates.
+- Legacy compatibility behavior remains validated by deployed static stubs in `publish/templates/classic-stories/*` and by previously validated path-mapping logic that preserves query/hash to canonical `/templates/classic-storymaps/*` targets.
+- Runtime asset and console-error checks require a full browser/network session (DevTools) and are still pending as explicit checklist items.
 
 ### Section E: Final Lock and Handoff
 
