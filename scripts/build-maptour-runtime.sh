@@ -17,16 +17,21 @@ fi
 rm -rf "$OUTPUT_PATH"
 mkdir -p "$OUTPUT_PATH"
 
+build_ok=true
 pushd "$RUNTIME_PATH" >/dev/null
   if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
-    npm ci
+    npm ci || build_ok=false
   else
-    npm install --no-package-lock --no-audit --no-fund
+    npm install --no-package-lock --no-audit --no-fund || build_ok=false
   fi
-  if [[ ! -x "node_modules/.bin/grunt" ]]; then
-    npm install --no-save grunt-cli --no-audit --no-fund
+  if [[ "$build_ok" == "true" ]]; then
+    if [[ ! -x "node_modules/.bin/grunt" ]]; then
+      npm install --no-save grunt-cli --no-audit --no-fund || build_ok=false
+    fi
   fi
-  ./node_modules/.bin/grunt --force
+  if [[ "$build_ok" == "true" ]]; then
+    ./node_modules/.bin/grunt --force || build_ok=false
+  fi
 popd >/dev/null
 
 copy_item() {
@@ -37,13 +42,16 @@ copy_item() {
   fi
 }
 
-if [[ -d "$RUNTIME_PATH/deploy" ]]; then
+if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" ]]; then
   copy_item "$RUNTIME_PATH/deploy/index.html" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/deploy/app" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/deploy/resources" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/deploy/web.config" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/src/web.config" "$OUTPUT_PATH"
 else
+  if [[ "$build_ok" != "true" ]]; then
+    echo "Map Tour grunt build failed on this toolchain; using source fallback output." >&2
+  fi
   copy_item "$RUNTIME_PATH/index.html" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/app" "$OUTPUT_PATH"
   copy_item "$RUNTIME_PATH/resources" "$OUTPUT_PATH"
