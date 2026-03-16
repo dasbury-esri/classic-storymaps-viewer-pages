@@ -13,6 +13,53 @@ import UIUtils from 'storymaps/tpl/utils/UI';
 const PREVIEW_THUMB = 'resources/tpl/builder/icons/media-placeholder/webpage.png';
 const PREVIEW_ICON = 'resources/tpl/builder/icons/immersive-panel/webpage.png';
 
+function getClassicStoryBasePath() {
+  const marker = '/templates/classic-storymaps';
+  const pathname = String(window.location.pathname || '').toLowerCase();
+  const idx = pathname.indexOf(marker);
+
+  if (idx >= 0) {
+    return (window.location.pathname.substring(0, idx) + marker).replace(/\/+$/, '');
+  }
+
+  return marker;
+}
+
+function buildClassicRuntimeUrl(runtimePath, search, hash) {
+  return window.location.origin
+    + getClassicStoryBasePath()
+    + '/' + runtimePath + '/index.html'
+    + (search || '')
+    + (hash || '');
+}
+
+function normalizeClassicTemplatesRootUrl(urlAsURL) {
+  const path = urlAsURL && urlAsURL.pathname ? urlAsURL.pathname : '';
+  const rootPrefix = '/templates/classic-storymaps';
+  const host = (urlAsURL && urlAsURL.hostname ? urlAsURL.hostname : '').toLowerCase();
+  const currentHost = (window.location.hostname || '').toLowerCase();
+
+  if (!path || host !== currentHost) {
+    return null;
+  }
+
+  if (path.toLowerCase().indexOf(rootPrefix) !== 0) {
+    return null;
+  }
+
+  let suffix = path.substring(rootPrefix.length);
+  const normalizedBase = getClassicStoryBasePath();
+  if (suffix && suffix.charAt(0) !== '/') {
+    suffix = '/' + suffix;
+  }
+
+  return window.location.origin
+    + normalizedBase
+    + (suffix || '')
+    + (urlAsURL.search || '')
+    + (urlAsURL.hash || '');
+}
+
 function isKnownShortenerHost(hostname) {
   const normalizedHost = (hostname || '').toLowerCase();
   return normalizedHost === 'arcg.is'
@@ -78,6 +125,11 @@ function normalizeLegacyClassicAppUrl(storedUrl) {
 
   try {
     const urlAsURL = new window.URL(storedUrl, window.location.origin);
+    const normalizedTemplatesRoot = normalizeClassicTemplatesRootUrl(urlAsURL);
+    if (normalizedTemplatesRoot) {
+      return normalizedTemplatesRoot;
+    }
+
     const legacyRouteMap = [
       { re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
       { re: /^\/apps\/mapjournal(?:\/|$)/i, runtime: 'mapjournal' },
@@ -97,10 +149,7 @@ function normalizeLegacyClassicAppUrl(storedUrl) {
     });
 
     if (runtimePath) {
-      return window.location.origin
-        + '/templates/classic-storymaps/' + runtimePath + '/index.html'
-        + (urlAsURL.search || '')
-        + (urlAsURL.hash || '');
+      return buildClassicRuntimeUrl(runtimePath, urlAsURL.search || '', urlAsURL.hash || '');
     }
   }
   catch (err) {

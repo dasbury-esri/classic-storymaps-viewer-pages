@@ -291,8 +291,59 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					return storedUrl;
 				}
 
+				function getClassicStoryBasePath() {
+					var marker = '/templates/classic-storymaps';
+					var pathname = String(window.location.pathname || '').toLowerCase();
+					var idx = pathname.indexOf(marker);
+
+					if (idx >= 0) {
+						return (window.location.pathname.substring(0, idx) + marker).replace(/\/+$/, '');
+					}
+
+					return marker;
+				}
+
+				function buildClassicRuntimeUrl(runtimePath, search, hash) {
+					return window.location.origin
+						+ getClassicStoryBasePath()
+						+ '/' + runtimePath + '/index.html'
+						+ (search || '')
+						+ (hash || '');
+				}
+
+				function normalizeClassicTemplatesRootUrl(urlAsURL) {
+					var path = urlAsURL && urlAsURL.pathname ? urlAsURL.pathname : '';
+					var rootPrefix = '/templates/classic-storymaps';
+					var host = (urlAsURL && urlAsURL.hostname ? urlAsURL.hostname : '').toLowerCase();
+					var currentHost = (window.location.hostname || '').toLowerCase();
+
+					if (!path || host !== currentHost) {
+						return null;
+					}
+
+					if (path.toLowerCase().indexOf(rootPrefix) !== 0) {
+						return null;
+					}
+
+					var suffix = path.substring(rootPrefix.length);
+					var normalizedBase = getClassicStoryBasePath();
+					if (suffix && suffix.charAt(0) !== '/') {
+						suffix = '/' + suffix;
+					}
+
+					return window.location.origin
+						+ normalizedBase
+						+ (suffix || '')
+						+ (urlAsURL.search || '')
+						+ (urlAsURL.hash || '');
+				}
+
 				try {
 					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var normalizedTemplatesRoot = normalizeClassicTemplatesRootUrl(urlAsURL);
+					if (normalizedTemplatesRoot) {
+						return normalizedTemplatesRoot;
+					}
 					var legacyRouteMap = [
 						{ re: /^\/apps\/storytellingswipe(?:\/|$)/i, runtime: 'swipe' },
 						{ re: /^\/apps\/mapjournal(?:\/|$)/i, runtime: 'mapjournal' },
@@ -313,10 +364,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					});
 
 					if (runtimePath) {
-						return window.location.origin
-							+ '/templates/classic-storymaps/' + runtimePath + '/index.html'
-							+ (urlAsURL.search || '')
-							+ (urlAsURL.hash || '');
+						return buildClassicRuntimeUrl(runtimePath, urlAsURL.search || '', urlAsURL.hash || '');
 					}
 				}
 				catch (err) {

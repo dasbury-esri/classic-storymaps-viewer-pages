@@ -267,6 +267,53 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					|| normalizedHost === 'j.mp';
 			}
 
+			function getClassicStoryBasePath() {
+				var marker = '/templates/classic-storymaps';
+				var pathname = String(window.location.pathname || '').toLowerCase();
+				var idx = pathname.indexOf(marker);
+
+				if (idx >= 0) {
+					return (window.location.pathname.substring(0, idx) + marker).replace(/\/+$/, '');
+				}
+
+				return marker;
+			}
+
+			function buildClassicRuntimeUrl(runtimePath, search, hash) {
+				return window.location.origin
+					+ getClassicStoryBasePath()
+					+ '/' + runtimePath + '/index.html'
+					+ (search || '')
+					+ (hash || '');
+			}
+
+			function normalizeClassicTemplatesRootUrl(urlAsURL) {
+				var path = urlAsURL && urlAsURL.pathname ? urlAsURL.pathname : '';
+				var rootPrefix = '/templates/classic-storymaps';
+				var host = (urlAsURL && urlAsURL.hostname ? urlAsURL.hostname : '').toLowerCase();
+				var currentHost = (window.location.hostname || '').toLowerCase();
+
+				if (!path || host !== currentHost) {
+					return null;
+				}
+
+				if (path.toLowerCase().indexOf(rootPrefix) !== 0) {
+					return null;
+				}
+
+				var suffix = path.substring(rootPrefix.length);
+				var normalizedBase = getClassicStoryBasePath();
+				if (suffix && suffix.charAt(0) !== '/') {
+					suffix = '/' + suffix;
+				}
+
+				return window.location.origin
+					+ normalizedBase
+					+ (suffix || '')
+					+ (urlAsURL.search || '')
+					+ (urlAsURL.hash || '');
+			}
+
 			function resolveKnownShortUrlOverride(storedUrl) {
 				if (!storedUrl || !window.URL) {
 					return storedUrl;
@@ -280,7 +327,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					// Tactical fallback: some browsers return opaque no-cors redirects for arcg.is,
 					// preventing deterministic expansion via fetch(response.url).
 					if ((host === 'arcg.is' || host === 'www.arcg.is') && pathCode === '5twzg') {
-						return window.location.origin + '/templates/classic-storymaps/cascade/index.html?appid=a8a18aaa2dee41dc98ae5eee3a2e4259';
+						return buildClassicRuntimeUrl('cascade', '?appid=a8a18aaa2dee41dc98ae5eee3a2e4259', '');
 					}
 				}
 				catch (err) {
@@ -349,6 +396,11 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 				try {
 					var urlAsURL = new window.URL(storedUrl, window.location.origin);
+					var normalizedTemplatesRoot = normalizeClassicTemplatesRootUrl(urlAsURL);
+					if (normalizedTemplatesRoot) {
+						return normalizedTemplatesRoot;
+					}
+
 					if ((urlAsURL.hostname || '').toLowerCase() === 'story.maps.arcgis.com'
 						&& /^\/sharing\/oauth2\/authorize(?:\/|$)/i.test(urlAsURL.pathname || '')) {
 						var redirectUrl = urlAsURL.searchParams && urlAsURL.searchParams.get('redirect_uri');
@@ -386,10 +438,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					});
 
 					if (runtimePath) {
-						return window.location.origin
-							+ '/templates/classic-storymaps/' + runtimePath + '/index.html'
-							+ (urlAsURL.search || '')
-							+ (urlAsURL.hash || '');
+						return buildClassicRuntimeUrl(runtimePath, urlAsURL.search || '', urlAsURL.hash || '');
 					}
 				}
 				catch (err) {
@@ -434,7 +483,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					return storedUrl;
 				}
 
-				return window.location.origin + '/templates/classic-storymaps/' + runtimePath + '/index.html?appid=' + appIdMatch[1];
+				return buildClassicRuntimeUrl(runtimePath, '?appid=' + appIdMatch[1], '');
 			}
 
 			function isLikelyFrameDeniedByTargetPolicy(storedUrl) {
