@@ -256,7 +256,4 @@
 
   loadJS('app/custom-scripts.js');
 
-  if (! app.isProduction) {
-    loadJS('//localhost:35729/livereload.js');
-  }
 })();

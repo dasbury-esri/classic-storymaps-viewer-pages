@@ -32,11 +32,28 @@ copy_runtime_build() {
   cp -R "$runtime_build"/. "$runtime_publish_dir"/
 }
 
+sanitize_runtime_publish() {
+  local runtime_name="$1"
+  local runtime_publish_dir="$PUBLISH_ROOT/$runtime_name"
+
+  if [[ ! -d "$runtime_publish_dir" ]]; then
+    return
+  fi
+
+  local tmp_file
+  while IFS= read -r file_path; do
+    tmp_file="$(mktemp)"
+    awk '!/localhost:35729\/livereload\.js/ && !/localhost:8888\/livereload\.js/' "$file_path" > "$tmp_file"
+    mv "$tmp_file" "$file_path"
+  done < <(grep -IrlE 'localhost:35729/livereload\.js|localhost:8888/livereload\.js' "$runtime_publish_dir" || true)
+}
+
 mkdir -p "$PUBLISH_ROOT"
 
 for runtime_name in "${runtime_names[@]}"; do
   require_runtime_build "$runtime_name"
   copy_runtime_build "$runtime_name"
+  sanitize_runtime_publish "$runtime_name"
 done
 
 echo "Classic Storymaps runtime publish output copied to $PUBLISH_ROOT for: ${runtime_names[*]}"
