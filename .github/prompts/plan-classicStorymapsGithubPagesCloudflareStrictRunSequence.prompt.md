@@ -27,7 +27,8 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 - [ ] Rollback if needed: no DNS cutover; demo fallback remains `storymaps.esri.com`.
 
 4. 10:00 PM to 11:00 PM — Domain wiring setup (safe mode)
-- [ ] Configure GitHub custom domain to `classicstorymaps.com`.
+- [x] Configure GitHub custom domain to `classicstorymaps.com`.
+- [x] Blocker noted: GitHub Pages API returned `The certificate does not exist yet` when enforcing HTTPS; Cloudflare DNS for `www` is not present yet.
 - [ ] Configure Cloudflare DNS (`www` CNAME and apex flattening) and SSL Full strict.
 - [ ] Keep CDN caching conservative.
 - [ ] Go/No-Go checkpoint passed: DNS records are correct and certificate issuance begins.
