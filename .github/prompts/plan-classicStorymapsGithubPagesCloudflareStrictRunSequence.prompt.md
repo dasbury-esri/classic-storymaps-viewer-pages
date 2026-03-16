@@ -7,8 +7,8 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 1. 7:00 PM to 7:30 PM — Preflight and freeze window
 - [x] Confirm demo scope is Stage A only.
 - [x] Confirm no path refactor work enters this window.
-- [ ] Confirm all required repo permissions for GitHub Pages and Actions.
-- [ ] Go/No-Go checkpoint passed: permissions and scope are confirmed.
+- [x] Confirm all required repo permissions for GitHub Pages and Actions.
+- [x] Go/No-Go checkpoint passed: permissions and scope are confirmed.
 - [ ] Rollback if needed: stop here with zero production impact.
 
 2. 7:30 PM to 9:00 PM — Build and artifact readiness
@@ -20,7 +20,7 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 
 3. 9:00 PM to 10:00 PM — Deploy workflow + first Pages publish
 - [x] Trigger minimal Pages pipeline publish.
-- [ ] Blocker noted: GitHub API returned 422 (`Your current plan does not support GitHub Pages for this repository`).
+- [x] Blocker noted: GitHub API returned 422 (`Your current plan does not support GitHub Pages for this repository`).
 - [ ] Confirm Pages artifact deployment completes successfully.
 - [ ] Validate default Pages hostname serves canonical path content.
 - [ ] Go/No-Go checkpoint passed: default Pages URL is stable for landing + 2 launchers + 2 runtime URLs.
