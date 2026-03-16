@@ -135,9 +135,9 @@ Run on selected endpoint(s):
 
 Required result:
 
-- [ ] No blocking 404s for runtime assets.
-- [ ] No TLS errors on custom domain (if cert gate passed).
-- [ ] No blocking console errors in tested paths.
+- [x] No blocking 404s for runtime assets. (PASS: sampled runtime assets referenced by tested pages are present in publish output)
+- [ ] No TLS errors on custom domain (if cert gate passed). (FAIL from current network: `curl` to `https://classicstorymaps.com/templates/classic-storymaps/` returns `status=000`, `curl: (35) Recv failure: Connection was reset`)
+- [ ] No blocking console errors in tested paths. (FAIL/PENDING: browser DevTools validation is still blocked by network access constraints; published artifacts still contain localhost livereload references in Cascade/Crowdsource sources)
 
 Section D execution notes (2026-03-16)
 
@@ -145,6 +145,8 @@ Section D execution notes (2026-03-16)
 - External reachability checks were executed via remote fetch proxy (`r.jina.ai`) and confirmed content retrieval for catalog, two launchers, two runtime appid URLs, and embedded candidates.
 - Legacy compatibility behavior remains validated by deployed static stubs in `publish/templates/classic-stories/*` and by previously validated path-mapping logic that preserves query/hash to canonical `/templates/classic-storymaps/*` targets.
 - Runtime asset and console-error checks require a full browser/network session (DevTools) and are still pending as explicit checklist items.
+- Runtime asset presence validation sample: `mapjournal/resources/tpl/viewer/icons/loading-light.gif`, `mapseries/resources/tpl/viewer/icons/loading-light.gif`, `maptour/app/maptour-viewer-min.js`, and `cascade/app/main-config.js` all exist in publish output.
+- ServiceNow request is open with Esri IST to unblock `classicstorymaps.com`; expected response time is approximately one week.
 
 ### Section E: Final Lock and Handoff
 
