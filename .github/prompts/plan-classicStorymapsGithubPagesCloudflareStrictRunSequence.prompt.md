@@ -28,16 +28,16 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 
 4. 10:00 PM to 11:00 PM — Domain wiring setup (safe mode)
 - [x] Configure GitHub custom domain to `classicstorymaps.com`.
-- [x] Blocker noted: GitHub Pages API returned `The certificate does not exist yet` when enforcing HTTPS; Cloudflare DNS for `www` is not present yet.
+- [x] Blocker noted: GitHub Pages API returned `The certificate does not exist yet` when enforcing HTTPS; after custom-domain binding, the default `github.io` hostname now 301-redirects to `classicstorymaps.com` and is no longer an independent fallback while the custom domain is attached.
 - [ ] Configure Cloudflare DNS (`www` CNAME and apex flattening) and SSL Full strict.
 - [ ] Keep CDN caching conservative.
 - [ ] Go/No-Go checkpoint passed: DNS records are correct and certificate issuance begins.
-- [ ] Rollback if needed: remove custom domain in Pages and continue with default Pages hostname for demo.
+- [ ] Rollback if needed: remove custom domain in Pages to recover the default Pages hostname as the demo endpoint.
 
 5. 11:00 PM to 11:30 PM — Nightly smoke gate
 - [ ] Smoke test default Pages hostname.
 - [ ] Smoke test `classicstorymaps.com/templates/classic-storymaps/` if propagated.
-- [ ] Record pass/fail matrix for morning go-live decision.
+- [x] Record pass/fail matrix for morning go-live decision.
 - [ ] Go/No-Go checkpoint passed: default Pages path passes all core tests, even if custom domain is still propagating.
 - [ ] Rollback if needed: declare fallback demo route `storymaps.esri.com/templates/classic-stories/*`.
 
@@ -87,5 +87,5 @@ Assumption: fallback remains `https://storymaps.esri.com/templates/classic-stori
 ### Demo Endpoint Decision Rule
 
 - [ ] Primary: `https://classicstorymaps.com/templates/classic-storymaps/` only if fully green by 9:00 AM PT.
-- [ ] Secondary: default GitHub Pages hostname canonical path.
+- [ ] Secondary: default GitHub Pages hostname canonical path, but only if the custom domain is removed from Pages first.
 - [ ] Tertiary fallback: `https://storymaps.esri.com/templates/classic-stories/*`.
