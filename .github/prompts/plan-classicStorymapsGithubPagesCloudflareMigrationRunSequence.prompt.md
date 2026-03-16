@@ -28,10 +28,10 @@ Move production hosting from storymaps.esri.com to GitHub Pages using classicsto
 - Checklist:
 - [x] Add GitHub Actions workflow to run landing build then runtime publish then Pages deploy.
 - [x] Add deployment safeguards: `.nojekyll`, `CNAME` (`classicstorymaps.com`), artifact structure check.
-- [ ] Configure Pages settings for custom domain and HTTPS.
+- [x] Configure Pages settings for custom domain and HTTPS.
 - [ ] Configure Cloudflare DNS:
-- [ ] `www CNAME -> <owner>.github.io`
-- [ ] apex flattening `classicstorymaps.com -> <owner>.github.io`
+- [x] `www CNAME -> <owner>.github.io`
+- [x] apex flattening `classicstorymaps.com -> <owner>.github.io`
 - [ ] Configure Cloudflare SSL/TLS and redirects:
 - [ ] SSL mode `Full (strict)`
 - [ ] `Always Use HTTPS` enabled
@@ -43,25 +43,25 @@ Move production hosting from storymaps.esri.com to GitHub Pages using classicsto
 - Dependencies: Phase 1 base-path contract.
 - LOE: `L` (about 5 to 7 days).
 - Checklist:
-- [ ] Refactor `apps/classic-storymaps-site/assets/js/classic-story-loader.js`:
-- [ ] Replace `VIEWER_BY_APP` absolute values with base-path-aware builder.
-- [ ] Update `getViewerUrl` to build from base path and preserve query encoding.
-- [ ] Replace `inferViewerConfig` runtime regex `/classic-storymaps/...` with base-path-aware runtime detection.
-- [ ] Refactor launcher pages to remove absolute Back to Catalog/demo anchors and use base-path-derived links.
+- [x] Refactor `apps/classic-storymaps-site/assets/js/classic-story-loader.js`:
+- [x] Replace `VIEWER_BY_APP` absolute values with base-path-aware builder.
+- [x] Update `getViewerUrl` to build from base path and preserve query encoding.
+- [x] Replace `inferViewerConfig` runtime regex `/classic-storymaps/...` with base-path-aware runtime detection.
+- [x] Refactor launcher pages to remove absolute Back to Catalog/demo anchors and use base-path-derived links.
 - [ ] Refactor landing `index.html` OG URL and embedded viewer map table to match deployment profile.
 - [ ] Refactor runtime source modules synthesizing canonical runtime URLs:
-- [ ] `runtimes/mapjournal/upstream/src/app/storymaps/tpl/ui/MainStage.js`
-- [ ] `runtimes/mapseries/upstream/src/app/storymaps/tpl/ui/MainStage.js`
-- [ ] `runtimes/cascade/upstream/src/app/storymaps/tpl/view/media/WebPage.jsx`
-- [ ] Rebuild affected runtimes and republish using scripts (no manual edits in `publish/`).
+- [x] `runtimes/mapjournal/upstream/src/app/storymaps/tpl/ui/MainStage.js`
+- [x] `runtimes/mapseries/upstream/src/app/storymaps/tpl/ui/MainStage.js`
+- [x] `runtimes/cascade/upstream/src/app/storymaps/tpl/view/media/WebPage.jsx`
+- [x] Rebuild affected runtimes and republish using scripts (no manual edits in `publish/`).
 
 4. **Phase 4: Compatibility Without IIS Rewrites**
 - Objective: preserve legacy path behavior without server-side rewrite support.
 - Dependencies: Phase 2 deployment in place.
 - LOE: `M` (about 2 days).
 - Checklist:
-- [ ] Implement static redirect stubs for `/templates/classic-stories/*` preserving query strings.
-- [ ] Verify compatibility behavior for representative runtime routes and launcher routes.
+- [x] Implement static redirect stubs for `/templates/classic-stories/*` preserving query strings.
+- [x] Verify compatibility behavior for representative runtime routes and launcher routes.
 - [ ] Update IIS-focused docs/checklists to Pages/Cloudflare equivalents.
 - [ ] Mark IIS-only validation items as non-applicable in new production profile.
 
@@ -70,8 +70,8 @@ Move production hosting from storymaps.esri.com to GitHub Pages using classicsto
 - Dependencies: Phases 2 through 4.
 - LOE: `M` (about 2 to 3 days).
 - Checklist:
-- [ ] Run smoke suite across landing, all launchers, and direct runtime URLs.
-- [ ] Validate embedded-story normalization in Map Journal, Map Series, and Cascade.
+- [x] Run smoke suite across landing, all launchers, and direct runtime URLs.
+- [x] Validate embedded-story normalization in Map Journal, Map Series, and Cascade.
 - [ ] Validate apex and `www` HTTPS behavior and redirect policy.
 - [ ] Validate cache behavior and perform purge steps after deploy.
 - [ ] Perform staged DNS cutover: preview -> low-traffic verification -> full cutover.
