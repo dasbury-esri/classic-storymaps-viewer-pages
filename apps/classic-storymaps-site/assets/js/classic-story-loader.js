@@ -738,12 +738,9 @@
       state.viewerUrl = result.classicType ? getViewerUrl(result.classicType, result.item.id) : null;
 
       var appLabel = APP_LABEL_BY_ID[result.classicType] || launcherAppLabel;
-      var chainText = result.chain.map(function(c) {
-        return c.id;
-      }).join(" -> ");
 
-      setTitle("Found: " + (result.item.title || "(Untitled)") + " [" + appLabel + "]", "warn");
-      setStatus("Resolved item chain: " + chainText, "warn");
+      setTitle("Found: '" + (result.item.title || "(Untitled)") + "' (" + appLabel + ")", "warn");
+      setStatus("Valid item: " + result.item.id, "warn");
 
       setDisabled(ui.openBtn, !state.viewerUrl);
       setDisabled(ui.downloadItemBtn, false);
