@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<script type="text/javascript">
+	// classicstorymaps-builder-guard
+	(function () {
+		var raw = (window.location.search || "").replace(/^\?/, "");
+		if (!raw) return;
+		var parts = raw.split("&");
+		var keep = [];
+		var changed = false;
+		for (var i = 0; i < parts.length; i++) {
+			if (!parts[i]) continue;
+			var key = parts[i].split("=")[0];
+			if (key === "edit" || key === "fromScratch" || key === "fromscratch") {
+				changed = true;
+			}
+			else {
+				keep.push(parts[i]);
+			}
+		}
+		if (!changed) return;
+		var next = window.location.pathname + (keep.length ? "?" + keep.join("&") : "") + (window.location.hash || "");
+		window.location.replace(next);
+	})();
+	</script>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 

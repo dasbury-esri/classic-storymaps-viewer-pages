@@ -84,7 +84,7 @@ function defineDojoConfig()
 	}
 }
 
-app.isProduction = true;
+app.isProduction = false;
 
 defineDojoConfig();
 

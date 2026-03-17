@@ -1,0 +1,18 @@
+<div id="addFeatureBar">
+	<button id="addFeature" class="btn btn-success"><%= add %></button>
+	<button id="importFeature" class="btn btn-success"><%= importFeatures %></button>
+	<button id="organizeFeatures" class="btn btn-primary"><%= organize %></button>
+	<button id="locateFeatures" class="btn btn-warning" data-toggle="tooltip" data-title="<%= locateFeaturesTooltip %>">
+		<span class="unlocatedFeatures"></span>
+	</button>
+	<button id="completeOrganization" class="btn btn-success"><%= done %></button>
+	<button id="deleteFeatures" class="btn btn-danger disabled"><%= deleteFeature %></button>
+	<div id="moveFeaturesContainer" class="dropdown">
+		<button class="btn btn-default dropdown-toggle disabled" type="button" id="moveFeaturesDropdownMenu" data-toggle="dropdown">
+			<%= move %>
+			<span class="caret"></span>
+		</button>
+		<ul id="tabSelector" class="dropdown-menu" >
+		</ul>
+	</div>
+</div>

@@ -12,6 +12,13 @@ Record post-S10/S10b runtime troubleshooting completed on 2026-03-13, including 
 
 ## Summary
 
+## 2026-03-17 Deployment Status Update
+
+- Cascade deploy is fixed in GitHub Pages pipeline.
+- Root cause for the recent deploy blocker was an invalid bash conditional in `scripts/build-cascade-runtime.sh` that could abort before fallback staging.
+- Fix commit: `47a023c`.
+- Deploy workflow run `23179242312` completed with `success`.
+
 | Runtime | Symptom | Root Cause | Outcome |
 |---|---|---|---|
 | Map Series + Map Journal | Embedded classic stories failed when links used shorteners or legacy app routes | Embedded URL normalization only handled limited patterns | Fixed and validated in runtime builds |
