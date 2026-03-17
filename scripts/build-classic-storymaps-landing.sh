@@ -7,6 +7,7 @@ COMPAT_OUT_DIR_STORIES="${COMPAT_OUT_DIR_STORIES:-publish/templates/classic-stor
 COMPAT_OUT_DIR_STORYMAPS="${COMPAT_OUT_DIR_STORYMAPS:-publish/templates/classic-storymaps}"
 ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-apps/classic-storymaps-site/archive-root.html}"
 ROOT_PAGE_OUT="${ROOT_PAGE_OUT:-publish/index.html}"
+ARCHIVE_ROOT_OUT="${ARCHIVE_ROOT_OUT:-publish/archive/index.html}"
 ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/2017-12-10/app-list/raw/index.raw.html}"
 ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/2017-12-10-app-list.html}"
 ARCHIVE_PAGES_SRC="${ARCHIVE_PAGES_SRC:-classic-apps/2017-12-10/app-list/pages}"
@@ -101,6 +102,7 @@ sanitize_archive_html_file() {
     s{\s*<link[^>]+signIn\.css[^>]*>\s*}{}gs;
     s{\s*<script[^>]+l10NStrings\.js[^>]*></script>\s*}{}gs;
     s{\s*<script[^>]+langSelector\.js[^>]*></script>\s*}{}gs;
+    s{\s*<script[^>]+my-stories-config/config\.js[^>]*></script>\s*}{}gs;
     s{\s*<nav[^>]+id="logged-out-navigation"[^>]*>.*?</nav>\s*}{}gs;
     s{\s*<div[^>]+id="logged-in-navigation"[^>]*>.*?</div>\s*}{}gs;
     s{\s*<div[^>]+id="sign-in-container"[^>]*>.*?</div>\s*}{}gs;
@@ -112,9 +114,11 @@ sanitize_archive_html_file() {
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/features/features-page\.css[^"]*"}{href="/viewers/assets/css/archive/features-page.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/applist\.css[^"]*"}{href="/viewers/assets/css/archive/applist.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/create-story\.css[^"]*"}{href="/viewers/assets/css/archive/create-story.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/steps\.css[^"]*"}{href="/viewers/assets/css/archive/steps.css"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/libs/jquery-1\.9\.1\.min\.js[^"]*"}{src="/viewers/assets/js/archive/jquery-1.9.1.min.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/tailcoat/tailcoat\.js[^"]*"}{src="/viewers/assets/js/archive/tailcoat.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/img/([^"?]+)(?:\?[^"]*)?"}{src="/viewers/assets/images/$1"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/([^"/]+)/img/([^"?]+)(?:\?[^"]*)?"}{src="/viewers/assets/images/archive/app-list/$1/$2"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/(map-tour|map-journal|cascade|map-series|crowdsource|shortlist|swipe-spyglass|basic)/tutorial/?"}{href="/archive/2017-12-10-pages/en__app-list__$1__tutorial.html"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/(map-tour|map-journal|cascade|map-series|crowdsource|shortlist|swipe-spyglass|basic)/?"}{href="/archive/2017-12-10-pages/en__app-list__$1.html"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/?"}{href="/archive/2017-12-10-pages/en__app-list.html"}g;
@@ -217,6 +221,8 @@ fi
 if [[ -n "$ROOT_PAGE_SRC" && -f "$ROOT_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ROOT_PAGE_OUT")"
   cp "$ROOT_PAGE_SRC" "$ROOT_PAGE_OUT"
+  mkdir -p "$(dirname "$ARCHIVE_ROOT_OUT")"
+  cp "$ROOT_PAGE_SRC" "$ARCHIVE_ROOT_OUT"
 fi
 
 if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then

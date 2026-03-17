@@ -1,0 +1,2060 @@
+<!DOCTYPE HTML>
+<html lang="en-us" dir="ltr">
+
+<head>
+	<meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<title>Esri Story Maps Retirement | Transition to ArcGIS StoryMaps</title>
+
+     
+    
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+     
+	
+    <meta name="description" content="Learn how to transition from classic Esri Story Maps to ArcGIS StoryMaps. Compare features and access resources to continue sharing stories with maps."/>
+	<meta name="template" content="esri-content-template"/>
+	
+
+	
+
+	
+<meta name="content-page-ref" content="ukWXiyDuvO9gvMDwTiuM7grxEJt5tOWKImZh7fGp1mbDM7SLGr2GUzqF1aTHVrLTFkXK7bUApfH7pUdFN4aqkfEZoMAmjHpAec4ZlI-YoYOFrS0DYNG499L_mzh1AG-d"/>
+<script defer="defer" type="text/javascript" src="/.rum/@adobe/helix-rum-js@%5E2/dist/micro.js"></script>
+<link rel="canonical" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic"/>
+
+
+	
+
+
+
+<link rel='preconnect' href='//webapps-cdn.esri.com' crossorigin/>
+<link rel='preconnect' href='//js.arcgis.com' crossorigin/>
+<link rel='preconnect' href='//assets.adobedtm.com'/>
+<link rel='preconnect' href='//fast.fonts.net' crossorigin/>
+
+
+<link rel="preload" as="style" href="https://fast.fonts.net/t/1.css?apiType=css&projectid=f9e335c8-e150-4885-976e-f4c392e562c4" crossorigin/>
+<link rel="preload" as="style" href="https://webapps-cdn.esri.com/CDN/fonts/v1.4.2/fonts.css" crossorigin/>
+
+
+<link rel='dns-prefetch' href='//pi.pardot.com' crossorigin/>
+<link rel='dns-prefetch' href='//js-cdn.dynatrace.com' crossorigin/>
+<link rel='dns-prefetch' href='//cdn.cookielaw.org' crossorigin/>
+<link rel='dns-prefetch' href='//api.company-target.com' crossorigin/>
+<link rel='dns-prefetch' href='//securetags.esri.com' crossorigin/>
+<link rel='dns-prefetch' href='//environmentals.tt.omtrdc.net' crossorigin/>
+<link rel='dns-prefetch' href='//geolocation.onetrust.com' crossorigin/>
+
+
+<link rel="modulepreload" href="https://js.arcgis.com/calcite-components/1.8.0/calcite.esm.js" crossorigin/>
+<link rel="stylesheet preload" as="style" href="https://js.arcgis.com/calcite-components/1.8.0/calcite.css" type="text/css" crossorigin/>
+
+
+
+
+
+<link rel="stylesheet preload" as="style" href="https://webapps-cdn.esri.com/CDN/components/esri-ui/0.3.0/css/esri-ui.css" type="text/css"/>
+
+<!-- Execute (runs the code) -->
+<script type="module" src="https://js.arcgis.com/calcite-components/1.8.0/calcite.esm.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    window.gnav_jsonPath = "/content/experience-fragments/esri-sites/en-us/site-settings/global-navigation-config/2022-nav-config.25.json";
+</script>
+<script>
+    window.gnav_mode = "";
+    window.window.gnav_login = "";
+    window.window.gnav_collapseMenus = ("" === "true");
+</script>
+
+
+
+<script>
+    window.chatHandler = "https://go.esri.com/l/82202/2020-01-30/mxx15l";
+</script>
+<link rel="stylesheet" href="https://webapps-cdn.esri.com/CDN/components/esri-cloud-chat/css/esriChat.css"/>
+
+<script src="https://geoip.esri.com/geoip.js"></script>
+
+
+
+
+
+
+
+<style>
+    :root {
+        --secondarytheme-color: #00a09e;
+
+        --theme-color: #00a09e;
+        --theme-color10: #00a09e1A;
+        --theme-color50: #00a09e80;
+        --theme-color-secondary: #00a09e;
+        --theme-color-secondary10: #00a09e1A;
+        --theme-color-secondary50: #00a09e80;
+
+        --theme-color-dark: #00a09e;
+        --theme-color-dark10: #00a09e1A;
+        --theme-color-dark50: #00a09e80;
+        --theme-color-secondary-dark: #0079c1;
+        --theme-color-secondary-dark10: #0079c11A;
+        --theme-color-secondary-dark50: #0079c180;
+    }
+
+    .calcite-mode-dark  {
+        --theme-color: var(--theme-color-dark);
+        --theme-color10: var(--theme-color-dark10);
+        --theme-color50: var(--theme-color-dark50);
+        --theme-color-secondary: var(--theme-color-secondary-dark);
+        --theme-color-secondary10: var(--theme-color-secondary-dark10);
+        --theme-color-secondary50: var(--theme-color-secondary-dark50);
+    }
+
+    .calcite-mode-light {
+        --theme-color: #00a09e;
+        --theme-color10: #00a09e1A;
+        --theme-color50: #00a09e80;
+        --theme-color-secondary: #00a09e;
+        --theme-color-secondary10: #00a09e1A;
+        --theme-color-secondary50: #00a09e80;
+    }
+
+    .theme-secondary {
+        --theme-color: var(--theme-color-secondary);
+        --theme-color10: var(--theme-color-secondary10);
+        --theme-color50: var(--theme-color-secondary50);
+    }
+
+    .theme-secondary .calcite-mode-light {
+        --theme-color: var(--theme-color-secondary);
+        --theme-color10: var(--theme-color-secondary10);
+        --theme-color50: var(--theme-color-secondary50);
+    }
+    .theme-secondary .calcite-mode-dark {
+        --theme-color: var(--theme-color-secondary-dark);
+        --theme-color10: var(--theme-color-secondary-dark10);
+        --theme-color50: var(--theme-color-secondary-dark50);
+    }
+</style>
+
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://www.esri.com/content/dam/esrisites/en-us/common/favicon/esri-favicon-light-180.png"/>
+<link rel="icon" media="(prefers-color-scheme:dark)" type="image/png" sizes="32x32" href="https://www.esri.com/content/dam/esrisites/en-us/common/favicon/esri-favicon-dark-32.png"/>
+<link rel="icon" media="(prefers-color-scheme:light)" type="image/png" sizes="32x32" href="https://www.esri.com/content/dam/esrisites/en-us/common/favicon/esri-favicon-light-32.png"/>
+<link rel="icon" type="image/svg+xml" sizes="16x16 32x32 48x48 180x180" href="https://www.esri.com/content/dam/esrisites/en-us/common/favicon/esri-favicon.svg"/>
+
+
+
+    <link rel="alternate" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic" hreflang="en-us"/>
+
+    <link rel="alternate" href="https://www.esri.com/fr-fr/arcgis/products/arcgis-storymaps/classic" hreflang="fr-fr"/>
+
+    <link rel="alternate" href="https://www.esri.com/zh-cn/arcgis/products/arcgis-storymaps/classic" hreflang="zh-cn"/>
+
+    <link rel="alternate" href="https://www.esri.com/ja-jp/arcgis/products/arcgis-storymaps/classic" hreflang="ja-jp"/>
+
+    <link rel="alternate" href="https://www.esri.com/es-es/arcgis/products/arcgis-storymaps/classic" hreflang="es-es"/>
+
+    <link rel="alternate" href="https://www.esri.com/ru-ru/arcgis/products/arcgis-storymaps/classic" hreflang="ru-ru"/>
+
+    <link rel="alternate" href="https://www.esri.com/de-de/arcgis/products/arcgis-storymaps/classic" hreflang="de-de"/>
+
+    <link rel="alternate" href="https://www.esri.com/ar-sa/arcgis/products/arcgis-storymaps/classic" hreflang="ar-sa"/>
+
+    <link rel="alternate" href="https://www.esri.com/it-it/arcgis/products/arcgis-storymaps/classic" hreflang="it-it"/>
+
+    <link rel="alternate" href="https://www.esri.com/ko-kr/arcgis/products/arcgis-storymaps/classic" hreflang="ko-kr"/>
+
+    <link rel="alternate" href="https://www.esri.com/pl-pl/arcgis/products/arcgis-storymaps/classic" hreflang="pl-pl"/>
+
+    <link rel="alternate" href="https://www.esri.com/pt-br/arcgis/products/arcgis-storymaps/classic" hreflang="pt-br"/>
+
+    <link rel="alternate" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic" hreflang="x-default"/>
+
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@Esri"/>
+<meta name="twitter:title" content="Esri Story Maps Retirement | Transition to ArcGIS StoryMaps"/>
+<meta property="twitter:url" content="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic"/>
+<meta name="twitter:description" content="Learn how to transition from classic Esri Story Maps to ArcGIS StoryMaps. Compare features and access resources to continue sharing stories with maps."/>
+<meta property="twitter:image" content="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/StoryMaps.png"/>
+
+
+<meta property="fb:app_id" content="1703715456573377"/>
+<meta property="og:title" content="Esri Story Maps Retirement | Transition to ArcGIS StoryMaps"/>
+<meta property="og:url" content="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic"/>
+<meta property="og:description" content="Learn how to transition from classic Esri Story Maps to ArcGIS StoryMaps. Compare features and access resources to continue sharing stories with maps."/>
+<meta property="og:image" content="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/StoryMaps.png"/>
+<meta property="og:type" content="website"/>
+
+<meta name="last-modified" content="Thu, 30 Oct 2025 22:08:10 GMT"/>
+
+
+<meta name="date-sort" content="Thu, 30 Oct 2025 22:08:10 GMT"/>
+<meta name="created"/>
+
+
+
+
+
+
+
+
+    
+    <script type="application/ld+json">
+    {	
+       "@context": "https://schema.org",
+       "@type": "WebPage",
+       "name": "Esri Story Maps Retirement | Transition to ArcGIS StoryMaps",
+        "sourceOrganization" : {
+            "@type": "Organization",
+            "name" : "Esri"
+            },
+       "url": "https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic",
+       "image": "https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/StoryMaps.png",
+       "inLanguage" : {
+           "@type": "Language",
+           "name": "en-us"
+       },
+       "description":"Learn how to transition from classic Esri Story Maps to ArcGIS StoryMaps. Compare features and access resources to continue sharing stories with maps."
+   }
+ </script>
+
+
+
+
+
+
+<!-- Sitelinks Search Box -->
+
+
+<!-- breadcrumb -->
+<script type="application/ld+json" id="breadcrumbs">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement":  [{"@type": "ListItem","position": 1,"name":"ArcGIS","item":"https://www.esri.com/en-us/arcgis/geospatial-platform/overview"},{"@type": "ListItem","position": 2,"name":"Products","item":"https://www.esri.com/en-us/arcgis/products/index"},{"@type": "ListItem","position": 3,"name":"ArcGIS StoryMaps","item":"https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview"},{"@type": "ListItem","position": 4,"name":"Classic StoryMaps","item":"https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic"}]
+ }
+</script>
+<meta name="format-detection" content="telephone=no"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<script src="/etc.clientlibs/esri-sites/clientlibs/datalayer.js"></script>
+
+
+
+<script>
+    window.dataLayer = Object.assign({}, window.dataLayer, {
+        pageTitle: "Classic Storymaps",
+        pageName: "Arcgis:Products:Arcgis Storymaps:Classic Storymaps",
+        pagePath: "/content/esri-sites/en-us/arcgis/products/arcgis-storymaps/classic",
+        pageType: "",
+        pageSubType: "",
+        metaOgTitle: "Esri Story Maps Retirement | Transition to ArcGIS StoryMaps",
+        metaOgUrl: "https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic",
+        metaOgDescription: "Learn how to transition from classic Esri Story Maps to ArcGIS StoryMaps. Compare features and access resources to continue sharing stories with maps.",
+        metaOgImage: "https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/StoryMaps.png",
+        datePublished: "",
+        domain: window.location.host,
+        environment: "crx3composite,nosamplecontent,publish,cloud-ready",
+        hierarchy1: "Arcgis",
+        hierarchy2: "Products",
+        hierarchy3: "Arcgis Storymaps",
+        hierarchy4: "",
+        locale: "en-us",
+        resourceType: "esri-sites/components/pages/editablecontentpage",
+        template: "/conf/esri-sites/settings/wcm/templates/esri-content-template",
+        language: "en",
+        countryCode: "us",
+        tags: "adobe-analytics---only-for-sites:page-type/products|page-sub-type/deeper-content",
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+    window.storeVariables = Object.assign({}, window.storeVariables, {
+        eCommUrl : "https://www.esri.com/api/ecomm",
+        lookupUrl : "https://ecomm-api.esri.com/lookup",
+        accountsUrl : "https://www.esri.com/en-us/signin",
+        checkoutUrl : "https://www.esri.com/checkout",
+        cartUrl : "https://www.esri.com/en-us/store/cart",
+        customerNumberUrl : "https://www.esri.com/en-us/store/customer-number",
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="color theme" content="00a09e"/>
+
+<!-- /* Clientlibs */ -->
+
+    
+<link rel="stylesheet" href="/etc.clientlibs/esri-sites/clientlibs/components.css" type="text/css">
+
+
+
+
+	
+    
+    
+
+    
+
+    
+
+
+        <script type="text/javascript" src="//assets.adobedtm.com/launch-EN26af1ee4ef084984926fd80d1cb93835.min.js"></script>
+
+
+    
+    
+    
+    
+    
+
+
+	
+	
+</head>
+
+<body class="editablecontentpage page basicpage" id="editablecontentpage-6c9902b55d" data-instant-intensity="viewport">
+
+	
+
+	
+
+	
+	
+		
+
+
+
+
+		
+<link rel="stylesheet" href="https://webapps-cdn.esri.com/CDN/components/global-nav/css/gn.css"/>
+<script src="https://webapps-cdn.esri.com/CDN/components/global-nav/js/gn.js"></script>
+<header id="globalnav" aria-label="Main" class="calcite-mode-light"></header>
+<main id="main-content">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <div class="local-navigation aem-GridColumn aem-GridColumn--default--12">
+
+
+
+    <nav id="second-nav" domain="" navtype="existingNavigation" path="/content/esri-sites/en-us/arcgis/products/arcgis-storymaps/overview"></nav>
+
+</div>
+<div class="hero-banner-global-v2 aem-GridColumn aem-GridColumn--default--12">
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/hero-banner-global-v2/clientlibs.css" type="text/css">
+
+  <script src="/etc.clientlibs/esri-sites/components/content/hero-banner-global-v2/clientlibs.js"></script>
+
+
+
+
+
+
+
+
+<div class="
+	hbg-container
+	hbg-container--small
+	calcite-mode-light
+	has-background
+	has-background--img
+	
+	has-background--cover
+	
+	" style="
+	--bg-color: #ffffff; --bg-gradient-end: var(--bg-color);;
+	--posX: center;
+	--posY: center;
+	">
+
+	<div class="hbg-container hbg-container--small">
+		
+			
+			<picture class="hbg-container--small--backgroundImage ">
+				
+				<img alt fetchpriority="low" loading="lazy" class="hbg-container--small--backgroundImage" src="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/subpage-banner-product-roadmap.png"/>
+			</picture>
+			
+		
+
+		
+		
+
+		<div class="hbg-container--small--left">
+			<div class="hbg-container--content--small calcite-animate" data-animation="calcite-animate__in-up">
+				<div class="hbg-content">
+					<div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h1 class="esri-text__title">Esri Story Maps</h1>
+
+	<p class="esri-text__subtitle ">Retiring in Q1 2026</p>
+
+	
+</div>
+</div>
+
+				</div>
+				
+			</div>
+		</div>
+		
+	</div>
+</div>
+</div>
+<div class="contentbar aem-GridColumn aem-GridColumn--default--12">
+
+  <link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/contentbar/clientlibs.css" type="text/css">
+<script defer src="/etc.clientlibs/esri-sites/components/content/contentbar/clientlibs.js"></script>
+
+
+
+
+
+
+
+
+	
+		<section class="contentbar--content calcite-mode-dark alignleft calcite-animate has-background
+			has-background--color" data-animation="calcite-animate__in-up" style="background-color: #004e4b; ;">
+	<div class="grid-container">
+		<div class="column-12 tablet-column-12 phone-column-6 leader-2 trailer-2 ">
+			<div>
+        
+
+        
+				
+					<h2 class="esri-text__title">Continue storytelling in ArcGIS StoryMaps</h2>
+				
+				
+				<div class="esri-text__description richtext-container trailer-0">
+					<p>The retirement of Esri Story Maps in ArcGIS Online has been moved to early 2026. When it retires, you won’t be able to view, edit, or create content and URLs to existing stories won’t work. Published stories will still be available in ArcGIS Enterprise 10.9.1 and earlier and in ArcGIS Online until the retirement.</p>
+<p>It’s time to switch to ArcGIS StoryMaps. Use the resources on this page to get started.  Note that the Esri Story Maps retirement is different from the StoryMaps.com retirement. ArcGIS StoryMaps is not retiring.</p>
+
+				</div>
+			</div>
+
+			
+				<div class="leader-1 trailer-0">
+
+         
+					<a class="esri-ui-button 
+						esri-ui-button--neutral
+						" data-cb-cta="one" href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps/announcements/classic-story-map-transition-timeline-december-2022" data-event="track-component" data-component-name="Content Bar" data-link-type="internal" data-component-link-type="button" data-component-link="Continue storytelling in ArcGIS StoryMaps - Prepare for retirement" data-component-link-placement="1">
+						Prepare for retirement</a>
+
+
+					<a class="esri-ui-button 
+						esri-ui-button--neutral
+						esri-ui-button--outline
+						
+						" data-cb-cta="one" data-event="track-component" data-component-name="Content Bar" data-link-type="internal" data-component-link-type="button" data-component-link="Continue storytelling in ArcGIS StoryMaps - Discover ArcGIS StoryMaps" data-component-link-placement="2" href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview">
+						Discover ArcGIS StoryMaps</a>
+
+
+
+						
+
+
+
+
+
+
+				</div>
+			
+		</div>
+	</div>
+	</section>
+
+</div>
+<div class="cards-container-v3 aem-GridColumn aem-GridColumn--default--12">
+
+
+
+
+
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/layouts/cards-container-v3/clientlibs.css" type="text/css">
+<script defer src="/etc.clientlibs/esri-sites/components/layouts/cards-container-v3/clientlibs.js"></script>
+
+
+
+<div class="
+    padding-leader-2
+    padding-trailer-2
+    calcite-mode-light
+    has-background
+    has-background--color
+    
+    
+    " style="--bg-color: var(--calcite-ui-foreground-1);  --bg-img: url(); --posX: center; --posY: center;  ;">
+
+
+    
+    
+
+    
+    <div class="grid-container">
+    
+    
+        
+        
+        
+        
+        
+        
+        <div class="card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+        
+        
+        
+            
+            <div class="container-v3 esri-text-container marginbottom50px ">
+                <h2 class="esri-text__title stylesystem ">It’s time to move to ArcGIS StoryMaps</h2>
+                
+                
+            </div>
+            
+
+            
+            
+            
+            
+            
+            <ul class="no-list calcite-mode-light relatedLinkMatrix card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+            
+            
+                <!-- Start Component Parsys -->
+                
+
+
+
+
+    
+    
+    <li class="block">
+
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/text-link-stack-icon/clientlibs.css" type="text/css">
+
+
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+	
+	<div class="text-link-stack-icon-wrapper">
+		<div class="esri-text__iconContainer">
+
+			
+
+			
+
+			
+
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M6.507 30.822a34.169 34.169 0 0 1 3.6-1.098c.999-.267 2.012-.544 2.993-.88V36.5c0 2.098 1.111 3.4 2.9 3.4h3.602l-1.823 1.036a60.04 60.04 0 0 1-12.482 4.481l-4.37.812.146.787 4.395-.818a60.818 60.818 0 0 0 12.687-4.557l3.066-1.74h9.402a2.76 2.76 0 0 1-.014-.801H16c-1.896 0-2.1-1.818-2.1-2.6V12c0-1.491.994-3.1 2.6-3.1H54a3.31 3.31 0 0 1 3.1 3.1v1.506l-.014 3.84a2.474 2.474 0 0 0-1.03 2.185 2.475 2.475 0 0 0 1.03 2.185v3.377h-.002l.001.4v.396h.002l.013 3.61V36.5a2.653 2.653 0 0 1-.332 1.286l.284.655c.03.069.051.14.08.21A3.385 3.385 0 0 0 57.9 36.5v-6.6H59a.94.94 0 0 0 .701-.266A1.78 1.78 0 0 0 60 28.306l-.003-2.417H60a2.134 2.134 0 0 0 1.8-2.35 2.859 2.859 0 0 0-.713-2 2.721 2.721 0 0 0 .714-2.008 2.728 2.728 0 0 0-.709-2.003 2.757 2.757 0 0 0 .709-1.947c0-1.368-.765-2.481-1.705-2.481H57.9V12A4.108 4.108 0 0 0 54 8.1h-1.86l.24-.106a2.534 2.534 0 0 0 1.383-2.927 1.15 1.15 0 0 0-1.353-.846l-6.809 1.416c-.126.024-.252.049-.376.077A14.688 14.688 0 0 0 40.303 7.8c-.149.096-.296.198-.442.299H16.5c-2.1 0-3.4 2.024-3.4 3.9v15.992c-1.036.37-2.125.672-3.2.958a34.564 34.564 0 0 0-3.685 1.128C4.197 30.87.536 31.775.536 31.775l.303.74s3.653-.902 5.668-1.693zm50.349-11.29c0-.919.454-1.558.861-1.558h2.523c.42 0 .761.698.761 1.557s-.341 1.558-.761 1.558h-2.523c-.407 0-.861-.64-.861-1.558zm2.273 9.542A.216.216 0 0 1 59 29.1h-1.1v-3.206h1.296l.004 2.43a1.718 1.718 0 0 1-.071.75zM60 25.088h-2.1V21.89h2.196c.428 0 .905.676.905 1.65 0 .912-.527 1.548-1.001 1.548zm.096-11.188c.418 0 .905.735.905 1.681 0 .939-.477 1.592-.905 1.592H57.9V13.9zM45.398 6.495c.118-.026.236-.05.36-.074l6.816-1.417a.35.35 0 0 1 .42.283 1.736 1.736 0 0 1-.937 1.975l-1.903.838h-8.79a13.783 13.783 0 0 1 4.034-1.605zm17.956 54.429l-.707.375-5.944-12.116a9.536 9.536 0 0 1-1.103-4.44v-1.814a8.63 8.63 0 0 0-.75-3.53l-1.803-4.158-1.07-1.997a1.725 1.725 0 0 0-2.457-.632l-.24.156 1.813 2.753-.666.443-2.575-3.903a.947.947 0 0 0-.759-.397l-.203-.003h-.015a1.071 1.071 0 0 0-.853.426l-.063.084-.68.806 1.246 1.891-.667.444-2.575-3.904a.95.95 0 0 0-.759-.397l-.2-.002a1.09 1.09 0 0 0-.87.426l-.063.084-1.246 1.477 1.188 1.782-.666.444-5.597-8.396a1.48 1.48 0 0 0-.872-.614l-1.287-.322a.552.552 0 0 0-.628.782l7.198 14.434a1.128 1.128 0 0 1-1.623 1.375l-.089-.07-2.974-3.134a1.209 1.209 0 0 0-1.686-.073.365.365 0 0 0-.072.466l3.484 5.626a12.246 12.246 0 0 0 3.016 3.265 18.44 18.44 0 0 0 2.378 1.508l5.173 2.751 3.27 10.036-.746.289-3.162-9.758-4.911-2.61a19.318 19.318 0 0 1-2.482-1.576 13.046 13.046 0 0 1-3.212-3.477l-3.488-5.632a1.163 1.163 0 0 1 .21-1.478 2.01 2.01 0 0 1 2.809.113l2.926 3.084a.342.342 0 0 0 .331-.048.33.33 0 0 0 .108-.358L31.567 27.03a1.352 1.352 0 0 1 1.538-1.915l1.287.323a2.276 2.276 0 0 1 1.344.945l3.947 5.92 1.131-1.348a1.923 1.923 0 0 1 1.52-.746l.2.002a1.752 1.752 0 0 1 1.401.735l.072.102.812 1.232.563-.673a1.938 1.938 0 0 1 1.52-.746l.202.003a1.753 1.753 0 0 1 1.399.734l.072.102.264.4.245-.159a2.523 2.523 0 0 1 3.598.927l1.085 2.027 1.817 4.184a9.43 9.43 0 0 1 .816 3.85v1.814a8.723 8.723 0 0 0 1.01 4.066zm-9.272-31.287V18.363h.8v11.274zM16.1 21h.8v6h-.8zm.8-2h-.8v-1h.8z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="contentarea esri-text-container">
+			<h3 class="esri-text__title ">
+				Fast, flexible storytelling</h3>
+			<div class="esri-text__description trailer-1 richtext-container">
+				<p style="	text-align: left;
+">Create professional-looking stories and presentations called briefings, with a single storytelling system.</p>
+</div>
+
+			<div class="bottom-link">
+				
+
+				
+			</div>
+
+			
+
+		</div>
+	</div>
+</article></li>
+
+
+    
+    
+    <li class="block">
+
+
+	
+
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+	
+	<div class="text-link-stack-icon-wrapper">
+		<div class="esri-text__iconContainer">
+
+			
+
+			
+
+			
+
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M57.183 28.778l-.256-1.818a9.608 9.608 0 0 0 2.672-4.044 3.554 3.554 0 0 0 1.36-2.28 8.245 8.245 0 0 0-1.059-5.408l-.256-.386a5.135 5.135 0 0 0-4.102-2.79 5.724 5.724 0 0 0-5.233 1.356 1.53 1.53 0 0 0-1.005.003c-2.194.636-3.458 3.403-3.657 5.164a5.114 5.114 0 0 0 1.557 4.625 9.726 9.726 0 0 0 2.865 4.007l-.246 1.568a7.939 7.939 0 0 0-4.855 1.34c.112.22.216.446.31.68l.046.054a6.911 6.911 0 0 1 4.48-1.279c.296 1.617 2.321 2.663 3.696 2.663s3.4-1.046 3.696-2.663c5.461.112 5.904 2.772 5.904 6.226V50.1H44.967q-.064.43-.124.8H63.9V35.796c0-3.634-.535-6.895-6.717-7.018zm-10.74-10.114c.167-1.497 1.264-3.957 3.083-4.484a1.23 1.23 0 0 1 .327-.055.318.318 0 0 1 .231.075l.299.307.286-.319a4.882 4.882 0 0 1 4.74-1.348 4.392 4.392 0 0 1 3.568 2.444l.261.392a7.467 7.467 0 0 1 .936 4.806 2.98 2.98 0 0 1-.736 1.531c-1.23-3.167-1.502-4.028-1.505-4.036l-.11-.351-.36.08c-.043.01-4.327.934-7.103-1.244l-.42-.33-.199.497a8.989 8.989 0 0 1-.745 1.48 16.61 16.61 0 0 0-1.675 4.118 4.647 4.647 0 0 1-.879-3.563zm1.52 4.271a17.252 17.252 0 0 1 1.708-4.396 9.32 9.32 0 0 0 .614-1.145c2.574 1.71 5.91 1.34 6.998 1.16.18.512.612 1.7 1.55 4.113-.967 3.012-3.963 5.267-5.48 5.267-1.457 0-4.33-2.096-5.39-4.999zm5.537 8.499c-1.026 0-2.916-.929-2.93-2.253l.223-1.423a4.894 4.894 0 0 0 2.56.975 5.192 5.192 0 0 0 2.849-1.18l.228 1.626c-.012 1.325-1.903 2.255-2.93 2.255zm-35.026 13.99a59.669 59.669 0 0 1-.871 4.676H2.397a57.1 57.1 0 0 1-1.45-13.888c.096-2.405 1.011-4.923 3.189-5.86.364 2.573 4.056 4.12 5.73 4.12l.113-.003.155.004c1.676 0 5.375-1.552 5.731-4.132a4.749 4.749 0 0 1 2.335 2.325 10.187 10.187 0 0 1 .26-1.118 5.216 5.216 0 0 0-4.535-2.381.996.996 0 0 1-.972-.698 8.912 8.912 0 0 0 5.322-9.795c-.56-3.097-3.015-6.407-8.233-6.407-5.195 0-7.655 3.29-8.226 6.37a8.916 8.916 0 0 0 5.24 9.801.965.965 0 0 1-.976.729c-4.17 0-5.803 3.767-5.932 7.014a58.245 58.245 0 0 0 1.546 14.418l.077.3H18.23l.076-.3c.006-.025.22-.885.486-2.271a92.124 92.124 0 0 1-.318-2.904zM2.604 18.783c.51-2.763 2.733-5.717 7.438-5.717 4.725 0 6.944 2.97 7.446 5.75a8.12 8.12 0 0 1-4.588 8.807V26.61a7.84 7.84 0 0 0 2.83-4.945 8.195 8.195 0 0 0 .088-1.686l-.006-.116-.067-.095a6.258 6.258 0 0 0-5.702-2.426 6.25 6.25 0 0 0-5.703 2.426l-.068.095-.005.117a8.207 8.207 0 0 0 .088 1.685A7.856 7.856 0 0 0 7.1 26.543v1.041a8.122 8.122 0 0 1-4.496-8.801zm7.439 8.15c-1.915 0-4.397-2.214-4.896-5.393a7.281 7.281 0 0 1-.086-1.402 5.478 5.478 0 0 1 4.944-1.996l.038.004.038-.004a5.485 5.485 0 0 1 4.943 1.997 7.337 7.337 0 0 1-.085 1.402c-.5 3.178-2.982 5.393-4.896 5.393zm-3.956 3.033A1.774 1.774 0 0 0 7.9 28.233v-1.136a4.364 4.364 0 0 0 2.143.636 4.314 4.314 0 0 0 2.057-.59v1.09a1.736 1.736 0 0 0 1.738 1.734 5.17 5.17 0 0 1 1.248.116c-.146 2.164-3.55 3.59-4.952 3.59l-.155-.003-.113.003c-1.399 0-4.791-1.42-4.95-3.577a5.265 5.265 0 0 1 1.17-.13zm33.562-1.678a19.182 19.182 0 0 0 1.418-6.74C41.067 16 40.037 9.635 32 9.635s-9.067 6.366-9.067 11.913a19.2 19.2 0 0 0 1.417 6.74c-2.845.947-4.25 3.132-4.25 6.664a91.049 91.049 0 0 0 1.498 17.634l.069.314h20.666l.07-.314A91.049 91.049 0 0 0 43.9 34.952c0-3.532-1.405-5.717-4.251-6.664zm-14.53-.226a18.62 18.62 0 0 1-1.386-6.514c0-5.495.982-11.113 8.267-11.113s8.267 5.618 8.267 11.113a18.616 18.616 0 0 1-1.388 6.519l-.004.01c-.284-.067-.558-.142-.867-.188l-.132-.02-.01.005-1.966-.197v-2.024a9.363 9.363 0 0 0 2.511-6.305l-.016-.482-.207-.11a12.03 12.03 0 0 1-4.591-5.002l-.3-.517-.363.472a11.915 11.915 0 0 1-7.04 4.997l-.291.175-.014.467a9.363 9.363 0 0 0 2.51 6.305v2.024l-1.966.197-.009-.005-.132.02c-.309.046-.583.121-.867.189zM32 26.999c-2.207 0-5.584-3.401-5.61-7.602a12.194 12.194 0 0 0 6.814-4.731 12.378 12.378 0 0 0 4.406 4.685c0 4.222-3.395 7.648-5.61 7.648zM28.9 28.4v-1.975A5.173 5.173 0 0 0 32 27.8a5.173 5.173 0 0 0 3.1-1.374V28.4l1.78.179A46.667 46.667 0 0 0 32 34.154a46.667 46.667 0 0 0-4.88-5.575zm12.786 23.7H22.314A93.777 93.777 0 0 1 20.9 34.952c0-3.75 1.567-5.684 5.074-6.25 1.447.892 4.588 4.86 5.706 6.354l.32.427.32-.427c1.117-1.493 4.26-5.462 5.706-6.355 3.507.567 5.074 2.5 5.074 6.251A93.777 93.777 0 0 1 41.686 52.1z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="contentarea esri-text-container">
+			<h3 class="esri-text__title ">
+				Interactive digital content</h3>
+			<div class="esri-text__description trailer-1 richtext-container">
+				<p>Encourage readers to explore maps, videos, and more to bring context to your content with integrated, interactive blocks.</p>
+</div>
+
+			<div class="bottom-link">
+				
+
+				
+			</div>
+
+			
+
+		</div>
+	</div>
+</article></li>
+
+
+    
+    
+    <li class="block">
+
+
+	
+
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+	
+	<div class="text-link-stack-icon-wrapper">
+		<div class="esri-text__iconContainer">
+
+			
+
+			
+
+			
+
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>devices-64</title><g id="icon-ui-svg--base"><path d="M45.1001,12V10h.7998v2ZM6,35.8999H32v-.7998H6A2.10285,2.10285,0,0,1,3.8999,33V6A2.10285,2.10285,0,0,1,6,3.8999H46A2.10285,2.10285,0,0,1,48.1001,6v6h.7998V6A2.903,2.903,0,0,0,46,3.1001H6A2.903,2.903,0,0,0,3.1001,6V33A2.903,2.903,0,0,0,6,35.8999ZM6.1001,23h.7998V16H6.1001Zm.7998-10H6.1001v1h.7998Zm53,4.79541V58.20459a3.6995,3.6995,0,0,1-3.69531,3.69531H37.79541a3.6995,3.6995,0,0,1-3.69531-3.69531V17.79541a3.6995,3.6995,0,0,1,3.69531-3.69531H56.20459A3.6995,3.6995,0,0,1,59.8999,17.79541Zm-.7998,0a2.89867,2.89867,0,0,0-2.89551-2.89551H37.79541a2.89867,2.89867,0,0,0-2.89551,2.89551V58.20459a2.89867,2.89867,0,0,0,2.89551,2.89551H56.20459a2.89867,2.89867,0,0,0,2.89551-2.89551ZM41,59.8999H53v-.7998H41Zm9-43.7998H44v.7998h6Zm2,.7998h1v-.7998H52Z"/></g></svg></span>
+			
+		</div>
+
+		<div class="contentarea esri-text-container">
+			<h3 class="esri-text__title ">
+				Any device, anywhere</h3>
+			<div class="esri-text__description trailer-1 richtext-container">
+				<p>Create content on tablets, laptops, and desktops then engage readers everywhere with stories that automatically adjust to any screen size.</p>
+</div>
+
+			<div class="bottom-link">
+				
+
+				
+			</div>
+
+			
+
+		</div>
+	</div>
+</article></li>
+
+
+
+                <!-- End Component Parsys -->
+            </ul>
+            
+            
+
+            
+
+            
+            <div class="card-container-v3_i18n">
+                <div class="card-container-v3_i18n-previous">Previous</div>
+                <div class="card-container-v3_i18n-next">Next</div>
+            </div>
+
+            
+            
+                
+                        <button class="paginate-container" aria-hidden='true' data-paginate="false">
+                            <span>Show more</span> <calcite-icon icon="chevron-down"/>
+                        </button>
+						<calcite-pagination class="paginate-container" page-size="" start-item="1" total-items="" aria-hidden="true" data-paginate-calcite="false" scale="m" calcite-hydrated=""></calcite-pagination>
+						<div data-paginate-calcite="false"></div>
+                
+            
+            
+
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+<div class="calcite-container calcite-mode-dark aem-GridColumn aem-GridColumn--default--12">
+
+
+<!-- <sly
+	data-sly-use.clientLibDefer="com.adobe.cq.wcm.core.components.models.ClientLibraries">
+	
+</sly> -->
+
+
+  <div class="
+    has-background
+    has-background--
+    
+    has-background--cover
+    
+    leader-0 trailer-0 padding-leader-2 padding-trailer-2 " style=" --bg-img: url(); --posX: center; --posY: center;  ;">
+    <div class="grid-container ">
+      
+
+    
+    
+    
+    <div id="container-cd813c1aaa" class="cmp-container">
+        
+        <div class="esri-text text-center">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h2 class="esri-text__title">Use ArcGIS StoryMaps instead</h2>
+
+	
+
+	
+</div>
+</div>
+<article class="media-split media-split__small">
+    
+<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/media-split/clientlibs.css" type="text/css">
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			
+			<div class="esriTextRt esri-text-rt">
+
+
+	
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">2026: Esri Story Maps will be retired in ArcGIS Online </h3>
+
+	
+
+	<p class="esri-text__description richtext-container">
+		<p>Classic Esri Story Maps will be retired in Q1 2026. At that time, you won’t be able to view or edit any stories created with Esri Story Maps.</p>
+<p>To preserve the relevant content you created, learn how to migrate it to ArcGIS StoryMaps.</p>
+</p>
+</div>
+</div>
+
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		<div class="split__copy--ctabuttons">
+			
+
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+  
+
+
+
+<!-- primary for no video -->
+
+		<a class="esri-ui-button
+    esri-ui-button--neutral
+    esri-ui-button--outline
+    
+    " href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps/announcements/classic-story-map-transition-timeline-december-2022" data-event="track-component" data-component-name="cta-buttons" data-link-type="internal" data-component-link-type="button" data-component-link="Explore the retirement roadmap">Explore the retirement roadmap</a>
+
+<!-- secondary -->
+		
+
+<!-- tertiary link -->
+		
+
+
+
+		</div>
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="480,750,1125,1170,1290,1440" data-cmp-dmimage data-cmp-src="https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=%7B.width%7D&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off" data-asset-id="fabddbf9-1eaf-4290-9bb9-8084ddf5709f" data-cmp-filereference="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/2026-storymap-roadmap.jpg" id="mediasplit-image-v3-8138ca1e1f" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&ts=1761862088813&fmt=png-alpha&dpr=off" srcset="https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=480&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 480w,https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=750&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 750w,https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=1125&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 1125w,https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=1170&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 1170w,https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=1290&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 1290w,https://www.esri.com/is/image/esri/2026-storymap-roadmap?qlt=82&amp;wid=1440&amp;ts=1761862088813&amp;fmt=png-alpha&amp;dpr=off 1440w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="720" height="405" alt="The sun setting over the ocean overlaid with a teal transparency"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+<article class="media-split media-split__small">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			
+			<div class="esriTextRt esri-text-rt">
+
+
+	
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">2023: No new features or enhancements will be added to Esri Story Maps</h3>
+
+	
+
+	<p class="esri-text__description richtext-container">
+		<p>From 2023 to Q1 2026, no new features or enhancements will be made to Esri Story Maps. However, any critical security vulnerabilities will be thoroughly evaluated and patched as necessary.</p>
+<p>In contrast, ArcGIS StoryMaps routinely receives new features and enhancements. These features evolve with readers’ and content creators’ changing needs. They also ensure that you can continue to create immersive stories with maps.</p>
+</p>
+</div>
+</div>
+
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		<div class="split__copy--ctabuttons">
+			
+
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+  
+
+
+
+<!-- primary for no video -->
+
+		<a class="esri-ui-button
+    esri-ui-button--neutral
+    esri-ui-button--outline
+    
+    " href="https://storymaps.arcgis.com/" data-event="track-component" data-component-name="cta-buttons" data-link-type="internal" data-component-link-type="button" data-component-link="Sign in to ArcGIS StoryMaps">Sign in to ArcGIS StoryMaps</a>
+
+<!-- secondary -->
+		
+
+<!-- tertiary link -->
+		
+
+
+
+		</div>
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="480,750,1125,1170,1290,1440" data-cmp-dmimage data-cmp-src="https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=%7B.width%7D&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off" data-asset-id="cf99f893-3bcd-4cd9-adc3-27250616dca5" data-cmp-filereference="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/2023-storymap-roadmap.jpg" id="mediasplit-image-v3-a9442c3bc6" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&ts=1761862088966&fmt=png-alpha&dpr=off" srcset="https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=480&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 480w,https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=750&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 750w,https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=1125&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 1125w,https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=1170&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 1170w,https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=1290&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 1290w,https://www.esri.com/is/image/esri/2023-storymap-roadmap?qlt=82&amp;wid=1440&amp;ts=1761862088966&amp;fmt=png-alpha&amp;dpr=off 1440w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="720" height="405" alt/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+<article class="media-split media-split__small">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			
+			<div class="esriTextRt esri-text-rt">
+
+
+	
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">2021: ArcGIS StoryMaps grows</h3>
+
+	
+
+	<p class="esri-text__description richtext-container">
+		<p>Thanks to continual product development, the most familiar classic storytelling patterns are made available in <a href="/en-us/arcgis/products/arcgis-storymaps/overview">ArcGIS StoryMaps</a>, and organizations of all sizes successfully transition to it. With thousands of stories published daily, storytellers worldwide embrace ArcGIS StoryMaps.</p>
+<p>It is also the end of an era, as the classic Esri Story Maps templates are removed from the ArcGIS Online Configurable Apps Gallery. Esri Story Maps enters extended support, meaning stories can be created but only critical maintenance updates are made to the product.</p>
+</p>
+</div>
+</div>
+
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		<div class="split__copy--ctabuttons">
+			
+
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+  
+
+
+
+<!-- primary for no video -->
+
+		<a class="esri-ui-button
+    esri-ui-button--neutral
+    esri-ui-button--outline
+    
+    " href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps/announcements/classic-story-map-transition-timeline-december-2022/" data-event="track-component" data-component-name="cta-buttons" data-link-type="internal" data-component-link-type="button" data-component-link="Learn about the transition">Learn about the transition</a>
+
+<!-- secondary -->
+		
+
+<!-- tertiary link -->
+		
+
+
+
+		</div>
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="480,750,1125,1170,1290,1440" data-cmp-dmimage data-cmp-src="https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=%7B.width%7D&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off" data-asset-id="1d7d7a7f-2650-4a2a-ae19-25bb9d8257dd" data-cmp-filereference="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/2021-storymap-roadmap.jpg" id="mediasplit-image-v3-16911f8325" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&ts=1761862089121&fmt=png-alpha&dpr=off" srcset="https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=480&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 480w,https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=750&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 750w,https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=1125&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 1125w,https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=1170&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 1170w,https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=1290&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 1290w,https://www.esri.com/is/image/esri/2021-storymap-roadmap?qlt=82&amp;wid=1440&amp;ts=1761862089121&amp;fmt=png-alpha&amp;dpr=off 1440w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="720" height="405" alt="A graphic displaying three stages of story map creation, each with a screen displaying story maps with toolbars and large colorful imagery "/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+<article class="media-split media-split__small">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			
+			<div class="esriTextRt esri-text-rt">
+
+
+	
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">2019: Transition to ArcGIS StoryMaps begins</h3>
+
+	
+
+	<p class="esri-text__description richtext-container">
+		<p><a href="/en-us/arcgis/products/arcgis-storymaps/overview">ArcGIS StoryMaps</a> made its debut at the Esri User Conference in July. Jennifer Bell, the product manager for ArcGIS StoryMaps, transported attendees to Nepal and Tibet as she rebuilt the <a href="https://storymaps.arcgis.com/stories/c87bc0a59c0144008e25d50a5dd1b192">Mapping Mount Everest</a> story by Alex Tait, a geographer for the National Geographic Society, live. </p>
+<p>Immediately after, customers around the world began creating immersive stories and collections with the new product. Their feedback helped transform ArcGIS StoryMaps into a powerful storytelling app for GIS professionals to share their work with the world. The initial retirement timeline for Esri Story Maps and the classic templates was provided at this time.</p>
+</p>
+</div>
+</div>
+
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		<div class="split__copy--ctabuttons">
+			
+
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+  
+
+
+
+<!-- primary for no video -->
+
+		<a class="esri-ui-button
+    esri-ui-button--neutral
+    esri-ui-button--outline
+    icon-end icon-play
+    " href="https://youtu.be/8wY14zHDmEs?co3=true" data-modal="true" data-event="track-component" data-component-name="cta-buttons" data-link-type="video" data-component-link-type="button" data-component-link="Play the launch video" data-href="https://youtu.be/8wY14zHDmEs?co3=true">Play the launch video</a>
+
+<!-- secondary -->
+		
+
+<!-- tertiary link -->
+		
+
+
+
+		</div>
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="480,750,1125,1170,1290,1440" data-cmp-dmimage data-cmp-src="https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=%7B.width%7D&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off" data-asset-id="8f5d2ccf-3ceb-48c8-99a3-12934fda7323" data-cmp-filereference="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/2019-storymap-roadmap.jpg" id="mediasplit-image-v3-9721d654cd" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&ts=1761862089270&fmt=png-alpha&dpr=off" srcset="https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=480&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 480w,https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=750&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 750w,https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=1125&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 1125w,https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=1170&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 1170w,https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=1290&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 1290w,https://www.esri.com/is/image/esri/2019-storymap-roadmap?qlt=82&amp;wid=1440&amp;ts=1761862089270&amp;fmt=png-alpha&amp;dpr=off 1440w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="720" height="405" alt="A person in a pale blue suit wearing a headset speaking onstage against a deep blue background overlaid with geometric green and gold shapes and text stating “2019 Esri User Conference- ArcGIS StoryMaps”"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+<article class="media-split media-split__small">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			
+			<div class="esriTextRt esri-text-rt">
+
+
+	
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">2011: Esri’s storytelling journey begins</h3>
+
+	
+
+	<p class="esri-text__description richtext-container">
+		<p>It started with a question: In the digital age, how could maps and multimedia content be woven together to create rich, interactive experiences?</p>
+<p>Then, it grew into a mission: to enable anyone to create visual stories, powered by place, regardless of their technical expertise. The lessons learned—and the feedback received—over the eight years that followed built a critical foundation for the creation of ArcGIS StoryMaps.</p>
+</p>
+</div>
+</div>
+
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		<div class="split__copy--ctabuttons">
+			
+
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+  
+
+
+
+<!-- primary for no video -->
+
+		<a class="esri-ui-button
+    esri-ui-button--neutral
+    esri-ui-button--outline
+    
+    " href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps/mapping/a-quantum-leap-for-story-maps/" data-event="track-component" data-component-name="cta-buttons" data-link-type="internal" data-component-link-type="button" data-component-link="Read the full history">Read the full history</a>
+
+<!-- secondary -->
+		
+
+<!-- tertiary link -->
+		
+
+
+
+		</div>
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="480,750,1125,1170,1290,1440" data-cmp-dmimage data-cmp-src="https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=%7B.width%7D&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off" data-asset-id="cb80f071-629d-419e-b1e5-83e76b34efbe" data-cmp-filereference="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/2011-storymap-roadmap.jpg" id="mediasplit-image-v3-7a4b11d837" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&ts=1761862089422&fmt=png-alpha&dpr=off" srcset="https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=480&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 480w,https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=750&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 750w,https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=1125&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 1125w,https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=1170&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 1170w,https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=1290&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 1290w,https://www.esri.com/is/image/esri/2011-storymap-roadmap?qlt=82&amp;wid=1440&amp;ts=1761862089422&amp;fmt=png-alpha&amp;dpr=off 1440w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="720" height="405" alt="A screen displaying a slider map in pink and blue displaying diabetes and obesity rates alongside charts and data"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+
+        
+    </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+<div class="cards-container-v3 aem-GridColumn aem-GridColumn--default--12">
+
+
+
+
+
+
+	
+
+
+<div class="
+    padding-leader-2
+    padding-trailer-2
+    calcite-mode-light
+    has-background
+    has-background--color
+    
+    has-background--cover
+    " style="--bg-color: var(--calcite-ui-foreground-1);  --bg-img: url(); --posX: center; --posY: center;  ;">
+
+
+    
+    
+
+    
+    <div class="grid-container">
+    
+    
+        
+        
+        
+        
+        
+        
+        <div class="card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+        
+        
+        
+            
+            <div class="container-v3 esri-text-container ">
+                <h2 class="esri-text__title stylesystem ">Recreate your popular classic stories with ArcGIS StoryMaps</h2>
+                
+                <p class="esri-text__description stylesystem">Evaluate the existing classic stories you created using Esri Story Maps and determine which ones are still widely used. The following resources provide tips to help you recreate them with ArcGIS StoryMaps.</p>
+                
+                
+            </div>
+            
+
+            
+            
+            
+            
+            
+            <ul class="no-list calcite-mode-light relatedLinkMatrix card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+            
+            
+                <!-- Start Component Parsys -->
+                
+
+
+
+
+    
+    
+    <li class="block size-2">
+
+
+
+
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/cards-standard/clientlibs.css" type="text/css">
+
+
+
+
+<article class="esri-text size-2 cards-standard calcite-animate calcite-mode-light" calcite-animate='true' data-animation="calcite-animate__in-up" tabindex="-1">
+
+	<!-- video anchor tag -->
+	
+
+	<!-- image anchor tag -->
+	
+		<a href="https://storymaps.arcgis.com/stories/472a6ddd582b40b58a5a6af2c30a4573" class="cards-standard__card-link" data-custom-analytics="true" data-event="track-component" data-component-name="cards-standard" data-component-link="Moving to ArcGIS StoryMaps - Read the article" data-component-link-type="full">
+	
+
+	<div class="cards-standard__card">
+		<div class="cards-standard__image">
+			
+			
+
+			
+				<picture srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/moving-to-arcgis-storymaps-card-1.jpg" imagefileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/moving-to-arcgis-storymaps-card-1.jpg" fileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/moving-to-arcgis-storymaps-card-1.jpg">
+					
+					<img decoding="async" width="342" height="192" loading="lazy" srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/moving-to-arcgis-storymaps-card-1.jpg" src="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/moving-to-arcgis-storymaps-card-1.jpg" alt="A pair of hands typing on a laptop computer at a desk" data-aem-asset-id="a1198a0e-becb-45ce-93b8-5a2b897f4611"/>
+				</picture>
+			
+			
+
+		</div>
+		<div class="cards-standard__right-column">
+			<div class="cards-standard__text esri-text-container">
+				<p class="esri-text__title">Moving to ArcGIS StoryMaps</p>
+				<p class="esri-text__subtitle">Owen Evans</p>
+				<div class="esri-text__description">
+					Bookmark this helpful guide for authors transitioning from Esri&#39;s classic storytelling templates. </div>
+			</div>
+		</div>
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block size-2">
+
+
+
+
+
+	
+
+
+
+<article class="esri-text size-2 cards-standard calcite-animate calcite-mode-light" calcite-animate='true' data-animation="calcite-animate__in-up" tabindex="-1">
+
+	<!-- video anchor tag -->
+	
+
+	<!-- image anchor tag -->
+	
+		<a href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps/constituent-engagement/mimicking-the-classic-templates-in-arcgis-storymaps" class="cards-standard__card-link" data-custom-analytics="true" data-event="track-component" data-component-name="cards-standard" data-component-link="Mimicking classic templates in ArcGIS StoryMaps - Read the article" data-component-link-type="full">
+	
+
+	<div class="cards-standard__card">
+		<div class="cards-standard__image">
+			
+			
+
+			
+				<picture srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/mimicking-the-classic-templates-in-arcgis-storymaps-card-2.jpg" imagefileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/mimicking-the-classic-templates-in-arcgis-storymaps-card-2.jpg" fileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/mimicking-the-classic-templates-in-arcgis-storymaps-card-2.jpg">
+					
+					<img decoding="async" width="342" height="192" loading="lazy" srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/mimicking-the-classic-templates-in-arcgis-storymaps-card-2.jpg" src="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/mimicking-the-classic-templates-in-arcgis-storymaps-card-2.jpg" alt="An inlet with a blue body of water and green land" data-aem-asset-id="9e508485-8bd1-47e3-afec-942ab8d5947e"/>
+				</picture>
+			
+			
+
+		</div>
+		<div class="cards-standard__right-column">
+			<div class="cards-standard__text esri-text-container">
+				<p class="esri-text__title">Mimicking classic templates in ArcGIS StoryMaps</p>
+				<p class="esri-text__subtitle">Esri&#39;s StoryMaps team</p>
+				<div class="esri-text__description">
+					Learn techniques to recreate your classic stories with ArcGIS StoryMaps.</div>
+			</div>
+		</div>
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block size-2">
+
+
+
+
+
+	
+
+
+
+<article class="esri-text size-2 cards-standard calcite-animate calcite-mode-light" calcite-animate='true' data-animation="calcite-animate__in-up" tabindex="-1">
+
+	<!-- video anchor tag -->
+	
+
+	<!-- image anchor tag -->
+	
+		<a href="https://www.esri.com/arcgis-blog/products/story-maps/mapping/recreating-classic-story-maps-in-arcgis-storymaps/" class="cards-standard__card-link" data-custom-analytics="true" data-event="track-component" data-component-name="cards-standard" data-component-link="Recreating a classic story with ArcGIS StoryMaps - Read the article" data-component-link-type="full">
+	
+
+	<div class="cards-standard__card">
+		<div class="cards-standard__image">
+			
+			
+
+			
+				<picture srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/recreating-classic-story-maps-in-arcgis-storymaps-card-3.jpg" imagefileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/recreating-classic-story-maps-in-arcgis-storymaps-card-3.jpg" fileref="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/recreating-classic-story-maps-in-arcgis-storymaps-card-3.jpg">
+					
+					<img decoding="async" width="342" height="192" loading="lazy" srcvalue="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/recreating-classic-story-maps-in-arcgis-storymaps-card-3.jpg" src="/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/recreating-classic-story-maps-in-arcgis-storymaps-card-3.jpg" alt="A series of multicolored, square pieces of fabric hanging on lines" data-aem-asset-id="b1cca293-e8d5-47a5-8b2a-7b0d34093938"/>
+				</picture>
+			
+			
+
+		</div>
+		<div class="cards-standard__right-column">
+			<div class="cards-standard__text esri-text-container">
+				<p class="esri-text__title">Recreating a classic story with ArcGIS StoryMaps</p>
+				<p class="esri-text__subtitle">Allen Carroll</p>
+				<div class="esri-text__description">
+					Discover how to give a classic story new life. </div>
+			</div>
+		</div>
+	</div>
+	</a>
+</article>
+</li>
+
+
+
+                <!-- End Component Parsys -->
+            </ul>
+            
+            
+
+            
+
+            
+            <div class="card-container-v3_i18n">
+                <div class="card-container-v3_i18n-previous">Previous</div>
+                <div class="card-container-v3_i18n-next">Next</div>
+            </div>
+
+            
+            
+                
+                        <button class="paginate-container" aria-hidden='true' data-paginate="false">
+                            <span>Show More</span> <calcite-icon icon="chevron-down"/>
+                        </button>
+						<calcite-pagination class="paginate-container" page-size="" start-item="1" total-items="" aria-hidden="true" data-paginate-calcite="false" scale="m" calcite-hydrated=""></calcite-pagination>
+						<div data-paginate-calcite="false"></div>
+                
+            
+            
+
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+<div class="contentbar aem-GridColumn aem-GridColumn--default--12">
+
+  
+
+
+
+
+
+
+
+	
+		<section class="contentbar--content calcite-mode-light aligncenter calcite-animate has-background
+			has-background--" data-animation="calcite-animate__in-up" style=";">
+	<div class="grid-container">
+		<div class="column-12 tablet-column-12 phone-column-6 leader-2 trailer-2 pre-6 text-center">
+			<div>
+        
+
+        
+				
+					<h2 class="esri-text__title">Use the story conversion helper</h2>
+				
+				
+				<div class="esri-text__description richtext-container trailer-0">
+					<p>Instead of rebuilding existing Esri Story Maps stories, try the classic story conversion helper—a tool that helps copy text and media to ArcGIS StoryMaps.</p>
+
+				</div>
+			</div>
+
+			
+				<div class="leader-1 trailer-0">
+
+         
+					
+
+
+					<a class="esri-ui-button 
+						esri-ui-button--brand
+						esri-ui-button--outline
+						
+						" data-cb-cta="one" data-event="track-component" data-component-name="Content Bar" data-link-type="internal" data-component-link-type="button" data-component-link="Use the story conversion helper - Rebuild your stories" data-component-link-placement="2" href="https://community.esri.com/t5/arcgis-storymaps-blog/try-the-classic-story-conversion-helper/ba-p/1262201">
+						Rebuild your stories</a>
+
+
+
+						
+
+
+
+
+
+
+				</div>
+			
+		</div>
+	</div>
+	</section>
+
+</div>
+<div class="elastic-content-strip aem-GridColumn aem-GridColumn--default--12">
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/elastic-content-strip/clientlibs.css" type="text/css">
+<script defer src="/etc.clientlibs/esri-sites/components/content/elastic-content-strip/clientlibs.js"></script>
+
+
+
+
+
+
+<div class="ecs__wrapper">
+
+	
+
+
+	<div class="ecs__main ">
+		
+			
+			<section class="ecs__panel has-background has-background--all   calcite-mode-dark" style="--bg-gradient-end: #00b3ac;  --bg-img: url(/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/ecs-image-2.png);
+        --bg-gradient-start: #007974;
+        --bg-img-size: cover;" data-aem-asset-id="02ffa808-b531-4ebf-a7a8-096179a57d38">
+				
+					<a href="https://storymaps.arcgis.com/collections/d34681ac0d1a417894a3a3d955c6913f" class="ecs__link-wrapper" data-event="track-component" data-component-name="Elastic content strip" data-link-text="ec-strip_Get started with ArcGIS StoryMaps" data-component-link="Get started with ArcGIS StoryMaps - Go to the tutorials" data-component-link-placement="1" data-component-link-type="full">
+						<div class="ecs__content size-3 calcite-animate animate-delay__1x" data-animation="calcite-animate__in-up">
+							
+
+							<div class="ecs__panel__icon">
+								<svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 64 64"><path id="icon-ui-svg--base" d="M28 54h-1v-1h1zm0-19h-1v1h1zm0-17h-1v1h1zm24.9-2.666V58.9H11.1V5.1h31.566zm-10-.234h8.635L42.9 6.465zm9.2 43V15.9h-10v-10H11.9v52.2zM25 35.1h-5.97l4.48-4.85c.474-.476.735-1.079.735-1.698 0-1.242-.768-2.198-2.056-2.557-1.242-.346-2.969-.035-3.73 1.225a6 6 0 0 0-.241.441l.717.339c.064-.13.134-.242.21-.367.556-.92 1.873-1.133 2.83-.868.442.124 1.47.545 1.47 1.787 0 .412-.174.803-.513 1.144L18.1 34.927v.973H25zM22.09 48.48c1.068-.518 1.807-1.46 1.807-2.521 0-1.05-.512-1.909-1.442-2.417-1.158-.63-2.727-.585-3.816.116l-.235.151.432.673.236-.151c.84-.541 2.102-.577 3-.087.468.256 1.026.76 1.026 1.715 0 1.16-1.287 2.142-2.811 2.142v.8c1.55 0 2.81.903 2.81 2.013 0 1.203-.792 1.734-1.265 1.944-.997.442-2.26.276-2.999-.396l-.538.593c.607.55 1.477.843 2.356.843.516 0 1.034-.1 1.505-.309 1.107-.49 1.742-1.465 1.741-2.675 0-1.06-.724-1.954-1.806-2.434M21.1 10.05h-.04L18 11.44v.88l3.1-1.41V19h.8v-8.95z"/></svg>
+							</div>
+
+							
+
+							<h2 class="esri-text__title title-text  link--">
+								Get started with ArcGIS StoryMaps</h2>
+							
+								<p class="esri-text__description">
+									Make your first story, briefing, or collection with ArcGIS StoryMaps by following these tutorials.</p>
+								<div class="ecs__link">Go to the tutorials<calcite-icon icon="arrowRight" scale="s"></calcite-icon></div>
+							
+						</div>
+					</a>
+				
+			</section>
+		
+			
+			<section class="ecs__panel has-background has-background--all   calcite-mode-dark" style="--bg-gradient-end: #00b3ac;  --bg-img: url(/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/ecs-image-3.png);
+        --bg-gradient-start: #007974;
+        --bg-img-size: cover;" data-aem-asset-id="bbded9b1-f2ec-4abf-a6e9-8026d7ee5cf2">
+				
+					<a href="https://www.esri.com/arcgis-blog/products/arcgis-storymaps" class="ecs__link-wrapper" data-event="track-component" data-component-name="Elastic content strip" data-link-text="ec-strip_What&#39;s new" data-component-link="What&#39;s new - Read the blog" data-component-link-placement="2" data-component-link-type="full">
+						<div class="ecs__content size-3 calcite-animate animate-delay__2x" data-animation="calcite-animate__in-up">
+							
+
+							<div class="ecs__panel__icon">
+								<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g id="icon-ui-svg--base"><path d="M13 38.1h32v.8H13zM13 44.1h27v.8H13z"/><path d="M55.822 17.1l-.8.8H60.1v34.2H24.611l-13.348 5.84 2.484-5.84H4.9V17.9h31.154l.799-.8H4.1v35.8h8.438l-2.803 6.587 14.96-6.587H60.9V17.1h-5.078z"/><path d="M59.862 4.732l-3.248-3.248-27.82 27.823a2.295 2.295 0 0 0-.544.872l-1.53 4.442 4.438-1.537a2.295 2.295 0 0 0 .866-.543l21.32-21.297.438 2.616-10.975 10.975.566.565L54.64 14.134l-.601-3.584zM31.46 31.974h-.001a1.498 1.498 0 0 1-.563.354l-2.884.999.995-2.889a1.492 1.492 0 0 1 .353-.566L56.614 2.616l2.117 2.116z"/></g></svg>
+							</div>
+
+							
+
+							<h2 class="esri-text__title title-text  link--">
+								What&#39;s new</h2>
+							
+								<p class="esri-text__description">
+									Discover the latest updates to ArcGIS StoryMaps.</p>
+								<div class="ecs__link">Read the blog<calcite-icon icon="arrowRight" scale="s"></calcite-icon></div>
+							
+						</div>
+					</a>
+				
+			</section>
+		
+			
+			<section class="ecs__panel has-background has-background--all   calcite-mode-dark" style="--bg-gradient-end: #007974;  --bg-img: url(/content/dam/esrisites/en-us/arcgis/products/storymaps-2019/ecs-image-4.png);
+        --bg-gradient-start: #00b3ac;
+        --bg-img-size: cover;" data-aem-asset-id="7a086242-c1e5-47e5-b018-98a7fb932613">
+				
+					<a href="https://mediaspace.esri.com/channel/ArcGIS%2BStoryMaps/238781783" class="ecs__link-wrapper" data-event="track-component" data-component-name="Elastic content strip" data-link-text="ec-strip_ArcGIS StoryMaps videos" data-component-link="ArcGIS StoryMaps videos - Go to the video channel" data-component-link-placement="3" data-component-link-type="full">
+						<div class="ecs__content size-3 calcite-animate animate-delay__3x" data-animation="calcite-animate__in-up">
+							
+
+							<div class="ecs__panel__icon">
+								<svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 64 64"><path id="icon-ui-svg--base" d="M57 15.9h-2v-.8h2zm-4-.8h-2v.8h2zM3 18.9h58v-.8H3zm60.9-7.066v39.333c0 .956-.777 1.733-1.733 1.733H1.834A1.735 1.735 0 0 1 .1 51.167V11.834c0-.957.777-1.734 1.734-1.734h60.333c.956 0 1.733.777 1.733 1.734m-.8 0a.935.935 0 0 0-.933-.934H1.834a.935.935 0 0 0-.934.933v39.334c0 .514.419.933.934.933h60.333a.935.935 0 0 0 .933-.933zM42.9 44h-.8v1.1H17v.8h25.1V47h.8v-1.1H47v-.8h-4.1zM28.042 24.777l12.32 7.723-12.32 7.723zm.8 14L38.857 32.5l-10.015-6.277z"/></svg>
+							</div>
+
+							
+
+							<h2 class="esri-text__title title-text  link--">
+								ArcGIS StoryMaps videos</h2>
+							
+								<p class="esri-text__description">
+									Explore our video collection for content from new and experienced digital storytellers.</p>
+								<div class="ecs__link">Go to the video channel<calcite-icon icon="arrowRight" scale="s"></calcite-icon></div>
+							
+						</div>
+					</a>
+				
+			</section>
+		
+	</div>
+</div>
+</div>
+<div class="cta-container aem-GridColumn aem-GridColumn--default--12">
+
+	<script defer src="/etc.clientlibs/esri-sites/components/layouts/cta-container/clientlibs.js"></script>
+
+
+
+
+
+
+	<div theme="light" class="cta-questions light-mode calcite-mode-light">
+		
+		
+			<div class="grid-container ctaprimary">
+				
+
+
+
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/calltoaction-primary/clientlibs.css" type="text/css">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="leader-2 phone-leader-1 tablet-leader-1 text-center">
+	<div class="svg-icon">
+		<?xml version="1.0" encoding="UTF-8"?><svg id="uuid-7c70af5a-b0f9-4b01-92a6-7fc6e5e47900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><style>.uuid-72eda160-f1ab-4fe7-ad3c-443e9bb78eb1{fill:#00bab5;}</style></defs><path class="uuid-72eda160-f1ab-4fe7-ad3c-443e9bb78eb1" d="M90.4818,27.09383c-6.83444,0-12.37679,2.62031-12.37679,9.44259v23.02544c0,1.07159,.42636,2.09914,1.18501,2.85594l10.55117,10.52541c.35405,.35318,.92716,.35318,1.2812,0l10.55117-10.52541c.75865-.7568,1.18501-1.78435,1.18501-2.85594v-23.02544c0-6.82228-5.54234-9.44259-12.37679-9.44259Zm0,20.99937c-3.70701,0-6.70761-2.9765-6.70761-6.64725,0-3.67679,3.0006-6.65322,6.70761-6.65322s6.70761,2.97642,6.70761,6.65322c0,3.67075-3.0006,6.64725-6.70761,6.64725Zm-19.68887-.36014c.60496-.30414,.98672-.92413,.98672-1.60124v-6.8639c0-.08139-.03749-.15825-.10161-.20837s-.14777-.06791-.22677-.0483c-2.56979,.63795-6.34508,2.70211-7.23837,3.20056-.11798,.06583-.26302,.05988-.37529-.01526-8.76286-5.86445-20.43843-3.93142-29.75829-2.54989-1.49782,.22439-6.44357,.918-7.7568,1.10192-.1854,.02596-.32252,.18415-.32252,.37136v55.30471c0,.10849,.04698,.21166,.12882,.28288s.1905,.10351,.29795,.08853l3.34187-.46578c1.85354-.23547,3.74924-.65085,5.58465-.92855,10.39044-1.55764,20.20131-3.43236,26.03344,2.2851l2.339,2.29301c.16342,.16021,.42499,.16021,.58841,0l2.339-2.29301c5.83213-5.71745,15.643-3.84273,26.03344-2.2851,1.83541,.2777,3.73111,.69308,5.58465,.92855l2.83115,.39881c.22586,.03182,.45443-.03583,.6266-.18544s.27103-.36651,.27103-.59461v-21.77509c0-.11449-.07777-.21434-.18876-.24238s-.22686,.0229-.28124,.12364l-.02717,.05035c-3.81527,7.06962-11.03151,11.48931-19.05104,11.01804-5.41175-.31801-10.28829,.08948-14.5067,2.01716V50.83021c0-.69354,.31798-1.35165,.86201-1.78181,.64107-.50689,1.26419-.95254,1.98583-1.31534Zm-10.68445,39.4077c-7.40318-3.32579-15.48735-2.09838-23.85659-.84864-.0319,.00517-.31887,.04662-.64606,.09392-.19243,.02782-.38739-.0294-.53445-.15659s-.23231-.3121-.23231-.50653V48.21897c0-.12412,.09107-.22966,.21392-.24742,.70959-.10258,1.56875-.22181,2.05617-.29495,8.04448-1.18726,16.04471-2.70577,22.00178,1.3268,.62417,.42252,.99754,1.12778,.99754,1.88151v36.25585Z"/></svg>
+	</div>
+	<h2 class="esri-text__title text-center">
+		Get inspired by ArcGIS StoryMaps examples
+	</h2>
+</div>
+
+
+
+
+
+
+
+    <div class="calcite-button-wrapper" data-event="track-component" data-component-name="CTA Container" data-component-link="Get inspired by ArcGIS StoryMaps examples - Discover StoryScape magazine" data-component-link-type="button">
+
+        <calcite-button class="cta-primary-button" id="CTAButton" tabindex='-1' appearance="solid" color="blue" kind="brand" scale="l" href="https://storyscape-esriwhere.hub.arcgis.com/" data-primary="true">Discover StoryScape magazine
+        </calcite-button>
+
+    </div>
+
+
+
+
+			</div>
+			
+			
+				<div class="grid-container ctasecondary">
+					<div class="cta-questions_social">
+						<div class="column-11 tablet-column-12 phone-column-6">
+							<div class="cta-questions_block size-4">
+								
+
+	<link rel="stylesheet" href="/etc.clientlibs/esri-sites/components/content/calltoaction-secondary/clientlibs.css" type="text/css">
+
+
+
+
+
+
+
+<div class="take-me-here">
+	<h2 class="esri_text-title">Get help with ArcGIS StoryMaps</h2>
+	<div class="tmh-block-group block-group block-group-3-up">
+		<div class="tmh-block block">
+			<div class="esri-text__iconContainer text-center">
+				
+					<a href="https://doc.arcgis.com/en/arcgis-storymaps/get-started/what-is-arcgis-storymaps.htm" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help with ArcGIS StoryMaps - Help documentation" data-component-link-placement="0" data-component-link-type="button">
+						
+						<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><path d="M58.515 75.114l28.122-28.128-12.639-12.638 2.736-7.203L46.97 15.838l-7.638-7.639H12.199v61.602h9.024l6.29 2.39 16.98 16.94 7.614-7.598 3.467 1.317 2.513-6.612zm25.858-28.128L59.903 71.46l13.472-35.47zM39.801 10.932l15.267 15.267H39.801zM13.8 9.8h24.867l.201.199h-.67v17.8H56v-.67l.2.202v40.867H13.8zm30.691 77.066L31.17 73.58l19.297 7.33zm10.156-6.08l-28.92-10.986H57.8V26.668l-8.071-8.071 24.942 9.473-17.386 45.774z" id="icon-ui-svg--base"/></svg></span>
+						<p class="esri_text-description">Help documentation</p>
+					</a>
+				
+			</div>
+		</div>
+
+		<div class="tmh-block  block">
+			<div class="esri-text__iconContainer text-center">
+				
+					<a href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/overview#getstarted" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help with ArcGIS StoryMaps - Pricing information" data-component-link-placement="0" data-component-link-type="button">
+						
+						<span><svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 48 48"><path id="icon-ui-svg--base" d="M34.5 28.1c-5.184 0-9.4 4.216-9.4 9.4s4.216 9.4 9.4 9.4 9.4-4.216 9.4-9.4-4.216-9.4-9.4-9.4m0 18c-4.742 0-8.6-3.858-8.6-8.6s3.858-8.6 8.6-8.6 8.6 3.858 8.6 8.6-3.858 8.6-8.6 8.6m.4-4H36v.8h-3v-.8h1.1v-6.2H33v-.8h1.9zm-7.683-27.883.566.566-12 12-.566-.566zm-7.434 16.566-.566-.566 9-9 .566.566zM44.701 7.301A2.203 2.203 0 0 0 42.5 5.1c-.759 0-1.484.096-2.16.263l-3.412-3.245-11.318.05-22.678 21.99L21.646 43.12l2.093-2.135-.57-.56-1.525 1.555-17.576-17.81L25.937 2.969l10.672-.05 2.85 2.711c-1.014.378-1.857.942-2.448 1.62A3.9 3.9 0 0 0 36 7.1c-2.15 0-3.9 1.75-3.9 3.901s1.75 3.9 3.9 3.9 3.9-1.75 3.9-3.9c0-1.5-.861-2.791-2.107-3.443.565-.564 1.368-1.018 2.317-1.308l2.99 2.845v11.018l-5.89 6.003.57.56 6.12-6.237V8.975a2.2 2.2 0 0 0 .801-1.674M36 14.1c-1.709 0-3.1-1.391-3.1-3.1s1.391-3.1 3.1-3.1c.177 0 .347.024.516.053A3.2 3.2 0 0 0 36.1 9.5c0 1.335.852 2.561 2.333 3.397A3.08 3.08 0 0 1 36 14.1m3.1-3.1c0 .431-.09.842-.25 1.216-1.238-.691-1.95-1.672-1.95-2.716a2.5 2.5 0 0 1 .39-1.31A3.1 3.1 0 0 1 39.1 11m4.35-2.679L41.04 6.03A8.5 8.5 0 0 1 42.5 5.9c.772 0 1.4.628 1.4 1.4 0 .398-.167.76-.45 1.021m-9.725 24.304a.776.776 0 1 1 1.552.001.776.776 0 0 1-1.552-.001"/></svg></span>
+						<p class="esri_text-description">Pricing information</p>
+					</a>
+				
+			</div>
+		</div>
+
+		<div class="tmh-block block">
+			<div class="esri-text__iconContainer text-center">
+				
+					<a href="https://www.esri.com/en-us/contact" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help with ArcGIS StoryMaps - Contact us" data-component-link-placement="0" data-component-link-type="button">
+						
+						<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><g id="icon-ui-svg--base"><path d="M28.94 10.577a7.34 7.34 0 0 1-1.753 5.372l-.608-.52a6.597 6.597 0 0 0-.711-9.288l.52-.608a7.338 7.338 0 0 1 2.553 5.044zm4.992-.578a12.826 12.826 0 0 0-4.468-8.815l-.52.607A12.111 12.111 0 0 1 30.25 18.87l.608.52A12.825 12.825 0 0 0 33.932 10zM36.396 33.637c-2.382-1.105-4.37-2.267-4.412-2.29a3.22 3.22 0 0 0-3.268.497 11.16 11.16 0 0 0-1.22 1.082c-1.053 1.031-1.642 1.54-2.501.919a29.094 29.094 0 0 1-5.51-5.437l-.04-.051a26.302 26.302 0 0 1-3.598-6.477c-.384-1 .327-1.49 1.617-2.27a11.795 11.795 0 0 0 1.343-.9 2.83 2.83 0 0 0 1.075-3.085 95.458 95.458 0 0 1-.983-4.817c-.51-2.89-1.396-3.931-3.949-4.642-2.659-.744-5.304 1.46-5.41 1.55-.059.048-5.817 4.877-2.12 13.911 2.612 6.383 4.571 9.154 6.277 11.168 1.53 2.194 3.705 4.799 9.205 8.962a13.873 13.873 0 0 0 8.461 3.113 10.895 10.895 0 0 0 5.716-1.536c.12-.083 2.926-2.075 2.893-4.835-.034-2.774-1.082-3.705-3.576-4.862zm.226 9.04c-.238.165-5.936 3.968-13.237-1.557-5.411-4.097-7.539-6.642-9.054-8.812-1.686-1.994-3.601-4.704-6.17-10.983-3.465-8.468 1.665-12.808 1.89-12.993a6.834 6.834 0 0 1 3.766-1.518 3.418 3.418 0 0 1 .918.122c2.255.629 2.918 1.416 3.376 4.011.462 2.618.987 4.84 1.006 4.908a2.064 2.064 0 0 1-.815 2.234 11.065 11.065 0 0 1-1.253.836c-1.215.736-2.591 1.57-1.95 3.242a27.405 27.405 0 0 0 3.732 6.703 29.808 29.808 0 0 0 5.695 5.623c1.447 1.047 2.553-.04 3.53-.996a10.58 10.58 0 0 1 1.13-1.006 2.457 2.457 0 0 1 2.416-.442c.02.011 2.039 1.192 4.457 2.314 2.386 1.107 3.084 1.785 3.113 4.146.028 2.333-2.526 4.152-2.55 4.168z"/></g></svg></span>
+						<p class="esri_text-description">Contact us</p>
+					</a>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+							</div>
+						</div>
+						<div class="column-2 phone-column-6 tablet-column-12">
+							<div class="horz-pipe"></div>
+						</div>
+
+						<div class="column-11 tablet-column-12 phone-column-6">
+							<div class="cta-questions_block size-4">
+								
+
+	
+
+
+
+
+<h2 class="esri_text-title">Connect with us</h2>
+
+	<div class="esri-text__iconContainer text-center">
+        
+            <a href="https://x.com/ArcGISStoryMaps" class="cta-questions-icon" data-event="track-component" data-component-name="CTA Container" data-component-link="Connect with us - Social Icon" data-component-link-placement="0" target="_blank" rel="noopener" aria-describedby="new-window" data-component-link-type="image">
+                
+                <span aria-hidden="true"><?xml version="1.0" encoding="UTF-8"?><svg id="Circle_Idle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><title>X / Twitter Circle Idle SVG Icon</title>
+<metadata><?xpacket begin="ï»¿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 7.1-c000 79.4d2f597, 2021/09/01-20:51:22        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#">
+         <dc:title>
+            <rdf:Alt>
+               <rdf:li xml:lang="x-default">X / Twitter Circle Idle SVG Icon</rdf:li>
+            </rdf:Alt>
+         </dc:title>
+         <xmp:MetadataDate>2023-12-05T09:41:18-05:00</xmp:MetadataDate>
+         <xmpMM:InstanceID>xmp.iid:cd11c733-a626-4654-a825-a3f2c5aed2cb</xmpMM:InstanceID>
+         <xmpMM:DocumentID>xmp.did:6aa35789-0867-4a3f-8b54-d40cb99b0042</xmpMM:DocumentID>
+         <xmpMM:OriginalDocumentID>xmp.did:6aa35789-0867-4a3f-8b54-d40cb99b0042</xmpMM:OriginalDocumentID>
+         <xmpMM:History>
+            <rdf:Seq>
+               <rdf:li>
+                  <rdf:Description>
+                     <stEvt:action>saved</stEvt:action>
+                     <stEvt:instanceID>xmp.iid:6aa35789-0867-4a3f-8b54-d40cb99b0042</stEvt:instanceID>
+                     <stEvt:when>2023-12-05T09:36:19-05:00</stEvt:when>
+                     <stEvt:softwareAgent>Adobe Bridge 2023</stEvt:softwareAgent>
+                     <stEvt:changed>/metadata</stEvt:changed>
+                  </rdf:Description>
+               </rdf:li>
+               <rdf:li>
+                  <rdf:Description>
+                     <stEvt:action>saved</stEvt:action>
+                     <stEvt:instanceID>xmp.iid:cd11c733-a626-4654-a825-a3f2c5aed2cb</stEvt:instanceID>
+                     <stEvt:when>2023-12-05T09:41:18-05:00</stEvt:when>
+                     <stEvt:softwareAgent>Adobe Bridge 2023</stEvt:softwareAgent>
+                     <stEvt:changed>/metadata</stEvt:changed>
+                  </rdf:Description>
+               </rdf:li>
+            </rdf:Seq>
+         </xmpMM:History>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                               
+<?xpacket end="w"?></metadata>
+<path d="m20,40h0C8.9543,40,0,31.0457,0,20h0C0,8.9543,8.9543,0,20,0h0c11.0457,0,20,8.9543,20,20h0c0,11.0457-8.9543,20-20,20Z" style="opacity:.3; stroke-width:0px;"/><path d="m21.69432,18.62177l6.55682-7.62177h-1.55376l-5.69329,6.61788-4.54721-6.61788h-5.24467l6.87627,10.0074-6.87627,7.9926h1.55384l6.01226-6.9887,4.80219,6.9887h5.24467l-7.13124-10.37823h.00038Zm-2.1282,2.4738l-.69671-.99651-5.54347-7.92935h2.38661l4.47365,6.39924.69671.99651,5.81521,8.31803h-2.38661l-4.74539-6.78753v-.00038Z" style="fill:#fff; stroke-width:0px;"/></svg></span>
+                <span class="visually-hidden"></span>
+            </a>
+        
+	
+        
+            <a href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup" class="cta-questions-icon" data-event="track-component" data-component-name="CTA Container" data-component-link="Connect with us - Social Icon" data-component-link-placement="0" data-component-link-type="image">
+                
+                <span aria-hidden="true"><svg id="Circle_Idle" data-name="Circle Idle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <title>Contact-Newsletter</title>
+  <path d="M20,40h0A20,20,0,0,1,0,20H0A20,20,0,0,1,20,0h0A20,20,0,0,1,40,20h0A20,20,0,0,1,20,40Z" style="opacity: 0.30000000000000004"/>
+  <path d="M20,22.4707l-10-6.2V26a2.00588,2.00588,0,0,0,2,2H28a2.00588,2.00588,0,0,0,2-2V16.2707Z" style="fill: #fff"/>
+  <path d="M20,19.1416l9.9502-5.5721A2.006,2.006,0,0,0,28,12H12a2.006,2.006,0,0,0-1.9502,1.5695Z" style="fill: #fff"/>
+</svg>
+</span>
+                <span class="visually-hidden"></span>
+            </a>
+        
+	
+        
+            <a href="https://community.esri.com/t5/arcgis-storymaps/ct-p/arcgis-storymaps" class="cta-questions-icon" data-event="track-component" data-component-name="CTA Container" data-component-link="Connect with us - Social Icon" data-component-link-placement="0" data-component-link-type="image">
+                
+                <span aria-hidden="true"><svg id="Circle_Idle" data-name="Circle Idle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><title>Esri Community</title>
+  <path d="M20,40h0A20,20,0,0,1,0,20H0A20,20,0,0,1,20,0h0A20,20,0,0,1,40,20h0A20,20,0,0,1,20,40Z" style="opacity: 0.30000000000000004"/>
+  <rect width="40" height="40" style="fill: none"/>
+  <g>
+    <path d="M28.58349,27.92577a11.54268,11.54268,0,0,1-7.81194,3.03139A11.27745,11.27745,0,0,1,9.37506,19.82905a10.59448,10.59448,0,0,1,3.279-7.65093,11.1053,11.1053,0,0,1,7.65486-3.13528A10.401,10.401,0,0,1,22.93965,9.38l-.7912,2.8891a7.14214,7.14214,0,0,0-1.86055-.23956,7.63279,7.63279,0,0,0-7.56553,7.49781,7.93351,7.93351,0,0,0,8.01662,7.8292A8.12064,8.12064,0,0,0,26.09408,25.362a.07817.07817,0,0,1,.107.00427l2.38548,2.4525a.07429.07429,0,0,1-.00308.107Z" style="fill: #fff"/>
+    <path d="M27.3212,18H18.25962A.25963.25963,0,0,0,18,18.25962,2.74038,2.74038,0,0,0,20.74038,21h9.62474a.2596.2596,0,0,0,.25962-.25977l-.00091-1.55372a10.35135,10.35135,0,0,0-4.21972-8.35466l-.93244,3.40837A8.7125,8.7125,0,0,1,27.3212,18Z" style="fill: #fff"/>
+  </g>
+</svg></span>
+                <span class="visually-hidden"></span>
+            </a>
+        
+	</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			
+		
+		
+		
+	</div>
+
+
+</div>
+
+    
+</div>
+</main>
+
+		
+		
+    
+    
+	<script defer src="/etc.clientlibs/clientlibs/granite/jquery/granite/csrf.js"></script>
+<script defer src="/etc.clientlibs/core/wcm/components/commons/site/clientlibs/container.js"></script>
+<script defer src="/etc.clientlibs/esri-sites/clientlibs/components.js"></script>
+
+
+
+<div hidden><span id="new-window">opens in new window</span></div>
+
+<calcite-modal id="page-modal" scale="m" width="m" aria-modal="true" role="dialog">
+	<div slot="header"></div>
+	<div slot="content"></div>
+</calcite-modal>
+
+<div id="live-region" class="assistText" aria-live="polite"></div>
+
+<script src="https://webapps-cdn.esri.com/CDN/components/esri-cloud-chat/js/esriChat.js"></script>
+<script src="https://webapps-cdn.esri.com/CDN/packages/instant.page/instantpage.min.js"></script>
+
+<script src="https://rum.hlx.page/.rum/@adobe/helix-rum-js@^2/dist/rum-standalone.js"></script>
+
+    
+
+    
+
+    
+
+
+        <script type="text/javascript">_satellite.pageBottom();</script>
+
+
+    
+    
+
+		
+    
+<script src="/etc.clientlibs/esri-sites/clientlibs/clientlib-dependencies.js"></script>
+
+
+
+	
+</body>
+
+</html>
