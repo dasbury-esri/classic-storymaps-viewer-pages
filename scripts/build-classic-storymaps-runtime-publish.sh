@@ -46,6 +46,49 @@ sanitize_runtime_publish() {
     awk '!/localhost:35729\/livereload\.js/ && !/localhost:8888\/livereload\.js/' "$file_path" > "$tmp_file"
     mv "$tmp_file" "$file_path"
   done < <(grep -IrlE 'localhost:35729/livereload\.js|localhost:8888/livereload\.js' "$runtime_publish_dir" || true)
+
+  # Remove builder bundles from production publish output.
+  find "$runtime_publish_dir/app" -maxdepth 1 -type f \( -iname '*builder*.js' -o -iname '*builder*.css' \) -delete 2>/dev/null || true
+  rm -rf "$runtime_publish_dir/resources/tpl/builder" 2>/dev/null || true
+
+  # Neutralize builder query parameters in deployed viewers.
+  local index_file="$runtime_publish_dir/index.html"
+  if [[ -f "$index_file" ]] && ! grep -q 'classicstorymaps-builder-guard' "$index_file"; then
+    tmp_file="$(mktemp)"
+    awk '
+      BEGIN { inserted = 0 }
+      {
+        print
+        if (inserted == 0 && $0 ~ /<head[^>]*>/) {
+          print "\t<script type=\"text/javascript\">"
+          print "\t// classicstorymaps-builder-guard"
+          print "\t(function () {"
+          print "\t\tvar raw = (window.location.search || \"\").replace(/^\\?/, \"\");"
+          print "\t\tif (!raw) return;"
+          print "\t\tvar parts = raw.split(\"&\");"
+          print "\t\tvar keep = [];"
+          print "\t\tvar changed = false;"
+          print "\t\tfor (var i = 0; i < parts.length; i++) {"
+          print "\t\t\tif (!parts[i]) continue;"
+          print "\t\t\tvar key = parts[i].split(\"=\")[0];"
+          print "\t\t\tif (key === \"edit\" || key === \"fromScratch\" || key === \"fromscratch\") {"
+          print "\t\t\t\tchanged = true;"
+          print "\t\t\t}"
+          print "\t\t\telse {"
+          print "\t\t\t\tkeep.push(parts[i]);"
+          print "\t\t\t}"
+          print "\t\t}"
+          print "\t\tif (!changed) return;"
+          print "\t\tvar next = window.location.pathname + (keep.length ? \"?\" + keep.join(\"&\") : \"\") + (window.location.hash || \"\");"
+          print "\t\twindow.location.replace(next);"
+          print "\t})();"
+          print "\t</script>"
+          inserted = 1
+        }
+      }
+    ' "$index_file" > "$tmp_file"
+    mv "$tmp_file" "$index_file"
+  fi
 }
 
 mkdir -p "$PUBLISH_ROOT"

@@ -57,7 +57,6 @@ jobs:
             test -f "publish/viewers/$runtime/index.html"
           done
           test -f publish/viewers/cascade/app/viewer-min.js
-          test -f publish/viewers/cascade/app/builder-min.js
           test -f publish/viewers/cascade/lib/jquery/dist/jquery.min.js
           test -f publish/viewers/cascade/lib/fastclick/lib/fastclick.js
           test -f publish/viewers/cascade/lib/font-awesome/css/font-awesome.css
