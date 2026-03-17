@@ -57,10 +57,8 @@ jobs:
             test -f "publish/viewers/$runtime/index.html"
           done
           test -f publish/viewers/cascade/app/viewer-min.js
-          test -f publish/viewers/cascade/lib/jquery/dist/jquery.min.js
-          test -f publish/viewers/cascade/lib/fastclick/lib/fastclick.js
-          test -f publish/viewers/cascade/lib/font-awesome/css/font-awesome.css
-          test -f publish/viewers/cascade/lib/calcite-bootstrap/css/calcite-bootstrap-open.min.css
+          test -f publish/viewers/cascade/resources/styles/calcite/colors-default.less
+          test -f publish/viewers/cascade/resources/styles/calcite/variables.less
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

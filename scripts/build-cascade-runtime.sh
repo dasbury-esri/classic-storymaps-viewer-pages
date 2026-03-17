@@ -7,6 +7,17 @@ CASCADE_RELEASE_FALLBACK_PATH="${CASCADE_RELEASE_FALLBACK_PATH:-runtimes/cascade
 CASCADE_HISTORY_FALLBACK_REF="${CASCADE_HISTORY_FALLBACK_REF:-30d22e8aa38fce3553eec3dd33e8283e3ddb1770}"
 CASCADE_HISTORY_FALLBACK_PATH="${CASCADE_HISTORY_FALLBACK_PATH:-publish/templates/classic-storymaps/cascade}"
 
+has_required_cascade_viewer_files() {
+  local candidate_path="$1"
+
+  [[ -f "$candidate_path/index.html" ]] || return 1
+  [[ -f "$candidate_path/app/main-config.js" ]] || return 1
+  [[ -f "$candidate_path/app/main-app.js" ]] || return 1
+  [[ -f "$candidate_path/app/viewer-min.js" ]] || return 1
+  [[ -f "$candidate_path/resources/styles/calcite/colors-default.less" ]] || return 1
+  [[ -f "$candidate_path/resources/styles/calcite/variables.less" ]] || return 1
+}
+
 stage_release_fallback_bundle() {
   local output_path="$1"
 
@@ -81,10 +92,10 @@ pushd "$RUNTIME_PATH" >/dev/null
   fi
 popd >/dev/null
 
-if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" ]]; then
+if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" && has_required_cascade_viewer_files "$RUNTIME_PATH/deploy" ]]; then
   cp -R "$RUNTIME_PATH/deploy"/. "$OUTPUT_PATH"/
 else
-  echo "Cascade grunt build failed on this toolchain; attempting official release fallback bundle." >&2
+  echo "Cascade grunt build output is incomplete on this toolchain; attempting official release fallback bundle." >&2
   if stage_release_fallback_bundle "$OUTPUT_PATH"; then
     echo "Cascade official release fallback bundle restored from local release assets." >&2
   elif stage_history_fallback_bundle "$OUTPUT_PATH"; then
