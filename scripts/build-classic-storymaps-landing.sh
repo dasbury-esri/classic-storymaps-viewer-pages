@@ -129,6 +129,23 @@ sanitize_archive_html_file() {
   ' "$file_path"
 }
 
+add_archive_banner_to_page() {
+  local file_path="$1"
+
+  if grep -q 'class="archive-banner"' "$file_path"; then
+    return 0
+  fi
+
+  perl -0pi -e '
+    s{</head>}{{STYLE_BLOCK}</head>}s;
+    s{<body([^>]*)>}{<body$1><div class="archive-banner" role="note" aria-label="Archive snapshot notice"><div class="container">This is an archive of the Classic Story Maps website from 2017-12-10.</div></div>}s;
+  ' "$file_path"
+
+  perl -0pi -e '
+    s/\{STYLE_BLOCK\}/\n    <style>\n      .archive-banner {\n        background: #fbf4df;\n        border-bottom: 1px solid #d8c79a;\n        color: #4a3b1f;\n        font-size: 15px;\n        line-height: 1.45;\n        padding: 10px 0;\n      }\n\n      .archive-banner .container {\n        font-weight: 600;\n      }\n    <\/style>\n/;
+  ' "$file_path"
+}
+
 write_compat_redirect_stub() {
   local out_file="$1"
   local from_prefix="$2"
@@ -202,6 +219,7 @@ if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ARCHIVE_PAGE_OUT")"
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
   sanitize_archive_html_file "$ARCHIVE_PAGE_OUT"
+  add_archive_banner_to_page "$ARCHIVE_PAGE_OUT"
 fi
 
 if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
@@ -211,11 +229,13 @@ if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
 
   while IFS= read -r archive_page; do
     sanitize_archive_html_file "$archive_page"
+    add_archive_banner_to_page "$archive_page"
   done < <(find "$ARCHIVE_PAGES_OUT" -type f -name '*.html' | sort)
 fi
 
 while IFS= read -r standalone_archive_page; do
   sanitize_archive_html_file "$standalone_archive_page"
+  add_archive_banner_to_page "$standalone_archive_page"
 done < <(find "$(dirname "$ARCHIVE_PAGE_OUT")" -maxdepth 1 -type f -name '*.html' | sort)
 
 compat_specs=(
