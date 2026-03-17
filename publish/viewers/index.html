@@ -430,6 +430,7 @@
     </p>
   </main>
 
+  <script src="assets/js/classic-storymaps-config.js"></script>
   <script>
     const SUPPORT_STATE = {
       SUPPORTED: "supported",
@@ -441,71 +442,8 @@
       [SUPPORT_STATE.QUEUED]: "In Progress"
     };
 
-    const apps = [
-      {
-        title: "Classic Story Map Tour",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Sequential place-based story format linking photos and captions to map locations.",
-        image: "assets/images/map-tour.png",
-        launchRoute: "maptour-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Classic Story Map Swipe",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Map comparison experience with slider and spyglass patterns.",
-        image: "assets/images/swipe.jpg",
-        launchRoute: "swipe-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Classic Story Map Journal",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Narrative panel plus map canvas with guided launch support for canonical appid routes.",
-        image: "assets/images/map-journal.jpg",
-        launchRoute: "mapjournal-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Classic Story Map Series (Tabbed, Bulleted or Side Accordion Layout)",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Tabbed sequence of maps and narrative content.",
-        image: "assets/images/map-series-tabbed-viewer.jpg",
-        launchRoute: "mapseries-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Story Map Cascade",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Immersive long-form layout combining maps, media, and narrative sections.",
-        image: "assets/images/cascade.jpg",
-        launchRoute: "cascade-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Classic Story Map Shortlist",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Themed place list with map-extent aware tab behavior.",
-        image: "assets/images/shortlist.jpg",
-        launchRoute: "shortlist-launcher.html",
-        action: "Open Launcher"
-      },
-      {
-        title: "Story Map Crowdsource",
-        state: SUPPORT_STATE.QUEUED,
-        description: "Public contribution workflow with moderation and approval. Viewer support is currently in progress.",
-        image: "assets/images/crowdsource.jpg",
-        action: "In Progress"
-      },
-      {
-        title: "Classic Story Map Basic",
-        state: SUPPORT_STATE.SUPPORTED,
-        description: "Minimal map-first viewer with optional title and legend.",
-        image: "assets/images/basic.jpg",
-        launchRoute: "basic-launcher.html",
-        action: "Open Launcher"
-      }
-    ];
+    const CLASSIC_CONFIG = window.ClassicStoryMapsConfig || {};
+    const apps = Array.isArray(CLASSIC_CONFIG.catalogApps) ? CLASSIC_CONFIG.catalogApps : [];
 
     const grid = document.getElementById("catalog-grid");
     const authButton = document.getElementById("auth-button");
@@ -518,15 +456,10 @@
       clientId: window.__CLASSIC_STORYMAPS_CLIENT_ID__ || "4ZanYdCYK0mWsFLz",
       redirectUri: window.__CLASSIC_STORYMAPS_REDIRECT_URI__ || (window.location.origin + window.location.pathname)
     };
-    const RUNTIME_VIEWER_BY_APP = {
-      maptour: "/viewers/maptour/index.html",
-      swipe: "/viewers/swipe/index.html",
-      mapjournal: "/viewers/mapjournal/index.html",
-      mapseries: "/viewers/mapseries/index.html",
-      cascade: "/viewers/cascade/index.html",
-      shortlist: "/viewers/shortlist/index.html",
-      basic: "/viewers/basic/index.html"
-    };
+    const RUNTIME_VIEWER_BY_APP = CLASSIC_CONFIG.runtimeViewerByApp || {};
+    const classifyRuntime = typeof CLASSIC_CONFIG.classifyClassicRuntimeFromItem === "function"
+      ? CLASSIC_CONFIG.classifyClassicRuntimeFromItem
+      : null;
 
     function getStoredToken() {
       try {
@@ -649,49 +582,10 @@
     }
 
     function classifyClassicRuntime(item) {
-      const keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
-      const normalizedKeywords = keywords.map(function(keyword) {
-        return String(keyword || "").toLowerCase();
-      });
-      const itemType = String((item && item.type) || "").toLowerCase();
-      const itemUrl = String((item && item.url) || "").toLowerCase();
-
-      function hasKeyword(fragment) {
-        return normalizedKeywords.some(function(keyword) {
-          return keyword.indexOf(fragment) !== -1;
-        });
+      if (!classifyRuntime) {
+        return null;
       }
-
-      if (hasKeyword("story map tour") || itemUrl.indexOf("/maptour/") !== -1) {
-        return "maptour";
-      }
-      if (hasKeyword("story map swipe") || hasKeyword("story map spyglass") || itemUrl.indexOf("/swipe/") !== -1) {
-        return "swipe";
-      }
-      if (hasKeyword("story map journal") || itemUrl.indexOf("/mapjournal/") !== -1) {
-        return "mapjournal";
-      }
-      if (hasKeyword("story map series") || itemUrl.indexOf("/mapseries/") !== -1) {
-        return "mapseries";
-      }
-      if (hasKeyword("story map cascade") || itemUrl.indexOf("/cascade/") !== -1) {
-        return "cascade";
-      }
-      if (hasKeyword("story map shortlist") || itemUrl.indexOf("/shortlist/") !== -1) {
-        return "shortlist";
-      }
-      if (hasKeyword("story map basic") || itemUrl.indexOf("/basic/") !== -1) {
-        return "basic";
-      }
-      if (hasKeyword("story map crowdsource") || itemUrl.indexOf("/crowdsource/") !== -1) {
-        return "crowdsource";
-      }
-
-      if (itemType === "web mapping application" && hasKeyword("story map")) {
-        return "unknown-classic";
-      }
-
-      return null;
+      return classifyRuntime(item);
     }
 
     async function fetchArcgisItem(itemId, token) {

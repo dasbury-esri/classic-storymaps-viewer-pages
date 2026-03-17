@@ -4,40 +4,26 @@
   var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
   var AUTH_STORAGE_KEY = "arcgis_access_token";
   var ARC_BASE = "https://www.arcgis.com/sharing/rest";
-  var DEFAULT_STORY_ROOT = "/viewers";
+  var CONFIG = window.ClassicStoryMapsConfig || {};
+  var APP_REGISTRY = CONFIG.appRegistry || {};
+  var DEFAULT_STORY_ROOT = CONFIG.basePath || "/viewers";
+  var LEGACY_BASE_PATHS = Array.isArray(CONFIG.legacyBasePaths) ? CONFIG.legacyBasePaths : [];
 
-  var VIEWER_BY_APP = {
-    maptour: "maptour",
-    swipe: "swipe",
-    mapjournal: "mapjournal",
-    mapseries: "mapseries",
-    cascade: "cascade",
-    shortlist: "shortlist",
-    crowdsource: "crowdsource",
-    basic: "basic"
-  };
+  function fromRegistry(field) {
+    var map = {};
+    Object.keys(APP_REGISTRY).forEach(function(key) {
+      if (APP_REGISTRY[key] && APP_REGISTRY[key][field]) {
+        map[key] = APP_REGISTRY[key][field];
+      }
+    });
+    return map;
+  }
 
-  var APP_LABEL_BY_ID = {
-    maptour: "Map Tour",
-    swipe: "Swipe",
-    mapjournal: "Map Journal",
-    mapseries: "Map Series",
-    cascade: "Cascade",
-    shortlist: "Shortlist",
-    crowdsource: "Crowdsource",
-    basic: "Basic"
-  };
+  var VIEWER_BY_APP = fromRegistry("runtimeFolder");
 
-  var DEMO_APP_TYPE_BY_ID = {
-    maptour: "Story Map Tour",
-    swipe: "Story Map Swipe",
-    mapjournal: "Story Map Journal",
-    mapseries: "Story Map Series",
-    cascade: "Story Map Cascade",
-    shortlist: "Story Map Shortlist",
-    crowdsource: "Story Map Crowdsource",
-    basic: "Story Map Basic"
-  };
+  var APP_LABEL_BY_ID = fromRegistry("label");
+
+  var DEMO_APP_TYPE_BY_ID = fromRegistry("demoType");
 
   function sanitize(value) {
     return (value || "").trim();
@@ -64,7 +50,7 @@
 
   function inferBasePathFromLocation() {
     var pathname = String(window.location.pathname || "");
-    var markers = ["/viewers", "/templates/classic-storymaps"];
+    var markers = [DEFAULT_STORY_ROOT].concat(LEGACY_BASE_PATHS);
     var lowerPath = pathname.toLowerCase();
     var i;
 
@@ -176,38 +162,10 @@
   }
 
   function classifyClassic(item) {
-    var keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
-    var joined = keywords.join("|").toLowerCase();
-    var type = String((item && item.type) || "").toLowerCase();
-    var url = String((item && item.url) || "").toLowerCase();
-
-    function has(fragment) {
-      return joined.indexOf(fragment) !== -1;
+    if (typeof CONFIG.classifyClassicRuntimeFromItem !== "function") {
+      return null;
     }
-
-    function hasAny(fragments) {
-      for (var i = 0; i < fragments.length; i += 1) {
-        if (has(fragments[i])) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    if (hasAny(["story map tour", "storymaptour", "maptour"]) || url.indexOf("/maptour/") !== -1) return "maptour";
-    if (hasAny(["story map swipe", "story map spyglass", "storymapswipe", "storymapspyglass", "mapswipe", "mapspyglass"]) || url.indexOf("/swipe/") !== -1) return "swipe";
-    if (hasAny(["story map journal", "storymapjournal", "mapjournal"]) || url.indexOf("/mapjournal/") !== -1) return "mapjournal";
-    if (hasAny(["story map series", "storymapseries", "mapseries"]) || url.indexOf("/mapseries/") !== -1) return "mapseries";
-    if (hasAny(["story map cascade", "storymapcascade", "mapcascade"]) || url.indexOf("/cascade/") !== -1) return "cascade";
-    if (hasAny(["story map shortlist", "storymapshortlist", "mapshortlist", "shortlist"]) || url.indexOf("/shortlist/") !== -1) return "shortlist";
-    if (hasAny(["story map crowdsource", "storymapcrowdsource", "mapcrowdsource", "crowdsource"]) || url.indexOf("/crowdsource/") !== -1) return "crowdsource";
-    if (hasAny(["story map basic", "storymapbasic", "mapbasic"]) || url.indexOf("/basic/") !== -1) return "basic";
-
-    if (type === "web mapping application" && has("story map")) {
-      return "unknown-classic";
-    }
-
-    return null;
+    return CONFIG.classifyClassicRuntimeFromItem(item);
   }
 
   function extractAppId(value) {
