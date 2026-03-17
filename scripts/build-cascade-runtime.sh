@@ -92,7 +92,7 @@ pushd "$RUNTIME_PATH" >/dev/null
   fi
 popd >/dev/null
 
-if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" && has_required_cascade_viewer_files "$RUNTIME_PATH/deploy" ]]; then
+if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" ]] && has_required_cascade_viewer_files "$RUNTIME_PATH/deploy"; then
   cp -R "$RUNTIME_PATH/deploy"/. "$OUTPUT_PATH"/
 else
   echo "Cascade grunt build output is incomplete on this toolchain; attempting official release fallback bundle." >&2
