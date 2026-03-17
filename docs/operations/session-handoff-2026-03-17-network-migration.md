@@ -2,6 +2,29 @@
 
 Date: 2026-03-17
 
+## Continuation update (2026-03-17 rerun)
+- Re-ran reachability checks and probe from this environment against `https://classicstorymaps.com/viewers`.
+- `https://classicstorymaps.com/` and `https://classicstorymaps.com/viewers/` both returned HTTP 200.
+- Re-ran:
+
+```bash
+node scripts/probe-storymaps-org-viewers.mjs \
+  --domain=story.maps.arcgis.com \
+  --viewerBase=https://classicstorymaps.com/viewers \
+  --max=250
+```
+
+- Result summary remained stable:
+  - `readyForManualRuntimeLoadTest`: 243
+  - `appItemNotAuthorized`: 5
+  - `missingAppIdInSourceUrl`: 2
+- Generated artifacts were refreshed in place:
+  - `docs/testing/phase5-s10e-storymaps-org-viewer-probe-2026-03-17.md`
+  - `docs/testing/artifacts/storymaps-org-viewer-probe-2026-03-17.json`
+- Policy update for ongoing validation:
+  - `https://classicstorymaps.com/viewers` is the source-of-truth deployment.
+  - `https://storymaps.esri.com/templates/classic-storymaps` is retired and should not be used for acceptance checks.
+
 ## Why this handoff exists
 This session was paused on archive reconstruction due to Wayback instability and shifted to real-world viewer hardening using public classic StoryMaps discovered from the ArcGIS StoryMaps organization.
 
@@ -15,7 +38,7 @@ You asked for this to be saved in-repo so work can continue from a machine/netwo
    - Probes item accessibility and viewer route reachability
    - Classifies failures into diagnosis buckets
 
-2. Confirmed network-specific blocker from this environment:
+2. Confirmed network-specific blocker from this environment at the original handoff time:
    - `https://classicstorymaps.com/*` returns connection reset from this corporate network
    - `https://storymaps.esri.com/*` is reachable
 
@@ -65,17 +88,8 @@ curl -I -sS --max-time 20 'https://classicstorymaps.com/' | sed -n '1,8p'
 curl -I -sS --max-time 20 'https://classicstorymaps.com/viewers/' | sed -n '1,8p'
 ```
 
-3. If custom domain still blocked, fallback run:
-
-```bash
-node scripts/probe-storymaps-org-viewers.mjs \
-  --domain=story.maps.arcgis.com \
-  --viewerBase=https://storymaps.esri.com/templates/classic-storymaps \
-  --max=250
-```
-
 ## Next recommended steps
-1. Keep this report as baseline and run the custom-domain probe from the unblocked network.
+1. Keep this report as baseline and continue probing against `https://classicstorymaps.com/viewers`.
 2. For top traffic appids, execute browser-level runtime checks (console + network) because HTTP reachability alone does not validate full viewer render.
 3. Update the planning prompt Phase 5 app-launch verification once browser-level checks are complete.
 

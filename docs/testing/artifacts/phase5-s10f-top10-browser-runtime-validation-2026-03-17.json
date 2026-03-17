@@ -1,0 +1,192 @@
+{
+  "context": {
+    "date": "2026-03-17T01:50:38.075Z",
+    "viewerBase": "https://classicstorymaps.com/viewers",
+    "sourceArtifact": "docs/testing/artifacts/storymaps-org-viewer-probe-2026-03-17.json",
+    "generatedAt": "2026-03-17T01:50:38.076Z",
+    "method": "playwright-headless-chromium",
+    "selection": "top10-highest-numViews-readyForManualRuntimeLoadTest"
+  },
+  "summary": {
+    "total": 10,
+    "pass": 8,
+    "fail": 2
+  },
+  "results": [
+    {
+      "runtime": "maptour",
+      "appId": "d79e17055aa14e119c9c6e8621b23a6a",
+      "title": "Monuments Men: Recovering Europe's Plundered Art",
+      "numViews": 1370012,
+      "viewerUrl": "https://classicstorymaps.com/viewers/maptour/index.html?appid=d79e17055aa14e119c9c6e8621b23a6a",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8255,
+      "result": "PASS"
+    },
+    {
+      "runtime": "swipe",
+      "appId": "97ae55e015774b7ea89fd0a52ca551c2",
+      "title": "Spyglass on the Past: New York City 1836 and Today",
+      "numViews": 407130,
+      "viewerUrl": "https://classicstorymaps.com/viewers/swipe/index.html?appid=97ae55e015774b7ea89fd0a52ca551c2",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8177,
+      "result": "PASS"
+    },
+    {
+      "runtime": "mapseries",
+      "appId": "e93cf59405144cb9904327ebe3a305dd",
+      "title": "Syria: Epicenter of a Deepening Refugee Crisis",
+      "numViews": 361395,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapseries/index.html?appid=e93cf59405144cb9904327ebe3a305dd",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8205,
+      "result": "PASS"
+    },
+    {
+      "runtime": "mapjournal",
+      "appId": "4c77a56bbcd743b69232cf3fd9c7a61c",
+      "title": "Mountains \n\nof Fire",
+      "numViews": 350727,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapjournal/index.html?appid=4c77a56bbcd743b69232cf3fd9c7a61c",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [
+        "GET https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/SpiritLake2012Treemat02.JPG/1600px-SpiritLake2012Treemat02.JPG (net::ERR_BLOCKED_BY_ORB)",
+        "GET https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/MSH80_eruption_mount_st_helens_05-18-80-dramatic-edit.jpg/681px-MSH80_eruption_mount_st_helens_05-18-80-dramatic-edit.jpg (net::ERR_BLOCKED_BY_ORB)"
+      ],
+      "durationMs": 8186,
+      "result": "PASS"
+    },
+    {
+      "runtime": "cascade",
+      "appId": "8811af6a8038442da5e2242eebe29fdd",
+      "title": "An Infamous Day",
+      "numViews": 310532,
+      "viewerUrl": "https://classicstorymaps.com/viewers/cascade/index.html?appid=8811af6a8038442da5e2242eebe29fdd",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [
+        "load.error is not a function",
+        "load.error is not a function"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Error: scriptError: /viewers/cascade/lib/jquery/dist/jquery.min.js\n    at e (https://js.arcgis.com/3.41/init.js:11:13)\n    at HTMLScriptElement.<anonymous> (https://js.arcgis.com/3.41/init.js:36:384)",
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Error: scriptError: /viewers/cascade/lib/fastclick/lib/fastclick.js\n    at e (https://js.arcgis.com/3.41/init.js:11:13)\n    at HTMLScriptElement.<anonymous> (https://js.arcgis.com/3.41/init.js:36:384)",
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "failedRequests": [
+        "GET https://classicstorymaps.com/viewers/cascade/lib/jquery/dist/jquery.min.js (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/fastclick/lib/fastclick.js (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/font-awesome/css/font-awesome.css (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/calcite-bootstrap/css/calcite-bootstrap-open.min.css (net::ERR_ABORTED)"
+      ],
+      "durationMs": 8118,
+      "result": "FAIL"
+    },
+    {
+      "runtime": "mapjournal",
+      "appId": "8cb27cf4d3b64f1e8cd9791211620a4d",
+      "title": "The Age of Megacities",
+      "numViews": 291835,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapjournal/index.html?appid=8cb27cf4d3b64f1e8cd9791211620a4d",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8012,
+      "result": "PASS"
+    },
+    {
+      "runtime": "mapjournal",
+      "appId": "8ff1d1534e8c41adb5c04ab435b7974b",
+      "title": "Inside the World's 10 Largest Refugee Camps",
+      "numViews": 277032,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapjournal/index.html?appid=8ff1d1534e8c41adb5c04ab435b7974b",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8012,
+      "result": "PASS"
+    },
+    {
+      "runtime": "cascade",
+      "appId": "5605867ba55e4b929689a20892c26b36",
+      "title": "Bruised Borders",
+      "numViews": 255460,
+      "viewerUrl": "https://classicstorymaps.com/viewers/cascade/index.html?appid=5605867ba55e4b929689a20892c26b36",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [
+        "load.error is not a function",
+        "load.error is not a function"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Error: scriptError: /viewers/cascade/lib/jquery/dist/jquery.min.js\n    at e (https://js.arcgis.com/3.41/init.js:11:13)\n    at HTMLScriptElement.<anonymous> (https://js.arcgis.com/3.41/init.js:36:384)",
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Error: scriptError: /viewers/cascade/lib/fastclick/lib/fastclick.js\n    at e (https://js.arcgis.com/3.41/init.js:11:13)\n    at HTMLScriptElement.<anonymous> (https://js.arcgis.com/3.41/init.js:36:384)",
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "failedRequests": [
+        "GET https://classicstorymaps.com/viewers/cascade/lib/jquery/dist/jquery.min.js (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/fastclick/lib/fastclick.js (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/font-awesome/css/font-awesome.css (net::ERR_ABORTED)",
+        "GET https://classicstorymaps.com/viewers/cascade/lib/calcite-bootstrap/css/calcite-bootstrap-open.min.css (net::ERR_ABORTED)"
+      ],
+      "durationMs": 8014,
+      "result": "FAIL"
+    },
+    {
+      "runtime": "mapseries",
+      "appId": "79798a56715c4df183448cc5b7e1b999",
+      "title": "A Nation of Drones",
+      "numViews": 205136,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "durationMs": 8015,
+      "result": "PASS"
+    },
+    {
+      "runtime": "mapseries",
+      "appId": "597d573e58514bdbbeb53ba2179d2359",
+      "title": "Katrina +10: A Decade of Change in New Orleans ",
+      "numViews": 204375,
+      "viewerUrl": "https://classicstorymaps.com/viewers/mapseries/index.html?appid=597d573e58514bdbbeb53ba2179d2359",
+      "documentStatus": 200,
+      "appDataRequestObserved": true,
+      "pageErrors": [],
+      "consoleErrors": [
+        "TypeError: Cannot read properties of undefined (reading 'forEach')\n    at w (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:503530)\n    at Object.getMapConfig (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:515723)\n    at W (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:356640)\n    at https://js.arcgis.com/3.41/init.js:64:387\n    at e (https://js.arcgis.com/3.41/init.js:105:393)\n    at f (https://js.arcgis.com/3.41/init.js:105:182)\n    at resolve.callback (https://js.arcgis.com/3.41/init.js:107:10)\n    at e (https://js.arcgis.com/3.41/init.js:106:96)\n    at f (https://js.arcgis.com/3.41/init.js:105:182)\n    at resolve.callback (https://js.arcgis.com/3.41/init.js:107:10) TypeError: Cannot read properties of undefined (reading 'forEach')\n    at w (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:503530)\n    at Object.getMapConfig (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:515723)\n    at W (https://classicstorymaps.com/viewers/mapseries/app/viewer-min.js?v=1.27.0:1:356640)\n    at https://js.arcgis.com/3.41/init.js:64:387\n    at e (https://js.arcgis.com/3.41/init.js:105:393)\n    at f (https://js.arcgis.com/3.41/init.js:105:182)\n    at resolve.callback (https://js.arcgis.com/3.41/init.js:107:10)\n    at e (https://js.arcgis.com/3.41/init.js:106:96)\n    at f (https://js.arcgis.com/3.41/init.js:105:182)\n    at resolve.callback (https://js.arcgis.com/3.41/init.js:107:10)"
+      ],
+      "failedRequests": [],
+      "durationMs": 8013,
+      "result": "PASS"
+    }
+  ]
+}
