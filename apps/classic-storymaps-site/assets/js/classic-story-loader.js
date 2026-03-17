@@ -616,12 +616,14 @@
       ".loader-downloads-label{font-size:0.85rem;color:var(--ink-1);font-weight:600;}" +
       ".loader-downloads-separator{height:1px;background:var(--line);opacity:0.7;margin:2px 0 6px;}" +
       ".loader-appid-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;}" +
+      ".loader-webmap-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;}" +
       ".loader-appid-row button{white-space:nowrap;}" +
-      "@media (max-width:620px){.loader-appid-row{grid-template-columns:1fr;}}";
+      ".loader-webmap-row button{white-space:nowrap;}" +
+      "@media (max-width:620px){.loader-appid-row,.loader-webmap-row{grid-template-columns:1fr;}}";
     document.head.appendChild(style);
   }
 
-  function applyLauncherLayout(form, panel, appIdInput, submitButton) {
+  function applyLauncherLayout(form, panel, appIdInput, submitButton, webmapInput, webmapButton) {
     ensureLayoutStyles();
 
     var backLink = form.querySelector(".actions .text-link");
@@ -646,6 +648,14 @@
       row.appendChild(submitButton);
     }
 
+    if (webmapInput && webmapButton && !webmapInput.closest(".loader-webmap-row")) {
+      var webmapRow = document.createElement("div");
+      webmapRow.className = "loader-webmap-row";
+      webmapInput.insertAdjacentElement("beforebegin", webmapRow);
+      webmapRow.appendChild(webmapInput);
+      webmapRow.appendChild(webmapButton);
+    }
+
     var actions = form.querySelector(".actions");
     if (actions && !actions.querySelector("button") && !actions.querySelector("a")) {
       actions.style.display = "none";
@@ -666,6 +676,8 @@
     var viewerConfig = inferViewerConfig();
     var launcherAppLabel = APP_LABEL_BY_ID[viewerConfig.runtimeId] || "Story";
     var demoAppType = DEMO_APP_TYPE_BY_ID[viewerConfig.runtimeId] || "story map";
+    var submitButton = form.querySelector('button[type="submit"]');
+    var webmapLoadButton = null;
     var ui = ensureUi(form, statusEl);
     var state = {
       item: null,
@@ -742,6 +754,51 @@
       setTitle("");
     }
 
+    function isValidId(value, regex) {
+      return regex.test(normalizeId(value || ""));
+    }
+
+    function updateLauncherLoadButtons() {
+      if (submitButton) {
+        setDisabled(submitButton, !isValidId(appIdInput.value, APP_ID_REGEX));
+      }
+
+      if (webmapLoadButton) {
+        var canLoadWebmap = supportsWebmapParam(viewerConfig.runtimeId) && isValidId(webmapInput && webmapInput.value, WEBMAP_ID_REGEX);
+        setDisabled(webmapLoadButton, !canLoadWebmap);
+      }
+    }
+
+    function handleWebmapLaunch() {
+      var webmapId = webmapInput ? normalizeId(webmapInput.value) : "";
+      if (!webmapId) {
+        setStatus("Enter a web map ID to continue.", "warn");
+        if (webmapInput) {
+          webmapInput.focus();
+        }
+        disableForLoad();
+        return;
+      }
+
+      if (!WEBMAP_ID_REGEX.test(webmapId)) {
+        setStatus("Web map ID must be 32 hexadecimal characters (a-f, 0-9).", "error");
+        if (webmapInput) {
+          webmapInput.focus();
+        }
+        disableForLoad();
+        return;
+      }
+
+      if (!supportsWebmapParam(viewerConfig.runtimeId)) {
+        setStatus("This launcher does not support direct web map launches.", "error");
+        disableForLoad();
+        return;
+      }
+
+      disableForLoad();
+      applyWebmapState(webmapId);
+    }
+
     form.addEventListener("submit", async function(evt) {
       evt.preventDefault();
 
@@ -763,23 +820,7 @@
       }
 
       if (!appId && webmapId) {
-        if (!WEBMAP_ID_REGEX.test(webmapId)) {
-          setStatus("Web map ID must be 32 hexadecimal characters (a-f, 0-9).", "error");
-          if (webmapInput) {
-            webmapInput.focus();
-          }
-          disableForLoad();
-          return;
-        }
-
-        if (!supportsWebmapParam(viewerConfig.runtimeId)) {
-          setStatus("This launcher does not support direct web map launches.", "error");
-          disableForLoad();
-          return;
-        }
-
-        disableForLoad();
-        applyWebmapState(webmapId);
+        handleWebmapLaunch();
         return;
       }
 
@@ -817,6 +858,7 @@
     appIdInput.addEventListener("input", function() {
       var hasAppId = !!sanitize(appIdInput.value);
       var hasWebmap = webmapInput ? !!sanitize(webmapInput.value) : false;
+      updateLauncherLoadButtons();
       if (!hasAppId && !hasWebmap) {
         setStatus("");
         setTitle("");
@@ -828,6 +870,7 @@
       webmapInput.addEventListener("input", function() {
         var hasAppId = !!sanitize(appIdInput.value);
         var hasWebmap = !!sanitize(webmapInput.value);
+        updateLauncherLoadButtons();
         if (!hasAppId && !hasWebmap) {
           setStatus("");
           setTitle("");
@@ -916,9 +959,15 @@
       webmapInput.value = webmapPrefill;
     }
 
-    var submitButton = form.querySelector('button[type="submit"]');
     if (submitButton) {
       submitButton.textContent = "Load " + launcherAppLabel;
+    }
+
+    if (webmapInput && supportsWebmapParam(viewerConfig.runtimeId)) {
+      webmapLoadButton = document.createElement("button");
+      webmapLoadButton.type = "button";
+      webmapLoadButton.textContent = "Load Web Map";
+      webmapLoadButton.addEventListener("click", handleWebmapLaunch);
     }
 
     var backToCatalog = form.querySelector(".text-link");
@@ -934,8 +983,10 @@
     ui.downloadAllBtn.textContent = "Download All";
 
     if (submitButton) {
-      applyLauncherLayout(form, panel, appIdInput, submitButton);
+      applyLauncherLayout(form, panel, appIdInput, submitButton, webmapInput, webmapLoadButton);
     }
+
+    updateLauncherLoadButtons();
 
     if (viewerConfig.demoLink && viewerConfig.defaultAppId && viewerConfig.runtimeId) {
       var defaultViewer = getViewerUrl(viewerConfig.runtimeId, viewerConfig.defaultAppId, "appid");
