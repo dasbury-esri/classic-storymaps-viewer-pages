@@ -82,18 +82,49 @@ sanitize_archive_html_file() {
   local file_path="$1"
 
   perl -0pi -e '
+    s{\s*<script>window\.RufflePlayer=.*?</script>\s*}{}gs;
+    s{\s*<script[^>]+ruffle\.js[^>]*></script>\s*}{}gs;
+    s{\s*<script type="text/javascript">\s*"\d+"\);\s*</script>\s*<!-- End Wayback Rewrite JS Include -->\s*}{}gs;
     s{\s*<script>\s*var _gaq = _gaq \|\| \[\];.*?</script>\s*}{}gs;
     s{\s*<!-- Google Tag Manager -->.*?<!-- End Google Tag Manager -->\s*}{}gs;
+    s{\s*<noscript><iframe[^>]*googletagmanager\.com/ns\.html[^>]*></iframe></noscript>\s*}{}gs;
     s{^[ \t]*<!-- Adobe Analytics -->\s*$\n?}{}mg;
     s{^[ \t]*<!-- Pardot -->\s*$\n?}{}mg;
     s{^[ \t]*<!-- Adobe Analytics start -->\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]+src="[^"]*assets\.adobedtm\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]+src="[^"]*go\.pardot\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
+    s{^[ \t]*<script[^>]+src="[^"]*go\.esri\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]+src="[^"]*google-analytics\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]*>_satellite\.pageBottom\(\);</script>\s*$\n?}{}mg;
+    s{href="[^"]*go\.esri\.com[^"]*"}{href="#"}g;
+    s{href="[^"]*storymaps\.arcgis\.com/assets/images/favicon\.ico[^"]*"}{href="/viewers/assets/images/favicon.ico"}g;
+    s{href="[^"]*storymaps\.arcgis\.com/assets/images/apple-touch-icon\.png[^"]*"}{href="/viewers/assets/images/apple-touch-icon.png"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/screen\.css[^"]*"}{href="/viewers/assets/css/archive/screen.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/arcgis-storymaps-my-stories-utils/assets/css/my-stories-utils\.css[^"]*"}{href="/viewers/assets/css/archive/my-stories-utils.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/arcgis-storymaps-my-stories-utils/sign-in/assets/css/signIn\.css[^"]*"}{href="/viewers/assets/css/archive/signIn.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/features/features-page\.css[^"]*"}{href="/viewers/assets/css/archive/features-page.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/applist\.css[^"]*"}{href="/viewers/assets/css/archive/applist.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/create-story\.css[^"]*"}{href="/viewers/assets/css/archive/create-story.css"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/libs/jquery-1\.9\.1\.min\.js[^"]*"}{src="/viewers/assets/js/archive/jquery-1.9.1.min.js"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/locale/l10NStrings\.js[^"]*"}{src="/viewers/assets/js/archive/l10NStrings.js"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/locale/langSelector\.js[^"]*"}{src="/viewers/assets/js/archive/langSelector.js"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/back-to-top\.js[^"]*"}{src="/viewers/assets/js/archive/back-to-top.js"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/tailcoat/tailcoat\.js[^"]*"}{src="/viewers/assets/js/archive/tailcoat.js"}g;
+    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/img/([^"?]+)(?:\?[^"]*)?"}{src="/viewers/assets/images/$1"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/(map-tour|map-journal|cascade|map-series|crowdsource|shortlist|swipe-spyglass|basic)/tutorial/?"}{href="/archive/2017-12-10-pages/en__app-list__$1__tutorial.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/(map-tour|map-journal|cascade|map-series|crowdsource|shortlist|swipe-spyglass|basic)/?"}{href="/archive/2017-12-10-pages/en__app-list__$1.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/?"}{href="/archive/2017-12-10-pages/en__app-list.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/resources/?"}{href="/archive/2017-12-10-pages/en__resources.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/my-stories/?"}{href="/archive/2017-12-10-pages/en__my-stories.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/how-to/?"}{href="/archive/2017-12-10-pages/en__how-to.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/faq/?(#?[^"]*)?"}{href="/archive/2017-12-10-pages/en__faq.html$1"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/?"}{href="/archive/2017-12-10-pages/en.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/[^"/]+/gallery[^\"]*"}{href="#"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/gallery/[^\"]*"}{href="#"}g;
+    s{\s*<link[^>]+fast\.fonts\.net/cssapi[^>]*>\s*}{}gs;
     s{href="[^"]*blogs\.esri\.com/esri/arcgis/category/story-maps/"}{href="/archive/2017-12-10-pages/en__archive-blog.html"}g;
     s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet"}{href="/archive/2017-12-10-pages/en__archive-forum.html"}g;
-      s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet_ideas"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
+    s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet_ideas"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
     s{href="[^"]*storymaps\.arcgis\.com/feedback/"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
   ' "$file_path"
 }

@@ -98,7 +98,7 @@
   </div>
   <ul>
     <li><a data-langlabel="nav_apps" class="drawer-link icon-stack" href="/">Apps</a></li>
-    <li><a data-langlabel="nav_gallery" class="drawer-link icon-grid" href="/archive/2017-12-10-pages/en__gallery.html">Gallery</a></li>
+    <li><span data-langlabel="nav_gallery" class="drawer-link icon-grid">Gallery</span></li>
     <li><a data-langlabel="nav_resources" class="drawer-link icon-support" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>
     <li><a data-langlabel="nav_blogs" class="drawer-link icon-community" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>
     <li><a data-langlabel="nav_mystories" class="drawer-link icon-map" href="/archive/2017-12-10-pages/en__my-stories.html">My Stories</a></li>
@@ -115,45 +115,17 @@
         <div class="site-brand">
           <a class="drawer-toggle toggle-site-navigation icon-navigation tablet-show" data-direction="active-left" href="#"></a>
           <a class="site-logo phone-hide" data-langlabel="sm-site-title" href="/">Story Maps</a>
-          <span class="site-dropdown-toggle tablet-hide"></span>
-          <nav class="site-dropdown tablet-hide">
-            <a href="https://www.arcgis.com/">
-              <h4 data-langlabel="arcgis">ArcGIS Online</h4>
-              <p data-langlabel="arcgis-desc">The mapping platform for your organization</p>
-            </a>
-            <a href="https://desktop.arcgis.com/">
-              <h4 data-langlabel="arcgis-for-desktop">ArcGIS Desktop</h4>
-              <p data-langlabel="arcgis-for-desktop-desc">A complete professional GIS</p>
-            </a>
-            <a href="https://server.arcgis.com/">
-              <h4 data-langlabel="arcgis-for-server">ArcGIS Enterprise</h4>
-              <p data-langlabel="arcgis-for-server-desc">GIS in your enterprise</p>
-            </a>
-            <a href="https://developers.arcgis.com/">
-              <h4 data-langlabel="arcgis-for-developers">ArcGIS for Developers</h4>
-              <p data-langlabel="arcgis-for-developers-desc">Tools to build location-aware apps</p>
-            </a>
-            <a href="https://solutions.arcgis.com/">
-              <h4 data-langlabel="arcgis-solutions">ArcGIS Solutions</h4>
-              <p>Free template maps and apps for your industry</p>
-            </a>
-            <a href="https://marketplace.arcgis.com/">
-              <h4 data-langlabel="arcigs-marketplace">ArcGIS Marketplace</h4>
-              <p data-langlabel="arcgis-marketplace-desc">Apps and data for your organization</p>
-            </a>
-          </nav>
         </div>
         <nav class="site-nav tablet-hide">
           <ul>
             <li><a data-langlabel="nav_apps" href="/">Apps</a></li>
-            <li><a data-langlabel="nav_gallery" href="/archive/2017-12-10-pages/en__gallery.html">Gallery</a></li>
+            <li><span data-langlabel="nav_gallery">Gallery</span></li>
             <li><a data-langlabel="nav_resources" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>
             <li><a data-langlabel="nav_blogs" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>
             <li><a data-langlabel="nav_mystories" href="/archive/2017-12-10-pages/en__my-stories.html">My Stories</a></li>
           </ul>
         </nav>
         <a class="esri-logo" href="https://www.esri.com/"></a>
-        <div id="lang-block" class="dropdown-navigation dropdown-wrapper right-align right tablet-hide"></div>
         <nav id="logged-out-navigation" class="right hide-if-logged-in">
           <ul class="left plain inline">
           <li>
@@ -200,7 +172,7 @@
   <div class="container">
     <h2>What Kind of Story Do You Want to Tell?</h2>
     <h3 class="pull-quote">Get started right away or browse our app templates</h3>
-    <div id="create-story-button" class="btn modal-show create-story-disabled">Create Story</div>
+    <a id="create-story-button" class="btn" href="/viewers">View Stories</a>
   </div>
 </div>
 <div class="container">
@@ -212,9 +184,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__map-tour.html">Story Map Tour&#8480;</a></h4>
       <p>Present a set of photos or videos along with captions, linked to an interactive map. It's ideal for walking tours or any sequence of places you’d like users to follow in order.</p>
-      <a class="btn" id="buildTour" data-template="tour">BUILD</a>
+      <a class="btn" href="/viewers/maptour-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-tour.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-tour__gallery.html#md=storymaps-apps:map-tour">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-tour__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category4">FAQS</a>
     </div>
@@ -228,9 +200,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__map-journal.html">Story Map Journal&#8480;</a></h4>
       <p>Create an in-depth narrative organized into sections presented in a scrolling side panel. As users scroll through the sections in your Map Journal they see the content associated with each section, such as a map, 3D scene, image, video, etc.</p>
-      <a class="btn" id="buildTour" data-template="journal">BUILD</a>
+      <a class="btn" href="/viewers/mapjournal-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-journal.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-journal__gallery.html#md=storymaps-apps:map-journal">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-journal__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category5">FAQS</a>
     </div>
@@ -242,9 +214,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__cascade.html">Story Map Cascade&#8480;</a></h4>
       <p>Create a visually and editorially engaging full-screen scrolling experience for your audience blending narrative text, maps, 3D scenes, images, videos, etc. Sections containing text and in-line media can be interspersed with "immersive" sections that fill the screen, including map animations and transition effects.</p>
-      <a class="btn" id="buildTour" data-template="cascade">BUILD</a>
+      <a class="btn" href="/viewers/cascade-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__cascade.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__cascade__gallery.html#md=storymaps-apps:cascade">GALLERY</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__cascade__tutorial.html">TUTORIAL</a>    
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category10">FAQS</a> 
       <a class="btn transparent transparent-btn-align-left" href="https://links.esri.com/storymaps/tips_cascade" target="_blank" rel="noopener">TIPS</a>
@@ -259,9 +231,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__map-series.html">Story Map Series&#8480; - Tabbed Layout</a></h4>
       <p>Present a series of maps via a set of tabs. There's an optional description panel for presenting text and other content associated with each map.</p>
-      <a class="btn" id="buildSeries" data-template="series" data-layout="tab">BUILD</a>
+      <a class="btn" href="/viewers/mapseries-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__gallery-series.html#md=storymaps-apps:tabbed">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__tutorial.html">TUTORIAL</a>  
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category6">FAQS</a>    
     </div>
@@ -273,9 +245,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__map-series.html">Story Map Series&#8480; - Side Accordion Layout</a></h4>
       <p>Present a series of maps, and accompanying text and other content for each map, in an expandable panel. Clicking a title selects the map and expands the panel to reveal the text.</p>
-      <a class="btn" id="buildSeries" data-template="series" data-layout="accordion">BUILD</a>
+      <a class="btn" href="/viewers/mapseries-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__gallery-series.html#md=storymaps-apps:side-accordion">GALLERY</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category6">FAQS</a>   
     </div>
@@ -287,9 +259,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__map-series.html">Story Map Series&#8480; - Bulleted Layout</a></h4>
       <p>Present a series of maps via numbered bullets, one map per bullet. It's a good choice when you have a large number of maps or locations to present. There's an optional description panel for presenting text and other content associated with each map.</p>
-      <a class="btn" id="buildSeries" data-template="series" data-layout="bullet">BUILD</a>
+      <a class="btn" href="/viewers/mapseries-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__gallery-series.html#md=storymaps-apps:bulleted">GALLERY</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__map-series__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category6">FAQS</a>         
     </div>
@@ -301,11 +273,11 @@
       <a href="/archive/2017-12-10-pages/en__app-list__crowdsource.html"><img src="/viewers/assets/images/crowdsource.jpg"></a>
     </div>
     <div class="app-text">
-      <h4><a href="/archive/2017-12-10-pages/en__app-list__crowdsource.html">Story Map Crowdsource&#8480;</a> <mark>BETA</mark></h4>
+      <h4><a href="/archive/2017-12-10-pages/en__app-list__crowdsource.html">Story Map Crowdsource&#8480;</a></h4>
       <p>Publish and manage a crowdsourced story to which anyone can contribute photos with captions. Use Crowdsource to engage your audience and collect their photos and experiences, thoughts or memories on the subject of your choice, all linked to a map. A vetting function lets you review and approve contributions.</p>
-      <a class="btn" id="buildTour" data-template="crowdsource">BUILD</a>
+      <a class="btn" href="/viewers/crowdsource-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__crowdsource.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__crowdsource__gallery.html#md=storymaps-apps:crowdsource">GALLERY</a>  
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__crowdsource__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category11">FAQS</a>   
       <a class="btn transparent transparent-btn-align-left" href="https://links.esri.com/storymaps/tips_crowdsource" target="_blank" rel="noopener">TIPS</a>
@@ -318,11 +290,11 @@
       <a href="/archive/2017-12-10-pages/en__app-list__shortlist.html"><img src="/viewers/assets/images/shortlist.jpg"></a>
     </div>
     <div class="app-text">
-      <h4><a href="/archive/2017-12-10-pages/en__app-list__shortlist.html">Story Map Shortlist&#8480;</a> <mark>BETA</mark></h4>
+      <h4><a href="/archive/2017-12-10-pages/en__app-list__shortlist.html">Story Map Shortlist&#8480;</a></h4>
       <p>Present a large number of places organized into tabs based on themes, for example, food, hotels, and attractions. As your users navigate around the map, the tabs update to show them just the places in their current map extent.</p>
-      <a class="btn" id="buildTour" data-template="shortlist">BUILD</a>
+      <a class="btn" href="/viewers/shortlist-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__shortlist.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__shortlist__gallery.html#md=storymaps-apps:shortlist">GALLERY</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__shortlist__tutorial.html">TUTORIAL</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__faq.html#category9">FAQS</a>   
     </div>
@@ -336,9 +308,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass.html">Story Map Swipe&#8480;</a></h4>
       <p>Let your users compare two separate web maps or two layers of a single map by sliding a swipe tool back and forth.</p>
-      <a class="btn" id="buildSwipe" data-template="swipeSpyglass" data-layout="swipe">BUILD</a>
+      <a class="btn" href="/viewers/swipe-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass__gallery.html#md=storymaps-apps:swipe">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass__tutorial.html">TUTORIAL</a>
     </div>
   </div>
@@ -349,9 +321,9 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass.html">Story Map Spyglass&#8480;</a></h4>
       <p>This app is similar to Swipe but enables your users to peer through one map to another with a spyglass tool. </p>
-      <a class="btn" id="buildSwipe" data-template="swipeSpyglass" data-layout="spyglass">BUILD</a>
+      <a class="btn" href="/viewers/swipe-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass__gallery.html#md=storymaps-apps:spyglass">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__swipe-spyglass__tutorial.html">TUTORIAL</a>
     </div>
   </div>
@@ -364,23 +336,24 @@
     <div class="app-text">
       <h4><a href="/archive/2017-12-10-pages/en__app-list__basic.html">Story Map Basic&#8480;</a></h4>
       <p>Present a map via a very simple user interface. Apart from the title bar and an optional legend, the map fills the screen. Use this app to let your map speak for itself.</p>
+      <a class="btn dark-blue" href="/viewers/basic-launcher.html">VIEW</a>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__basic.html">OVERVIEW</a>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__basic__gallery.html#md=storymaps-apps:basic">GALLERY</a> 
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__app-list__basic__tutorial.html">TUTORIAL</a>
     </div>
   </div>
   <hr>
-  <h2 class="app-heading">Legacy Apps (Retired in 2015)</h2>
+  <h2 class="app-heading">Retired in 2015</h2>
   <div class="app-row">
     <div class="app-img">
       <a href="https://web.archive.org/web/20150410001034/http://storymaps.arcgis.com/en/app-list/countdown/"><img src="/viewers/assets/images/countdown.jpg"></a>
     </div>
     <div class="app-text">
       <h4><a href="https://web.archive.org/web/20150410001034/http://storymaps.arcgis.com/en/app-list/countdown/">Story Map Countdown&#8480;</a></h4>
-      <p>Archived legacy app preserved from the 2015 Story Maps app list.</p>
+      <p>This app presents a list of locations along with information about each location. The app taps a web map and its pop-ups; pop-up contents are shown in a side panel. Users can toggle the main map and a locator map back and forth.</p>
       <a class="btn transparent transparent-btn-align-left" href="https://web.archive.org/web/20150410001034/http://storymaps.arcgis.com/en/app-list/countdown/">OVERVIEW</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="https://web.archive.org/web/20150116082112/http://storymaps.arcgis.com/en/app-list/countdown/tutorial/">TUTORIAL</a>
-      <p class="archive-legacy-note">FAQ page not available in the archive.</p>
     </div>
   </div>
   <div class="app-row">
@@ -389,21 +362,21 @@
     </div>
     <div class="app-text">
       <h4><a href="https://web.archive.org/web/20150409064659/http://storymaps.arcgis.com/en/app-list/playlist/">Story Map Playlist&#8480;</a></h4>
-      <p>Archived legacy app preserved from the 2015 Story Maps app list.</p>
+      <p>This app gives users options to explore locations using a map and by scanning a preview list displaying titles and thumbnail images.</p>
       <a class="btn transparent transparent-btn-align-left" href="https://web.archive.org/web/20150409064659/http://storymaps.arcgis.com/en/app-list/playlist/">OVERVIEW</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
       <a class="btn transparent transparent-btn-align-left" href="https://web.archive.org/web/20150410024710/http://storymaps.arcgis.com/en/app-list/playlist/tutorial/">TUTORIAL</a>
-      <p class="archive-legacy-note">FAQ page not available in the archive.</p>
     </div>
   </div>
   <hr>
   <h2 class="app-heading">Custom Story Map Designs</h2>
   <div class="app-row">
     <div class="app-img">
-      <a href="/archive/2017-12-10-pages/en__gallery.html#md=storymaps-apps:custom"><img src="/viewers/assets/images/custom.png"></a>
+      <img src="/viewers/assets/images/custom.png">
     </div>
     <div class="app-text">
       <p>Custom story maps are developed for particular projects, and to help prototype designs that we can turn into new apps.</p>
-      <a class="btn transparent transparent-btn-align-left" href="/archive/2017-12-10-pages/en__gallery.html#md=storymaps-apps:custom">GALLERY</a>
+      <span class="btn transparent transparent-btn-align-left">GALLERY</span>
     </div>
   </div>
 </div>
@@ -426,37 +399,16 @@
       <nav class="column-6 tablet-column-24 leader-1">
         <h4 data-langlabel="sm-site-title">Story Maps</h4>
         <ul>
-          <li><a data-langlabel="nav_home" href="/">Home</a></li>
-          <li><a data-langlabel="nav_apps" href="/">Apps</a></li>
-          <li><a data-langlabel="nav_gallery" href="/archive/2017-12-10-pages/en__gallery.html">Gallery</a></li>
-          <li><a data-langlabel="nav_resources" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>
-          <li><a data-langlabel="nav_blogs" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>
-          <li><a data-langlabel="nav_mystories" href="/archive/2017-12-10-pages/en__my-stories.html">My Stories</a></li>
+          <li>Home</li>
+          <li>Apps</li>
+          <li>Gallery</li>
+          <li>Resources</li>
+          <li>Blog</li>
+          <li>My Stories</li>
         </ul>
       </nav>
       <nav class="column-6 tablet-column-24 leader-1">
-        <h4 data-langlabel="nav_arcgis_platform">Arc<span>GIS</span> Platform</h4>
-        <ul>
-          <li><a data-langlabel="arcgis" href="https://www.arcgis.com/">ArcGIS Online</a></li>
-          <li><a data-langlabel="arcgis-for-desktop" href="https://desktop.arcgis.com/">ArcGIS Desktop</a></li>
-          <li><a data-langlabel="arcgis-for-server" href="https://server.arcgis.com/">ArcGIS Enterprise</a></li>
-          <li><a data-langlabel="arcgis-for-developers" href="https://developers.arcgis.com/">ArcGIS for Developers</a></li>
-          <li><a data-langlabel="arcgis-solutions" href="https://solutions.arcgis.com/">ArcGIS Solutions</a></li>
-          <li><a data-langlabel="arcgis-marketplace" href="https://marketplace.arcgis.com/">ArcGIS Marketplace</a></li>
-        </ul>
-      </nav>
-      <nav class="column-6 tablet-column-24 leader-1">
-        <h4 data-langlabel="about-esri">About Esri</h4>
-        <ul>
-          <li><a data-langlabel="about-us" href="https://www.esri.com/about-esri/">About Us</a></li>
-          <li><a data-langlabel="careers" href="https://www.esri.com/careers/">Careers</a></li>
-          <li><a data-langlabel="insiders-blog" href="https://blogs.esri.com/esri/esri-insider/">Insiders Blog</a></li>
-          <li><a data-langlabel="user-conference" href="https://www.esri.com/events/user-conference/index.html">User Conference</a></li>
-          <li><a data-langlabel="developer-summit" href="https://www.esri.com/events/devsummit/index.html">Developer Summit</a></li>
-        </ul>
-      </nav>
-      <nav class="column-6 tablet-column-24 leader-1">
-        <a class="esri-logo-footer" href="https://www.esri.com/">Esri</a>
+        <span class="esri-logo-footer">Esri</span>
         <section class="footer-social-nav">
           <a class="icon-twitter" href="https://twitter.com/Esri/"></a>
           <a class="icon-facebook" href="https://www.facebook.com/esrigis"></a>
@@ -464,15 +416,13 @@
           <a class="icon-email" href="https://www.esri.com/about-esri/contact/"></a>
         </section>
         <section class="feedback-footer center-text">
-          <a class="feedbacklink icon-comment" data-langlabel="feedback-tell-us" href="/archive/2017-12-10-pages/en__archive-feedback.html">Tell us what you think.</a>
+          <span class="feedbacklink icon-comment" data-langlabel="feedback-tell-us">Tell us what you think.</span>
 
         </section>
       </nav>
       <div class="column-24 footer-legal leader-1 trailer-1">
         <small class="column-12 tablet-column-24">
-          &copy; Copyright 2017 Environmental Systems Research Institute, Inc. |
-          <a data-langlabel="privacy" href="https://www.esri.com/legal/privacy">Privacy</a> |
-          <a data-langlabel="legal" href="https://www.esri.com/legal/software-license">Legal</a>
+          &copy; Copyright 2017 Environmental Systems Research Institute, Inc. | Privacy | Legal
         </small>
       </div>
     </div>
