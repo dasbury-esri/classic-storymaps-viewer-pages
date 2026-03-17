@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -54,6 +56,12 @@ jobs:
           for runtime in maptour swipe mapjournal mapseries cascade shortlist crowdsource basic; do
             test -f "publish/viewers/$runtime/index.html"
           done
+          test -f publish/viewers/cascade/app/viewer-min.js
+          test -f publish/viewers/cascade/app/builder-min.js
+          test -f publish/viewers/cascade/lib/jquery/dist/jquery.min.js
+          test -f publish/viewers/cascade/lib/fastclick/lib/fastclick.js
+          test -f publish/viewers/cascade/lib/font-awesome/css/font-awesome.css
+          test -f publish/viewers/cascade/lib/calcite-bootstrap/css/calcite-bootstrap-open.min.css
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
