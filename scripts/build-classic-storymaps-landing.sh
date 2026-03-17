@@ -12,6 +12,7 @@ ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/2017-12-10/app-list/raw/index
 ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/2017-12-10-app-list.html}"
 ARCHIVE_PAGES_SRC="${ARCHIVE_PAGES_SRC:-classic-apps/2017-12-10/app-list/pages}"
 ARCHIVE_PAGES_OUT="${ARCHIVE_PAGES_OUT:-publish/archive/2017-12-10-pages}"
+SANITIZE_ARCHIVE_SOURCE_PAGES="${SANITIZE_ARCHIVE_SOURCE_PAGES:-0}"
 
 # Keep this list aligned with scripts/build-classic-storymaps-runtime-publish.sh.
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
@@ -89,6 +90,9 @@ sanitize_archive_html_file() {
     s{\s*<script>\s*var _gaq = _gaq \|\| \[\];.*?</script>\s*}{}gs;
     s{\s*<!-- Google Tag Manager -->.*?<!-- End Google Tag Manager -->\s*}{}gs;
     s{\s*<noscript><iframe[^>]*googletagmanager\.com/ns\.html[^>]*></iframe></noscript>\s*}{}gs;
+    s{<!-- Adobe Analytics -->}{}g;
+    s{<!-- Pardot -->}{}g;
+    s{<!-- Adobe Analytics start -->}{}g;
     s{^[ \t]*<!-- Adobe Analytics -->\s*$\n?}{}mg;
     s{^[ \t]*<!-- Pardot -->\s*$\n?}{}mg;
     s{^[ \t]*<!-- Adobe Analytics start -->\s*$\n?}{}mg;
@@ -112,6 +116,7 @@ sanitize_archive_html_file() {
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/screen\.css[^"]*"}{href="/viewers/assets/css/archive/screen.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/arcgis-storymaps-my-stories-utils/assets/css/my-stories-utils\.css[^"]*"}{href="/viewers/assets/css/archive/my-stories-utils.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/features/features-page\.css[^"]*"}{href="/viewers/assets/css/archive/features-page.css"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/features\.css[^"]*"}{href="/viewers/assets/css/archive/features-page.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/applist\.css[^"]*"}{href="/viewers/assets/css/archive/applist.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/create-story\.css[^"]*"}{href="/viewers/assets/css/archive/create-story.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/steps\.css[^"]*"}{href="/viewers/assets/css/archive/steps.css"}g;
@@ -127,6 +132,7 @@ sanitize_archive_html_file() {
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/how-to/?"}{href="/archive/2017-12-10-pages/en__how-to.html"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/faq/?(#?[^"]*)?"}{href="/archive/2017-12-10-pages/en__faq.html$1"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/?"}{href="/archive/2017-12-10-pages/en.html"}g;
+    s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/?"}{href="/archive/"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/[^"/]+/gallery[^\"]*"}{href="#"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/gallery/[^\"]*"}{href="#"}g;
     s{\s*<link[^>]+fast\.fonts\.net/cssapi[^>]*>\s*}{}gs;
@@ -290,6 +296,14 @@ if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   sanitize_archive_html_file "$ARCHIVE_PAGE_OUT"
   add_archive_banner_to_page "$ARCHIVE_PAGE_OUT"
   add_archive_header_to_page "$ARCHIVE_PAGE_OUT"
+fi
+
+if [[ "$SANITIZE_ARCHIVE_SOURCE_PAGES" == "1" && -d "$ARCHIVE_PAGES_SRC" ]]; then
+  while IFS= read -r archive_source_page; do
+    sanitize_archive_html_file "$archive_source_page"
+    add_archive_banner_to_page "$archive_source_page"
+    add_archive_header_to_page "$archive_source_page"
+  done < <(find "$ARCHIVE_PAGES_SRC" -type f -name '*.html' | sort)
 fi
 
 if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
