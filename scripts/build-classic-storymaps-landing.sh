@@ -78,6 +78,26 @@ sanitize_wayback_html() {
   rm -f "$tmp_file_2"
 }
 
+sanitize_archive_html_file() {
+  local file_path="$1"
+
+  perl -0pi -e '
+    s{\s*<script>\s*var _gaq = _gaq \|\| \[\];.*?</script>\s*}{}gs;
+    s{\s*<!-- Google Tag Manager -->.*?<!-- End Google Tag Manager -->\s*}{}gs;
+    s{^[ \t]*<!-- Adobe Analytics -->\s*$\n?}{}mg;
+    s{^[ \t]*<!-- Pardot -->\s*$\n?}{}mg;
+    s{^[ \t]*<!-- Adobe Analytics start -->\s*$\n?}{}mg;
+    s{^[ \t]*<script[^>]+src="[^"]*assets\.adobedtm\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
+    s{^[ \t]*<script[^>]+src="[^"]*go\.pardot\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
+    s{^[ \t]*<script[^>]+src="[^"]*google-analytics\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
+    s{^[ \t]*<script[^>]*>_satellite\.pageBottom\(\);</script>\s*$\n?}{}mg;
+    s{href="[^"]*blogs\.esri\.com/esri/arcgis/category/story-maps/"}{href="/archive/2017-12-10-pages/en__archive-blog.html"}g;
+    s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet"}{href="/archive/2017-12-10-pages/en__archive-forum.html"}g;
+      s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet_ideas"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
+    s{href="[^"]*storymaps\.arcgis\.com/feedback/"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
+  ' "$file_path"
+}
+
 write_compat_redirect_stub() {
   local out_file="$1"
   local from_prefix="$2"
@@ -150,13 +170,22 @@ fi
 if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ARCHIVE_PAGE_OUT")"
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
+  sanitize_archive_html_file "$ARCHIVE_PAGE_OUT"
 fi
 
 if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
   rm -rf "$ARCHIVE_PAGES_OUT"
   mkdir -p "$ARCHIVE_PAGES_OUT"
   cp -R "$ARCHIVE_PAGES_SRC"/. "$ARCHIVE_PAGES_OUT"/
+
+  while IFS= read -r archive_page; do
+    sanitize_archive_html_file "$archive_page"
+  done < <(find "$ARCHIVE_PAGES_OUT" -type f -name '*.html' | sort)
 fi
+
+while IFS= read -r standalone_archive_page; do
+  sanitize_archive_html_file "$standalone_archive_page"
+done < <(find "$(dirname "$ARCHIVE_PAGE_OUT")" -maxdepth 1 -type f -name '*.html' | sort)
 
 compat_specs=(
   "$COMPAT_OUT_DIR_STORIES:/templates/classic-stories"
