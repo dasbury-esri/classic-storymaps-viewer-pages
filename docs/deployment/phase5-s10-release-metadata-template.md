@@ -1,6 +1,6 @@
 # S10 Release Metadata Template
 
-Use this template for each import-first release to `/templates/classic-storymaps`.
+Use this template for each Classic Storymaps release with `/viewers` as the canonical route family.
 
 ## Release Record
 
@@ -8,8 +8,14 @@ Use this template for each import-first release to `/templates/classic-storymaps
 - Release timestamp (UTC): `<iso8601>`
 - Operator: `<name>`
 - Environment: `<prod|staging>`
-- IIS host: `<host>`
-- IIS app path: `/templates/classic-storymaps`
+- Public host: `<host>`
+- Canonical route base: `/viewers`
+- Root archive entry: `/`
+- Compatibility route bases:
+  - `/templates/classic-storymaps`
+  - `/templates/classic-stories`
+- Optional IIS host: `<host-or-n/a>`
+- Optional IIS app path: `<path-or-n/a>`
 
 ## Source Provenance
 
@@ -33,10 +39,17 @@ Use this template for each import-first release to `/templates/classic-storymaps
 - Landing build script run: `scripts/build-classic-storymaps-landing.sh`
 - Runtime build script run: `scripts/build-classic-storymaps-runtime-publish.sh`
 - Package boundary reference: `docs/deployment/phase4-s8-package-boundary-and-assembly.md`
+- Verified publish outputs:
+  - `publish/index.html`
+  - `publish/archive/2017-12-10-app-list.html`
+  - `publish/viewers/**`
+  - `publish/templates/classic-storymaps/**`
+  - `publish/templates/classic-stories/**`
 
 ## Validation Evidence
 
-- IIS validation transcript: `docs/testing/phase4-s9-iis-validation-transcript.md`
+- Route contract reference: `docs/architecture/phase1-s3-route-matrix.md`
+- Optional IIS validation transcript: `docs/testing/phase4-s9-iis-validation-transcript.md`
 - Smoke baseline record: `docs/testing/phase5-s10-smoke-suite-baseline.md`
 
 ## Outcome

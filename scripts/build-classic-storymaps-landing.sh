@@ -5,10 +5,10 @@ SRC_DIR="${SRC_DIR:-apps/classic-storymaps-site}"
 OUT_DIR="${OUT_DIR:-publish/viewers}"
 COMPAT_OUT_DIR_STORIES="${COMPAT_OUT_DIR_STORIES:-publish/templates/classic-stories}"
 COMPAT_OUT_DIR_STORYMAPS="${COMPAT_OUT_DIR_STORYMAPS:-publish/templates/classic-storymaps}"
-ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-}"
+ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-apps/classic-storymaps-site/archive-root.html}"
 ROOT_PAGE_OUT="${ROOT_PAGE_OUT:-publish/index.html}"
-ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/Classic Apps WebPage - Jun 2016 Internet Archive.html}"
-ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/classic-apps-2016-06.html}"
+ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/2017-12-10/app-list/raw/index.raw.html}"
+ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/2017-12-10-app-list.html}"
 
 # Keep this list aligned with scripts/build-classic-storymaps-runtime-publish.sh.
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
@@ -29,25 +29,51 @@ sanitize_wayback_html() {
   local in_file="$1"
   local out_file="$2"
   local tmp_file
+  local tmp_file_2
   tmp_file="$(mktemp)"
+  tmp_file_2="$(mktemp)"
 
-  # Remove the injected Wayback toolbar block while preserving archived page markup.
+  # Remove the injected Wayback toolbar and head bootstrap while preserving the archived document shell.
   awk '
     /<!-- BEGIN WAYBACK TOOLBAR INSERT -->/ { skip=1; next }
     /<!-- END WAYBACK TOOLBAR INSERT -->/ { skip=0; next }
+    /^[[:space:]]*<head><script type="text\/javascript" src="https:\/\/web-static\.archive\.org\/_static\/js\/bundle-playback\.js/ {
+      sub(/<script.*/, "", $0)
+      print
+      skip=1
+      next
+    }
+    /<!-- End Wayback Rewrite JS Include -->/ { skip=0; next }
     skip == 0 { print }
   ' "$in_file" > "$tmp_file"
 
   # Remove remaining Wayback helper scripts/styles and replay hooks outside toolbar markers.
   sed -E \
+    -e '/RufflePlayer/d' \
+    -e '/ruffle\.js/d' \
+    -e '/^[[:space:]]*"[0-9]+"\);[[:space:]]*$/d' \
     -e '/bundle-playback\.js/d' \
     -e '/wombat\.js/d' \
     -e '/banner-styles\.css/d' \
     -e '/iconochive\.css/d' \
     -e '/__wm\./d' \
-    "$tmp_file" > "$out_file"
+    -e '/FILE ARCHIVED ON/,/SECTION 108\(a\)\(3\)\)\./d' \
+    -e '/playback timings \(ms\):/,$d' \
+    "$tmp_file" > "$tmp_file_2"
+
+  if grep -qi '^[[:space:]]*<meta charset=' "$tmp_file_2"; then
+    {
+      printf '<!DOCTYPE html>\n'
+      printf '<html xml:lang="en" lang="en">\n'
+      printf '  <head>\n'
+      cat "$tmp_file_2"
+    } > "$out_file"
+  else
+    mv "$tmp_file_2" "$out_file"
+  fi
 
   rm -f "$tmp_file"
+  rm -f "$tmp_file_2"
 }
 
 write_compat_redirect_stub() {

@@ -28,7 +28,7 @@ Focused tasks
 	- Dependencies: canonical route contract defined
 	- Estimate: S
 	- Output: redirect matrix and expected status behavior
-- [ ] Update route matrix and deployment docs for root-site role and compatibility behavior.
+- [x] Update route matrix and deployment docs for root-site role and compatibility behavior.
 	- Priority: P1
 	- Dependencies: canonical route contract, compatibility redirect matrix
 	- Estimate: S
@@ -38,12 +38,12 @@ Focused tasks
 	- Dependencies: compatibility redirect matrix
 	- Estimate: M
 	- Output: static redirect/stub approach, path conventions, and limitations documented
-- [ ] Document IIS rewrite strategy as historical/optional deployment path.
+- [x] Document IIS rewrite strategy as historical/optional deployment path.
 	- Priority: P2
 	- Dependencies: compatibility redirect matrix
 	- Estimate: M
 	- Output: IIS rules and verification guidance for non-GitHub Pages environments
-- [ ] In parallel, update release/checklist docs to assert /viewers canonical availability and legacy redirect integrity.
+- [x] In parallel, update release/checklist docs to assert /viewers canonical availability and legacy redirect integrity.
 	- Priority: P1
 	- Dependencies: canonical route contract
 	- Estimate: S
@@ -52,7 +52,7 @@ Focused tasks
 Phase checklist
 - [x] Canonical and compatibility contracts are documented and reviewed.
 - [x] Redirect strategy is documented for IIS and non-IIS fallback.
-- [ ] Release checklist includes /viewers-specific validations.
+- [x] Release checklist includes /viewers-specific validations.
 
 ## Phase 2: Viewer Hub Canonicalization (/viewers)
 
@@ -110,7 +110,7 @@ Focused tasks
 	- Dependencies: rewrite rules for local mirrors defined
 	- Estimate: S
 	- Output: explicit rules for local vs external link retention
-- [ ] Build archive-themed root experience with archive label and CTA text:
+- [x] Build archive-themed root experience with archive label and CTA text:
 	- Priority: P0
 	- Dependencies: hosting context and root navigation targets finalized
 	- Estimate: S
@@ -122,7 +122,7 @@ Focused tasks
 	- Output: placeholder page templates and mapped missing routes
 
 Phase checklist
-- [ ] Root page presents archive banner with 2017-12-10 reference.
+- [x] Root page presents archive banner with 2017-12-10 reference.
 - [ ] Core archived navigation is functional.
 - [ ] Missing sections are handled via explicit placeholders.
 
@@ -157,12 +157,12 @@ Phase checklist
 Estimated phase effort: M (2-3 days)
 
 Focused tasks
-- [ ] Run build scripts in required order and verify output tree includes root archived site, /viewers landing, /viewers launchers, /viewers runtimes, and legacy redirects.
+- [x] Run build scripts in required order and verify output tree includes root archived site, /viewers landing, /viewers launchers, /viewers runtimes, and legacy redirects.
 	- Priority: P0
 	- Dependencies: Phases 1-4 completed
 	- Estimate: S
 	- Output: build logs and artifact tree snapshot
-- [ ] Execute URL verification for canonical and compatibility routes (status codes, Location headers, query/hash preservation).
+- [x] Execute URL verification for canonical and compatibility routes (status codes and static-stub redirect behavior with query/hash preservation).
 	- Priority: P0
 	- Dependencies: output tree generated
 	- Estimate: S
@@ -179,8 +179,8 @@ Focused tasks
 	- Output: final notes in deployment docs/runbook
 
 Phase checklist
-- [ ] All critical canonical routes pass.
-- [ ] Legacy redirects pass expected behavior checks.
+- [x] All critical canonical routes pass.
+- [x] Legacy redirects pass expected behavior checks.
 - [ ] Representative app launches succeed.
 - [ ] Known gaps are documented and accepted.
 
@@ -215,9 +215,9 @@ Phase checklist
 - classic-apps/Classic Apps WebPage - Jun 2016 Internet Archive.html - existing archive sanitization pattern reference.
 
 ## Verification Checklist
-- [ ] Build order verification: run landing build then runtime publish and confirm deterministic output.
-- [ ] URL contract verification: check /, /viewers, /viewers/index.html, /viewers/*-launcher.html, /viewers/<app>/index.html.
-- [ ] Redirect verification: check legacy /templates/classic-storymaps* to /viewers* with correct redirect status and Location.
+- [x] Build order verification: run landing build then runtime publish and confirm deterministic output.
+- [x] URL contract verification: check /, /viewers, /viewers/index.html, /viewers/*-launcher.html, /viewers/<app>/index.html.
+- [x] Redirect verification: check legacy /templates/classic-storymaps* to /viewers* static redirect behavior and query/hash preservation (GitHub Pages static stubs return 200 and do not emit Location headers).
 - [ ] App launch verification: open sample launch URLs with appid for at least 5 runtimes and confirm viewer load.
 - [ ] Archive integrity verification: crawl rebuilt archived navigation and ensure no unresolved web.archive.org dependency is required for primary rendering.
 - [ ] Placeholder verification: unavailable pages render clear archive-notice pages and maintain user navigation path.

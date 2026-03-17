@@ -1,15 +1,15 @@
-# S10 Release Runbook: Import-First Classic Storymaps
+# S10 Release Runbook: Classic Storymaps Pages Release
 
 ## Objective
 
-Define a repeatable release process for publishing Classic Storymaps under `/templates/classic-storymaps` with auditable metadata, verification, and rollback steps.
+Define a repeatable release process for publishing Classic Storymaps with `/viewers` as the canonical route family, legacy compatibility redirects under `/templates`, and auditable metadata, verification, and rollback steps.
 
 ## Scope
 
-- Landing/catalog shell
-- Map Tour runtime
-- Swipe runtime
-- Map Journal runtime
+- Archive-facing root shell
+- Landing/catalog shell under `/viewers`
+- Supported and imported viewer runtimes under `/viewers`
+- Legacy compatibility redirects under `/templates/classic-storymaps` and `/templates/classic-stories`
 
 ## Prerequisites
 
@@ -21,7 +21,10 @@ Define a repeatable release process for publishing Classic Storymaps under `/tem
 - Build scripts available:
   - `scripts/build-classic-storymaps-landing.sh`
   - `scripts/build-classic-storymaps-runtime-publish.sh`
-- IIS host route/caching baseline validated:
+- Publish-path contract docs reviewed:
+  - `docs/architecture/phase1-s3-route-matrix.md`
+  - `docs/deployment/phase2-s5-landing-catalog-shell.md`
+- Optional IIS deployment baseline validated when applicable:
   - `docs/testing/phase4-s9-iis-validation-transcript.md`
 
 ## Inputs Recorded Per Release
@@ -38,9 +41,9 @@ Define a repeatable release process for publishing Classic Storymaps under `/tem
 1. Sync source and capture monorepo SHA.
 2. Build landing output.
 3. Build runtime publish output.
-4. Validate publish tree shape under `publish/templates/classic-storymaps`.
-5. Copy package to IIS target path.
-6. Run smoke baseline checks for landing and all supported runtimes.
+4. Validate publish tree shape under `publish/index.html`, `publish/archive`, `publish/viewers`, and legacy redirect stubs under `publish/templates`.
+5. If deploying to GitHub Pages, verify the Pages workflow artifact shape; if deploying to IIS, copy the curated publish package to the target path.
+6. Run smoke baseline checks for root, `/viewers`, representative runtimes, and compatibility redirects.
 7. Record evidence and release metadata.
 
 ## Command Sequence (Git Bash)
@@ -57,20 +60,31 @@ RELEASE_TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 ./scripts/build-classic-storymaps-landing.sh
 ./scripts/build-classic-storymaps-runtime-publish.sh
 
+test -f publish/index.html
+test -f publish/archive/2017-12-10-app-list.html
+test -f publish/viewers/index.html
+test -f publish/viewers/maptour/index.html
+test -f publish/viewers/swipe/index.html
+test -f publish/viewers/mapjournal/index.html
 test -f publish/templates/classic-storymaps/index.html
-test -f publish/templates/classic-storymaps/maptour/index.html
-test -f publish/templates/classic-storymaps/swipe/index.html
-test -f publish/templates/classic-storymaps/mapjournal/index.html
+test -f publish/templates/classic-stories/index.html
 
 echo "Release SHA: ${MONOREPO_SHA}"
 echo "Release TS:  ${RELEASE_TS}"
 ```
 
+## Deployment Notes
+
+- Canonical public route family is `/viewers`
+- Root `/` is the archive-facing entry point and should publish `publish/index.html`
+- Compatibility stubs under `/templates/classic-storymaps` and `/templates/classic-stories` must remain intact and preserve query/hash
+- Do not mix source-only runtime folders into the deploy destination
+
 ## IIS Publish Notes
 
-- Publish target remains `/templates/classic-storymaps`
-- Preserve canonical routes and compatibility redirect behavior validated in S9
-- Do not mix source-only runtime folders into publish destination
+- Use IIS rewrite rules only for non-GitHub Pages deployments that need true HTTP redirects
+- Preserve canonical `/viewers` routes and compatibility redirect behavior validated in S9
+- Map the package root so `publish/index.html`, `publish/archive/**`, `publish/viewers/**`, and `publish/templates/**` remain addressable
 
 ## Smoke Gate
 
@@ -83,7 +97,7 @@ All `Required` checks must pass.
 ## Rollback
 
 1. Restore prior known-good publish package snapshot.
-2. Revalidate landing route and three runtime routes.
+2. Revalidate root, `/viewers`, and representative runtime routes.
 3. Record rollback reason and timestamp in release metadata.
 
 ## Evidence Artifacts
