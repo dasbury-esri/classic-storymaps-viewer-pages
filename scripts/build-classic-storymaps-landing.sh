@@ -154,6 +154,18 @@ add_archive_banner_to_page() {
   ' "$file_path"
 }
 
+add_archive_header_to_page() {
+  local file_path="$1"
+
+  if grep -q 'id="header"' "$file_path"; then
+    return 0
+  fi
+
+  perl -0pi -e '
+    s{<div class="page sticky-footer">}{<div class="page sticky-footer">\n<header id="header">\n  <div class="container">\n    <div class="row">\n      <div class="column-24">\n        <div class="site-brand">\n          <a class="drawer-toggle toggle-site-navigation icon-navigation tablet-show" data-direction="active-left" href="#"></a>\n          <a class="site-logo phone-hide" data-langlabel="sm-site-title" href="/archive/">Story Maps</a>\n        </div>\n        <nav class="site-nav tablet-hide">\n          <ul>\n            <li><a data-langlabel="nav_apps" href="/archive/">Apps</a></li>\n            <li><span data-langlabel="nav_gallery">Gallery</span></li>\n            <li><a data-langlabel="nav_resources" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>\n            <li><a data-langlabel="nav_blogs" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>\n            <li><a data-langlabel="nav_mystories" href="/archive/2017-12-10-pages/en__my-stories.html">My Stories</a></li>\n          </ul>\n        </nav>\n        <div class="esri-logo"></div>\n      </div>\n    </div>\n  </div>\n</header>}s;
+  ' "$file_path"
+}
+
 write_compat_redirect_stub() {
   local out_file="$1"
   local from_prefix="$2"
@@ -230,6 +242,7 @@ if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
   sanitize_archive_html_file "$ARCHIVE_PAGE_OUT"
   add_archive_banner_to_page "$ARCHIVE_PAGE_OUT"
+  add_archive_header_to_page "$ARCHIVE_PAGE_OUT"
 fi
 
 if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
@@ -240,12 +253,14 @@ if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
   while IFS= read -r archive_page; do
     sanitize_archive_html_file "$archive_page"
     add_archive_banner_to_page "$archive_page"
+    add_archive_header_to_page "$archive_page"
   done < <(find "$ARCHIVE_PAGES_OUT" -type f -name '*.html' | sort)
 fi
 
 while IFS= read -r standalone_archive_page; do
   sanitize_archive_html_file "$standalone_archive_page"
   add_archive_banner_to_page "$standalone_archive_page"
+  add_archive_header_to_page "$standalone_archive_page"
 done < <(find "$(dirname "$ARCHIVE_PAGE_OUT")" -maxdepth 1 -type f -name '*.html' | sort)
 
 compat_specs=(
