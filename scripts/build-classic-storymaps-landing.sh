@@ -9,6 +9,8 @@ ROOT_PAGE_SRC="${ROOT_PAGE_SRC:-apps/classic-storymaps-site/archive-root.html}"
 ROOT_PAGE_OUT="${ROOT_PAGE_OUT:-publish/index.html}"
 ARCHIVE_PAGE_SRC="${ARCHIVE_PAGE_SRC:-classic-apps/2017-12-10/app-list/raw/index.raw.html}"
 ARCHIVE_PAGE_OUT="${ARCHIVE_PAGE_OUT:-publish/archive/2017-12-10-app-list.html}"
+ARCHIVE_PAGES_SRC="${ARCHIVE_PAGES_SRC:-classic-apps/2017-12-10/app-list/pages}"
+ARCHIVE_PAGES_OUT="${ARCHIVE_PAGES_OUT:-publish/archive/2017-12-10-pages}"
 
 # Keep this list aligned with scripts/build-classic-storymaps-runtime-publish.sh.
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
@@ -135,6 +137,11 @@ shopt -u dotglob nullglob
 
 cp -R "$SRC_DIR"/. "$OUT_DIR"/
 
+# Keep canonical /viewers/index.html even when source is named viewers.html.
+if [[ -f "$OUT_DIR/viewers.html" && ! -f "$OUT_DIR/index.html" ]]; then
+  cp "$OUT_DIR/viewers.html" "$OUT_DIR/index.html"
+fi
+
 if [[ -n "$ROOT_PAGE_SRC" && -f "$ROOT_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ROOT_PAGE_OUT")"
   cp "$ROOT_PAGE_SRC" "$ROOT_PAGE_OUT"
@@ -143,6 +150,12 @@ fi
 if [[ -f "$ARCHIVE_PAGE_SRC" ]]; then
   mkdir -p "$(dirname "$ARCHIVE_PAGE_OUT")"
   sanitize_wayback_html "$ARCHIVE_PAGE_SRC" "$ARCHIVE_PAGE_OUT"
+fi
+
+if [[ -d "$ARCHIVE_PAGES_SRC" ]]; then
+  rm -rf "$ARCHIVE_PAGES_OUT"
+  mkdir -p "$ARCHIVE_PAGES_OUT"
+  cp -R "$ARCHIVE_PAGES_SRC"/. "$ARCHIVE_PAGES_OUT"/
 fi
 
 compat_specs=(
