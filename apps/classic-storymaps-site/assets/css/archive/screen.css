@@ -5116,64 +5116,6 @@ html.ie9 .drawer.active-right .drawer-right {
   position: relative;
   z-index: 400;
 }
-#logged-in-navigation span,
-#logged-out-navigation span {
-  font-size: 14px;
-}
-#logged-in-navigation {
-  display: none;
-}
-#logged-in-navigation img {
-  padding-right: 0.5em;
-}
-#logged-in-navigation #header-user-name {
-  font-size: 14px;
-  padding-top: 0.69em;
-}
-#logged-in-navigation #header-user-name.dropdown:after {
-  top: 1.78em;
-}
-#logged-out-navigation {
-  border-left: 1px solid #ededed;
-  border-right: 1px solid #ededed;
-  display: none;
-  padding-left: 1em;
-  margin-left: 1em;
-  padding-right: 1em;
-  font-size: 1.125em;
-  font-family: "Avenir LT W01 35 Light", Arial, Helvetica, sans-serif;
-}
-#logged-out-navigation ul {
-  margin: 0;
-}
-#logged-out-navigation li {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  line-height: 1.5rem;
-  display: inline-block;
-}
-#logged-out-navigation li:hover {
-  color: #007ac2;
-  background-image: linear-gradient(
-    to bottom,
-    transparent 92%,
-    #007ac2 93%,
-    #007ac2 100%
-  );
-}
-#logged-out-navigation li:hover a {
-  color: #007ac2;
-}
-#logged-out-navigation li:hover a.icon-user:before {
-  color: #007ac2;
-}
-#logged-out-navigation a {
-  color: #323232;
-}
-#logged-out-navigation a.icon-user:before {
-  color: #828282;
-  padding-right: 10px;
-}
 .feedback-footer {
   font-size: 0.75em;
 }
