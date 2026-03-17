@@ -245,7 +245,7 @@
       <p class="eyebrow">Classic Story Maps</p>
       <h1 id="launcher-title">Map Tour Launcher</h1>
       <p class="lead">
-        Enter your Map Tour app ID below to open the viewer.<br>
+        Enter either a Map Tour app ID or a web map ID below to open the viewer.<br>
         To locate Classic Story Map app IDs, you can search your My Content page in ArcGIS Online with this query: <code>type:"Web Mapping Application" and tags:"Story Map"</code><br>
         Or you can use <a href="https://classic-story-search.netlify.app/" rel="noreferrer noopener" target="_blank">this helpful tool</a>.
       </p>
@@ -257,14 +257,15 @@
           </div>
 
           <div class="appid-box-content">
-            <h2>What is an app ID?</h2>
+            <h2>What can you launch?</h2>
             <p>
-              It is a 32-character hexadecimal ID used to identify items in ArcGIS Online.<br>
-              Example: <code>20fd39888a444629bc8e40d9b6ac38cc</code>
+              Map Tour accepts either a 32-character application ID or a 32-character web map ID.<br>
+              For authored Map Tour stories, <code>appid</code> is the preferred path because it preserves the app's saved narrative and media configuration.
             </p>
             <ul>
-              <li>They use letters <code>a-f</code> and numbers <code>0-9</code>without spaces, braces or hyphens.</li>
-              <li>Invalid IDs will be checked before launch.</li>
+              <li>App ID example: <code>2c62acf3468c4cbbba6b82f1035bfe22</code>.</li>
+              <li>Web map example: <code>62702544d70648e593bc05d65180fd64</code>.</li>
+              <li>Both values must be 32 hexadecimal characters with no spaces, braces or hyphens.</li>
             </ul>
           </div>
         </div>
@@ -273,6 +274,11 @@
       <form id="launch-form" novalidate>
         <label for="appid">Map Tour app ID</label>
         <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-status">
+
+        <label for="webmap">Web map ID</label>
+        <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID" maxlength="64" inputmode="latin" aria-describedby="webmap-hint appid-status">
+        <p id="webmap-hint" class="hint">Use this for direct map launches. If both fields are present, <code>appid</code> takes precedence.</p>
+
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
         <div class="actions">
@@ -283,7 +289,9 @@
 
       <p class="route-block">
         <a id="demo-link" class="demo-link" href="/viewers/maptour/index.html?appid=2c62acf3468c4cbbba6b82f1035bfe22">If you'd like to view an example Story Map Tour, click here</a>
+        <span> using the authored Map Tour app configuration.</span>
       </p>
+      <p class="hint">Direct <code>webmap</code> launches use this deployment's default Map Tour configuration, so they can differ from an authored app's selected tabs and media.</p>
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>

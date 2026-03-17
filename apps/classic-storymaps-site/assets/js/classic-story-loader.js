@@ -2,6 +2,7 @@
   "use strict";
 
   var APP_ID_REGEX = /^[a-f0-9]{32}$/i;
+  var WEBMAP_ID_REGEX = /^[a-f0-9]{32}$/i;
   var AUTH_STORAGE_KEY = "arcgis_access_token";
   var ARC_BASE = "https://www.arcgis.com/sharing/rest";
   var CONFIG = window.ClassicStoryMapsConfig || {};
@@ -280,14 +281,19 @@
     return resolveOne(seedId, 0);
   }
 
-  function getViewerUrl(classicType, appId) {
+  function getViewerUrl(classicType, id, paramName) {
     var runtimeFolder = VIEWER_BY_APP[classicType];
     if (!runtimeFolder) {
       return null;
     }
 
     var basePath = getStoryBasePath();
-    return basePath + "/" + runtimeFolder + "/index.html?appid=" + encodeURIComponent(normalizeId(appId));
+    var queryParam = paramName || "appid";
+    return basePath + "/" + runtimeFolder + "/index.html?" + queryParam + "=" + encodeURIComponent(normalizeId(id));
+  }
+
+  function supportsWebmapParam(runtimeId) {
+    return runtimeId === "swipe" || runtimeId === "maptour";
   }
 
   function isLikelyImageUrl(value) {
@@ -649,6 +655,7 @@
   function init() {
     var form = document.getElementById("launch-form");
     var appIdInput = document.getElementById("appid");
+    var webmapInput = document.getElementById("webmap");
     var statusEl = document.getElementById("appid-status");
     var panel = document.querySelector(".panel");
 
@@ -693,7 +700,7 @@
       state.item = result.item;
       state.itemData = result.itemData;
       state.classicType = result.classicType;
-      state.viewerUrl = result.classicType ? getViewerUrl(result.classicType, result.item.id) : null;
+      state.viewerUrl = result.classicType ? getViewerUrl(result.classicType, result.item.id, "appid") : null;
 
       var appLabel = APP_LABEL_BY_ID[result.classicType] || launcherAppLabel;
 
@@ -709,6 +716,27 @@
       ui.openBtn.textContent = "Open " + appLabel + " Viewer";
     }
 
+    function applyWebmapState(webmapId) {
+      var runtimeId = viewerConfig.runtimeId;
+      var appLabel = APP_LABEL_BY_ID[runtimeId] || launcherAppLabel;
+
+      state.item = null;
+      state.itemData = null;
+      state.classicType = runtimeId;
+      state.viewerUrl = runtimeId ? getViewerUrl(runtimeId, webmapId, "webmap") : null;
+
+      setTitle("Using web map: '" + webmapId + "' (" + appLabel + ")", "warn");
+      setStatus("Valid web map: " + webmapId, "warn");
+
+      setDisabled(ui.openBtn, !state.viewerUrl);
+      setDisabled(ui.downloadItemBtn, true);
+      setDisabled(ui.downloadDataBtn, true);
+      setDisabled(ui.downloadZipBtn, true);
+      setDisabled(ui.downloadAllBtn, true);
+
+      ui.openBtn.textContent = "Open " + appLabel + " Viewer";
+    }
+
     function disableForLoad() {
       resetButtons();
       setTitle("");
@@ -718,17 +746,40 @@
       evt.preventDefault();
 
       var appId = normalizeId(appIdInput.value);
-      if (!appId) {
-        setStatus("Enter an app ID to continue.", "warn");
+      var webmapId = webmapInput ? normalizeId(webmapInput.value) : "";
+
+      if (!appId && !webmapId) {
+        setStatus(webmapInput ? "Enter an app ID or a web map ID to continue." : "Enter an app ID to continue.", "warn");
         appIdInput.focus();
         disableForLoad();
         return;
       }
 
-      if (!APP_ID_REGEX.test(appId)) {
+      if (appId && !APP_ID_REGEX.test(appId)) {
         setStatus("App ID must be 32 hexadecimal characters (a-f, 0-9).", "error");
         appIdInput.focus();
         disableForLoad();
+        return;
+      }
+
+      if (!appId && webmapId) {
+        if (!WEBMAP_ID_REGEX.test(webmapId)) {
+          setStatus("Web map ID must be 32 hexadecimal characters (a-f, 0-9).", "error");
+          if (webmapInput) {
+            webmapInput.focus();
+          }
+          disableForLoad();
+          return;
+        }
+
+        if (!supportsWebmapParam(viewerConfig.runtimeId)) {
+          setStatus("This launcher does not support direct web map launches.", "error");
+          disableForLoad();
+          return;
+        }
+
+        disableForLoad();
+        applyWebmapState(webmapId);
         return;
       }
 
@@ -764,12 +815,26 @@
     });
 
     appIdInput.addEventListener("input", function() {
-      if (!sanitize(appIdInput.value)) {
+      var hasAppId = !!sanitize(appIdInput.value);
+      var hasWebmap = webmapInput ? !!sanitize(webmapInput.value) : false;
+      if (!hasAppId && !hasWebmap) {
         setStatus("");
         setTitle("");
         resetButtons();
       }
     });
+
+    if (webmapInput) {
+      webmapInput.addEventListener("input", function() {
+        var hasAppId = !!sanitize(appIdInput.value);
+        var hasWebmap = !!sanitize(webmapInput.value);
+        if (!hasAppId && !hasWebmap) {
+          setStatus("");
+          setTitle("");
+          resetButtons();
+        }
+      });
+    }
 
     ui.openBtn.addEventListener("click", function() {
       if (!state.viewerUrl) return;
@@ -842,9 +907,13 @@
     });
 
     var params = new URLSearchParams(window.location.search);
-    var prefill = normalizeId(params.get("appid") || viewerConfig.defaultAppId || "");
-    if (prefill) {
-      appIdInput.value = prefill;
+    var appidPrefill = normalizeId(params.get("appid") || viewerConfig.defaultAppId || "");
+    var webmapPrefill = normalizeId(params.get("webmap") || "");
+    if (appidPrefill) {
+      appIdInput.value = appidPrefill;
+    }
+    if (!appidPrefill && webmapInput && webmapPrefill) {
+      webmapInput.value = webmapPrefill;
     }
 
     var submitButton = form.querySelector('button[type="submit"]');
@@ -869,7 +938,7 @@
     }
 
     if (viewerConfig.demoLink && viewerConfig.defaultAppId && viewerConfig.runtimeId) {
-      var defaultViewer = getViewerUrl(viewerConfig.runtimeId, viewerConfig.defaultAppId);
+      var defaultViewer = getViewerUrl(viewerConfig.runtimeId, viewerConfig.defaultAppId, "appid");
       if (defaultViewer) {
         viewerConfig.demoLink.setAttribute("href", defaultViewer);
       }
