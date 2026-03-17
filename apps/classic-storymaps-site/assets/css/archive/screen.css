@@ -5056,24 +5056,6 @@ html.ie9 .drawer.active-right .drawer-right {
   margin-left: -20px;
   margin-top: -20px;
 }
-.back-to-top {
-  position: fixed;
-  bottom: 2em;
-  right: 0px;
-  text-decoration: none;
-  color: #000000;
-  background-color: rgba(235, 235, 235, 0.8);
-  font-size: 12px;
-  padding: 1em;
-  font-family: "Avenir LT W01 65 Medium", Arial, Helvetica, sans-serif;
-  display: none;
-}
-.back-to-top:before {
-  padding-right: 1em;
-}
-.back-to-top:hover {
-  background-color: rgba(135, 135, 135, 0.5);
-}
 .site-dropdown {
   width: 300px !important;
 }

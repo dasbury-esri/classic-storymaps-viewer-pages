@@ -96,6 +96,8 @@ sanitize_archive_html_file() {
     s{^[ \t]*<script[^>]+src="[^"]*go\.esri\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]+src="[^"]*google-analytics\.com[^"]*"[^>]*></script>\s*$\n?}{}mg;
     s{^[ \t]*<script[^>]*>_satellite\.pageBottom\(\);</script>\s*$\n?}{}mg;
+    s{\s*<a[^>]+class="back-to-top[^"]*"[^>]*>.*?</a>\s*}{}gs;
+    s{\s*<script[^>]+back-to-top\.js[^>]*></script>\s*}{}gs;
     s{\s*<link[^>]+signIn\.css[^>]*>\s*}{}gs;
     s{\s*<script[^>]+l10NStrings\.js[^>]*></script>\s*}{}gs;
     s{\s*<script[^>]+langSelector\.js[^>]*></script>\s*}{}gs;
@@ -111,7 +113,6 @@ sanitize_archive_html_file() {
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/applist\.css[^"]*"}{href="/viewers/assets/css/archive/applist.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/create-story\.css[^"]*"}{href="/viewers/assets/css/archive/create-story.css"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/libs/jquery-1\.9\.1\.min\.js[^"]*"}{src="/viewers/assets/js/archive/jquery-1.9.1.min.js"}g;
-    s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/back-to-top\.js[^"]*"}{src="/viewers/assets/js/archive/back-to-top.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/tailcoat/tailcoat\.js[^"]*"}{src="/viewers/assets/js/archive/tailcoat.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/img/([^"?]+)(?:\?[^"]*)?"}{src="/viewers/assets/images/$1"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/(map-tour|map-journal|cascade|map-series|crowdsource|shortlist|swipe-spyglass|basic)/tutorial/?"}{href="/archive/2017-12-10-pages/en__app-list__$1__tutorial.html"}g;
