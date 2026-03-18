@@ -276,8 +276,7 @@
         <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-status">
 
         <label for="webmap">Web map ID</label>
-        <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID" maxlength="64" inputmode="latin" aria-describedby="webmap-hint appid-status">
-        <p id="webmap-hint" class="hint">Use this for direct map launches. If both fields are present, <code>appid</code> takes precedence.</p>
+        <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID. Use this for direct web map launches." maxlength="64" inputmode="latin" aria-describedby="appid-status">
 
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
@@ -289,9 +288,8 @@
 
       <p class="route-block">
         <a id="demo-link" class="demo-link" href="/viewers/maptour/index.html?appid=2c62acf3468c4cbbba6b82f1035bfe22">If you'd like to view an example Story Map Tour, click here</a>
-        <span> using the authored Map Tour app configuration.</span>
       </p>
-      <p class="hint">Direct <code>webmap</code> launches use this deployment's default Map Tour configuration, so they can differ from an authored app's selected tabs and media.</p>
+      <p class="hint">Direct <code>webmap</code> launches use the Side Panel Map Tour layout, so they can differ from an authored app's selected layout and style.</p>
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
