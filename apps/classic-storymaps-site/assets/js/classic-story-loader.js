@@ -163,10 +163,34 @@
   }
 
   function classifyClassic(item) {
-    if (typeof CONFIG.classifyClassicRuntimeFromItem !== "function") {
+    if (typeof CONFIG.classifyClassicRuntimeFromItem === "function") {
+      var classified = CONFIG.classifyClassicRuntimeFromItem(item);
+      if (classified) {
+        return classified;
+      }
+    }
+
+    var type = String((item && item.type) || "").toLowerCase();
+    if (type !== "web mapping application") {
       return null;
     }
-    return CONFIG.classifyClassicRuntimeFromItem(item);
+
+    var terms = getItemMetadataTerms(item);
+    if (!termsContainAny(terms, ["story map", "storymap"])) {
+      return null;
+    }
+
+    var runtimeIds = Object.keys(APP_REGISTRY);
+    for (var i = 0; i < runtimeIds.length; i += 1) {
+      var runtimeId = runtimeIds[i];
+      var runtimeInfo = APP_REGISTRY[runtimeId] || {};
+      var variants = Array.isArray(runtimeInfo.classifyFragments) ? runtimeInfo.classifyFragments : [];
+      if (variants.length && termsContainAny(terms, variants)) {
+        return runtimeId;
+      }
+    }
+
+    return "unknown-classic";
   }
 
   function detectClassicRuntimeFromUrl(url) {
@@ -342,6 +366,15 @@
     return runtimeId === "swipe" || runtimeId === "maptour";
   }
 
+  function isLikelySelfHostedClassicUrl(url) {
+    var str = String(url || "").toLowerCase();
+    if (!/^https?:\/\//.test(str)) {
+      return false;
+    }
+
+    return str.indexOf("www.arcgis.com") === -1 && str.indexOf("arcgis.com/apps") === -1;
+  }
+
   function getItemMetadataTerms(item) {
     var terms = [];
     var keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
@@ -418,7 +451,7 @@
       }
 
       if (typeof value === "string") {
-        if (isLikelyImageUrl(value)) {
+          selfHosted: isLikelySelfHostedClassicUrl(item.url),
           refs.push({
             path: path,
             title: context.title || "",
