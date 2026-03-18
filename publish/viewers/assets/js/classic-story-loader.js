@@ -305,7 +305,7 @@
           item: item,
           itemData: itemData,
           classicType: classicType,
-          selfHosted: false,
+          selfHosted: isLikelySelfHostedClassicUrl(item.url),
           chain: chain
         };
       }
@@ -451,7 +451,7 @@
       }
 
       if (typeof value === "string") {
-          selfHosted: isLikelySelfHostedClassicUrl(item.url),
+        if (isLikelyImageUrl(value)) {
           refs.push({
             path: path,
             title: context.title || "",
