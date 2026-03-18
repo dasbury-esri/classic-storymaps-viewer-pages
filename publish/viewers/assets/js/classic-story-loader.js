@@ -1020,12 +1020,17 @@
       ui.openBtn.textContent = "Open " + appLabel + " Viewer";
     }
 
-    function applyWebmapState(webmapId, itemTitle, typeLabel) {
+    function applyWebmapState(webmapId, itemTitle, typeLabel, webmapItem, webmapData) {
       var runtimeId = viewerConfig.runtimeId;
       var appLabel = APP_LABEL_BY_ID[runtimeId] || launcherAppLabel;
+      var canDownloadMedia = runtimeId === "maptour";
 
-      state.item = null;
-      state.itemData = null;
+      state.item = webmapItem || {
+        id: webmapId,
+        title: itemTitle || "(Untitled)",
+        type: typeLabel || "Web Map"
+      };
+      state.itemData = webmapData || null;
       state.classicType = runtimeId;
       state.selfHosted = false;
       state.viewerUrl = runtimeId ? getViewerUrl(runtimeId, webmapId, "webmap") : null;
@@ -1034,10 +1039,10 @@
       setStatus("Valid web map: " + webmapId, "warn");
 
       setDisabled(ui.openBtn, !state.viewerUrl);
-      setDisabled(ui.downloadItemBtn, true);
-      setDisabled(ui.downloadDataBtn, true);
-      setDisabled(ui.downloadZipBtn, true);
-      setDisabled(ui.downloadAllBtn, true);
+      setDisabled(ui.downloadItemBtn, false);
+      setDisabled(ui.downloadDataBtn, !state.itemData);
+      setDisabled(ui.downloadZipBtn, !canDownloadMedia);
+      setDisabled(ui.downloadAllBtn, !canDownloadMedia);
 
       ui.openBtn.textContent = "Open " + appLabel + " Viewer";
     }
@@ -1102,8 +1107,9 @@
           return;
         }
 
+        var webmapData = null;
         if (viewerConfig.runtimeId === "maptour") {
-          var webmapData = await tryFetchItemData(webmapId, token);
+          webmapData = await tryFetchItemData(webmapId, token);
           if (!webmapHasValidMapTourDataLayer(webmapData)) {
             setTitle("Found: '" + (webmapItem.title || "(Untitled)") + "' (Web Map)", "warn");
             setStatus("The web map does not contain a valid data layer for Map Tour.", "error");
@@ -1111,7 +1117,7 @@
           }
         }
 
-        applyWebmapState(webmapId, webmapItem.title, typeLabel);
+        applyWebmapState(webmapId, webmapItem.title, typeLabel, webmapItem, webmapData);
       } catch (error) {
         setStatus("Web map load failed: " + (error && error.message ? error.message : "Unexpected error."), "error");
       }
