@@ -833,7 +833,21 @@
   function inferViewerConfig() {
     var demoLink = document.getElementById("demo-link");
     var href = demoLink && demoLink.getAttribute("href") ? demoLink.getAttribute("href") : "";
-    var appId = extractAppId(href);
+    var appId = null;
+
+    if (href) {
+      try {
+        var parsed = new URL(href, window.location.origin);
+        appId = normalizeId(parsed.searchParams.get("appid") || "");
+      } catch (_) {
+        var queryMatch = String(href).match(/[?&]appid=([a-f0-9]{32})/i);
+        appId = queryMatch ? normalizeId(queryMatch[1]) : null;
+      }
+
+      if (appId && !APP_ID_REGEX.test(appId)) {
+        appId = null;
+      }
+    }
 
     var viewerPath = "";
     if (href) {
