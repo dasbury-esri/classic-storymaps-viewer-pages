@@ -366,6 +366,120 @@
     return runtimeId === "swipe" || runtimeId === "maptour";
   }
 
+  var MAPTOUR_FIELD_CANDIDATES = {
+    objectid: ["__objectid", "objectid", "id", "fid"],
+    name: ["name", "title", "name-short", "name-long"],
+    description: ["description", "caption", "snippet", "comment"],
+    pic_url: ["pic_url", "url", "pic", "picture"],
+    thumb_url: ["thumb_url", "thumb", "thumbnail"]
+  };
+
+  function normalizeCandidate(value) {
+    return String(value || "").toLowerCase().trim();
+  }
+
+  function maptourLayerIsVisible(layer) {
+    return !(layer && (layer.visible === false || layer.visibility === false));
+  }
+
+  function maptourIsMapNotesLayer(layer) {
+    var id = String((layer && layer.id) || "").toLowerCase();
+    var title = String((layer && layer.title) || "").toLowerCase();
+    return id.indexOf("mapnotes_") === 0 || title === "map notes";
+  }
+
+  function maptourLayerGeometryType(layer) {
+    if (!layer) {
+      return "";
+    }
+
+    if (typeof layer.geometryType === "string") {
+      return layer.geometryType;
+    }
+
+    var featureCollectionLayers = layer.featureCollection && Array.isArray(layer.featureCollection.layers)
+      ? layer.featureCollection.layers
+      : [];
+    if (featureCollectionLayers.length) {
+      var layerDefinition = featureCollectionLayers[0] && featureCollectionLayers[0].layerDefinition;
+      if (layerDefinition && typeof layerDefinition.geometryType === "string") {
+        return layerDefinition.geometryType;
+      }
+    }
+
+    return "";
+  }
+
+  function maptourLayerFieldNames(layer) {
+    var fields = Array.isArray(layer && layer.fields) ? layer.fields : [];
+
+    if (!fields.length) {
+      var fcLayers = layer && layer.featureCollection && Array.isArray(layer.featureCollection.layers)
+        ? layer.featureCollection.layers
+        : [];
+      if (fcLayers.length && fcLayers[0] && fcLayers[0].layerDefinition && Array.isArray(fcLayers[0].layerDefinition.fields)) {
+        fields = fcLayers[0].layerDefinition.fields;
+      }
+    }
+
+    return fields
+      .map(function(field) {
+        return normalizeCandidate(field && (field.name || field.fieldName));
+      })
+      .filter(Boolean);
+  }
+
+  function maptourHasAnyCandidate(fieldNames, candidates) {
+    for (var i = 0; i < candidates.length; i += 1) {
+      if (fieldNames.indexOf(normalizeCandidate(candidates[i])) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function maptourLayerHasMandatoryFields(layer) {
+    var fieldNames = maptourLayerFieldNames(layer);
+    if (!fieldNames.length) {
+      return false;
+    }
+
+    return maptourHasAnyCandidate(fieldNames, MAPTOUR_FIELD_CANDIDATES.objectid)
+      && maptourHasAnyCandidate(fieldNames, MAPTOUR_FIELD_CANDIDATES.name)
+      && maptourHasAnyCandidate(fieldNames, MAPTOUR_FIELD_CANDIDATES.description)
+      && maptourHasAnyCandidate(fieldNames, MAPTOUR_FIELD_CANDIDATES.pic_url)
+      && maptourHasAnyCandidate(fieldNames, MAPTOUR_FIELD_CANDIDATES.thumb_url);
+  }
+
+  function webmapHasValidMapTourDataLayer(webmapData) {
+    var operationalLayers = webmapData && Array.isArray(webmapData.operationalLayers) ? webmapData.operationalLayers : [];
+
+    for (var i = operationalLayers.length - 1; i >= 0; i -= 1) {
+      var layer = operationalLayers[i];
+      if (!maptourLayerIsVisible(layer)) {
+        continue;
+      }
+
+      if (maptourIsMapNotesLayer(layer)) {
+        continue;
+      }
+
+      if (maptourLayerGeometryType(layer) !== "esriGeometryPoint") {
+        continue;
+      }
+
+      if (layer && layer.url) {
+        return true;
+      }
+
+      if (maptourLayerHasMandatoryFields(layer)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   function isLikelySelfHostedClassicUrl(url) {
     var str = String(url || "").toLowerCase();
     if (!/^https?:\/\//.test(str)) {
@@ -972,6 +1086,15 @@
           setStatus("The provided ID is not recognized as a Web Map.", "error");
           setTitle("Found: '" + (webmapItem.title || "(Untitled)") + "' (" + typeLabel + ")", "warn");
           return;
+        }
+
+        if (viewerConfig.runtimeId === "maptour") {
+          var webmapData = await tryFetchItemData(webmapId, token);
+          if (!webmapHasValidMapTourDataLayer(webmapData)) {
+            setTitle("Found: '" + (webmapItem.title || "(Untitled)") + "' (Web Map)", "warn");
+            setStatus("The web map does not contain a valid data layer for Map Tour.", "error");
+            return;
+          }
         }
 
         applyWebmapState(webmapId, webmapItem.title, typeLabel);
