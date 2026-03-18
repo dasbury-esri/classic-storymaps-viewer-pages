@@ -392,9 +392,22 @@
   }
 
   function termsContainAny(terms, variants) {
+    function normalizeTerm(value) {
+      return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
     for (var i = 0; i < terms.length; i += 1) {
+      var rawTerm = String(terms[i] || "");
+      var normalizedTerm = normalizeTerm(rawTerm);
       for (var j = 0; j < variants.length; j += 1) {
-        if (terms[i].indexOf(variants[j]) !== -1) {
+        var rawVariant = String(variants[j] || "");
+        var normalizedVariant = normalizeTerm(rawVariant);
+
+        if (rawTerm.indexOf(rawVariant) !== -1) {
+          return true;
+        }
+
+        if (normalizedVariant && normalizedTerm.indexOf(normalizedVariant) !== -1) {
           return true;
         }
       }
