@@ -277,6 +277,7 @@
 
         <label for="webmap">Web map ID</label>
         <input id="webmap" name="webmap" type="text" autocomplete="off" placeholder="Enter 32-character web map ID. Use this for direct web map launches." maxlength="64" inputmode="latin" aria-describedby="appid-status">
+        <p id="webmap-hint" class="hint">Direct <code>webmap</code> launches use the Side Panel Map Tour layout, so they can differ from an authored app's selected layout and style.</p>
 
         <p id="appid-status" class="status" role="status" aria-live="polite"></p>
 
@@ -289,7 +290,6 @@
       <p class="route-block">
         <a id="demo-link" class="demo-link" href="https://classicstorymaps.com/viewers/maptour/index.html?webmap=a5019e8c55d547eab69c0777dcd7509a">If you'd like to view an example Story Map Tour, click here</a>
       </p>
-      <p class="hint">Direct <code>webmap</code> launches use the Side Panel Map Tour layout, so they can differ from an authored app's selected layout and style.</p>
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
