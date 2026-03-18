@@ -296,6 +296,65 @@
     return runtimeId === "swipe" || runtimeId === "maptour";
   }
 
+  function getItemMetadataTerms(item) {
+    var terms = [];
+    var keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
+    var tags = Array.isArray(item && item.tags) ? item.tags : [];
+
+    keywords.forEach(function(value) {
+      terms.push(String(value || "").toLowerCase());
+    });
+
+    tags.forEach(function(value) {
+      terms.push(String(value || "").toLowerCase());
+    });
+
+    return terms;
+  }
+
+  function termsContainAny(terms, variants) {
+    for (var i = 0; i < terms.length; i += 1) {
+      for (var j = 0; j < variants.length; j += 1) {
+        if (terms[i].indexOf(variants[j]) !== -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function validateAppMetadata(item, runtimeId) {
+    var type = String((item && item.type) || "").toLowerCase();
+    var terms = getItemMetadataTerms(item);
+    var runtimeMeta = APP_REGISTRY[runtimeId] || {};
+    var runtimeVariants = Array.isArray(runtimeMeta.classifyFragments) ? runtimeMeta.classifyFragments : [];
+
+    var hasWebMappingApplicationType = type === "web mapping application";
+    var hasStoryMapTerm = termsContainAny(terms, ["story map", "storymap"]);
+    var hasRuntimeTerm = runtimeVariants.length ? termsContainAny(terms, runtimeVariants) : false;
+
+    return {
+      ok: hasWebMappingApplicationType && hasStoryMapTerm && hasRuntimeTerm,
+      hasWebMappingApplicationType: hasWebMappingApplicationType,
+      hasStoryMapTerm: hasStoryMapTerm,
+      hasRuntimeTerm: hasRuntimeTerm
+    };
+  }
+
+  function deriveTypeLabelFromMetadata(item) {
+    var terms = getItemMetadataTerms(item);
+    if (termsContainAny(terms, ["web map", "webmap"])) {
+      return "Web Map";
+    }
+    if (termsContainAny(terms, ["web mapping application"])) {
+      return "Web Mapping Application";
+    }
+    if (termsContainAny(terms, ["story map", "storymap"])) {
+      return "Story Map";
+    }
+    return String((item && item.type) || "Item");
+  }
+
   function isLikelyImageUrl(value) {
     var str = String(value || "").toLowerCase();
     if (!/^https?:\/\//.test(str) && str.indexOf("/sharing/rest/content/items/") === -1) {
@@ -728,7 +787,7 @@
       ui.openBtn.textContent = "Open " + appLabel + " Viewer";
     }
 
-    function applyWebmapState(webmapId) {
+    function applyWebmapState(webmapId, itemTitle, typeLabel) {
       var runtimeId = viewerConfig.runtimeId;
       var appLabel = APP_LABEL_BY_ID[runtimeId] || launcherAppLabel;
 
@@ -737,7 +796,7 @@
       state.classicType = runtimeId;
       state.viewerUrl = runtimeId ? getViewerUrl(runtimeId, webmapId, "webmap") : null;
 
-      setTitle("Using web map: '" + webmapId + "' (" + appLabel + ")", "warn");
+      setTitle("Found: '" + (itemTitle || "(Untitled)") + "' (" + (typeLabel || "Web Map") + ")", "warn");
       setStatus("Valid web map: " + webmapId, "warn");
 
       setDisabled(ui.openBtn, !state.viewerUrl);
@@ -769,7 +828,7 @@
       }
     }
 
-    function handleWebmapLaunch() {
+    async function handleWebmapLaunch() {
       var webmapId = webmapInput ? normalizeId(webmapInput.value) : "";
       if (!webmapId) {
         setStatus("Enter a web map ID to continue.", "warn");
@@ -796,7 +855,23 @@
       }
 
       disableForLoad();
-      applyWebmapState(webmapId);
+      setStatus("Loading web map metadata...", "warn");
+
+      try {
+        var token = getToken();
+        var webmapItem = await fetchArcgisJson("/content/items/" + encodeURIComponent(webmapId), token);
+        var typeLabel = deriveTypeLabelFromMetadata(webmapItem);
+
+        if (String(typeLabel).toLowerCase() !== "web map") {
+          setStatus("The provided ID is not recognized as a Web Map.", "error");
+          setTitle("Found: '" + (webmapItem.title || "(Untitled)") + "' (" + typeLabel + ")", "warn");
+          return;
+        }
+
+        applyWebmapState(webmapId, webmapItem.title, typeLabel);
+      } catch (error) {
+        setStatus("Web map load failed: " + (error && error.message ? error.message : "Unexpected error."), "error");
+      }
     }
 
     form.addEventListener("submit", async function(evt) {
@@ -820,7 +895,7 @@
       }
 
       if (!appId && webmapId) {
-        handleWebmapLaunch();
+        await handleWebmapLaunch();
         return;
       }
 
@@ -845,6 +920,24 @@
           setDisabled(ui.downloadDataBtn, !result.itemData);
           setDisabled(ui.downloadZipBtn, false);
           setDisabled(ui.downloadAllBtn, false);
+          return;
+        }
+
+        var expectedRuntime = viewerConfig.runtimeId;
+        if (expectedRuntime && result.classicType !== expectedRuntime) {
+          setTitle("Found: '" + (result.item.title || "(Untitled)") + "' (" + (APP_LABEL_BY_ID[result.classicType] || "Unknown") + ")", "warn");
+          setStatus("This app ID is not a " + (APP_LABEL_BY_ID[expectedRuntime] || launcherAppLabel) + " item.", "error");
+          return;
+        }
+
+        var appMetaValidation = validateAppMetadata(result.item, expectedRuntime || result.classicType);
+        if (!appMetaValidation.ok) {
+          var missingParts = [];
+          if (!appMetaValidation.hasWebMappingApplicationType) missingParts.push("type=Web Mapping Application");
+          if (!appMetaValidation.hasStoryMapTerm) missingParts.push("Story Map keyword/tag");
+          if (!appMetaValidation.hasRuntimeTerm) missingParts.push((APP_LABEL_BY_ID[expectedRuntime || result.classicType] || launcherAppLabel) + " keyword/tag");
+          setTitle("Found: '" + (result.item.title || "(Untitled)") + "' (" + (APP_LABEL_BY_ID[result.classicType] || launcherAppLabel) + ")", "warn");
+          setStatus("Item metadata validation failed: missing " + missingParts.join(", ") + ".", "error");
           return;
         }
 
@@ -967,7 +1060,9 @@
       webmapLoadButton = document.createElement("button");
       webmapLoadButton.type = "button";
       webmapLoadButton.textContent = "Load Web Map";
-      webmapLoadButton.addEventListener("click", handleWebmapLaunch);
+      webmapLoadButton.addEventListener("click", function() {
+        handleWebmapLaunch();
+      });
     }
 
     var backToCatalog = form.querySelector(".text-link");
