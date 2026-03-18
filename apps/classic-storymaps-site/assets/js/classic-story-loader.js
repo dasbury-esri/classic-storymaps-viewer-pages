@@ -834,7 +834,8 @@
       item: null,
       itemData: null,
       classicType: null,
-      viewerUrl: null
+      viewerUrl: null,
+      selfHosted: false
     };
 
     if (viewerConfig.demoLink) {
@@ -863,7 +864,10 @@
       state.item = result.item;
       state.itemData = result.itemData;
       state.classicType = result.classicType;
-      state.viewerUrl = result.classicType ? getViewerUrl(result.classicType, result.item.id, "appid") : null;
+      state.selfHosted = !!result.selfHosted;
+      state.viewerUrl = result.selfHosted
+        ? (result.item && result.item.url ? result.item.url : null)
+        : (result.classicType ? getViewerUrl(result.classicType, result.item.id, "appid") : null);
 
       var appLabel = APP_LABEL_BY_ID[result.classicType] || launcherAppLabel;
       var titleType = result.selfHosted ? "self-hosted " + appLabel : appLabel;
@@ -877,9 +881,13 @@
 
       setDisabled(ui.openBtn, !state.viewerUrl);
       setDisabled(ui.downloadItemBtn, false);
-      setDisabled(ui.downloadDataBtn, !state.itemData);
-      setDisabled(ui.downloadZipBtn, false);
-      setDisabled(ui.downloadAllBtn, false);
+      setDisabled(ui.downloadDataBtn, result.selfHosted || !state.itemData);
+      setDisabled(ui.downloadZipBtn, result.selfHosted);
+      setDisabled(ui.downloadAllBtn, result.selfHosted);
+
+      if (result.selfHosted) {
+        setStatus("Valid app id: " + result.item.id + " (self-hosted URL detected)", "warn");
+      }
 
       ui.openBtn.textContent = "Open " + appLabel + " Viewer";
     }
@@ -891,6 +899,7 @@
       state.item = null;
       state.itemData = null;
       state.classicType = runtimeId;
+      state.selfHosted = false;
       state.viewerUrl = runtimeId ? getViewerUrl(runtimeId, webmapId, "webmap") : null;
 
       setTitle("Found: '" + (itemTitle || "(Untitled)") + "' (" + (typeLabel || "Web Map") + ")", "warn");
