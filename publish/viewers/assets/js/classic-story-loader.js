@@ -169,6 +169,34 @@
     return CONFIG.classifyClassicRuntimeFromItem(item);
   }
 
+  function detectClassicRuntimeFromUrl(url) {
+    var lower = String(url || "").toLowerCase();
+    if (!lower) {
+      return null;
+    }
+
+    var runtimes = Object.keys(APP_REGISTRY);
+    for (var i = 0; i < runtimes.length; i += 1) {
+      var runtimeId = runtimes[i];
+      var runtimeInfo = APP_REGISTRY[runtimeId] || {};
+      var folder = String(runtimeInfo.runtimeFolder || runtimeId || "").toLowerCase();
+      if (!folder) {
+        continue;
+      }
+
+      if (
+        lower.indexOf("/" + folder + "/") !== -1 ||
+        lower.indexOf("/" + folder + "?") !== -1 ||
+        lower.indexOf("/" + folder + "#") !== -1 ||
+        lower.indexOf("storymap" + folder) !== -1
+      ) {
+        return runtimeId;
+      }
+    }
+
+    return null;
+  }
+
   function extractAppId(value) {
     if (!value) {
       return null;
@@ -253,6 +281,23 @@
           item: item,
           itemData: itemData,
           classicType: classicType,
+          selfHosted: false,
+          chain: chain
+        };
+      }
+
+      var selfHostedClassicType = null;
+      if (item.url && /^https?:/i.test(item.url)) {
+        selfHostedClassicType = detectClassicRuntimeFromUrl(item.url);
+      }
+
+      if (selfHostedClassicType) {
+        chain[chain.length - 1].classicType = selfHostedClassicType;
+        return {
+          item: item,
+          itemData: itemData,
+          classicType: selfHostedClassicType,
+          selfHosted: true,
           chain: chain
         };
       }
@@ -274,6 +319,7 @@
         item: item,
         itemData: itemData,
         classicType: null,
+        selfHosted: false,
         chain: chain
       };
     }
@@ -774,9 +820,14 @@
       state.viewerUrl = result.classicType ? getViewerUrl(result.classicType, result.item.id, "appid") : null;
 
       var appLabel = APP_LABEL_BY_ID[result.classicType] || launcherAppLabel;
+      var titleType = result.selfHosted ? "self-hosted " + appLabel : appLabel;
 
-      setTitle("Found: '" + (result.item.title || "(Untitled)") + "' (" + appLabel + ")", "warn");
-      setStatus("Valid item: " + result.item.id, "warn");
+      if (result.selfHosted) {
+        setTitle("Found item title: '" + (result.item.title || "(Untitled)") + "' (" + titleType + ")", "warn");
+      } else {
+        setTitle("Found: '" + (result.item.title || "(Untitled)") + "' (" + titleType + ")", "warn");
+      }
+      setStatus("Valid app id: " + result.item.id, "warn");
 
       setDisabled(ui.openBtn, !state.viewerUrl);
       setDisabled(ui.downloadItemBtn, false);
@@ -931,7 +982,7 @@
         }
 
         var appMetaValidation = validateAppMetadata(result.item, expectedRuntime || result.classicType);
-        if (!appMetaValidation.ok) {
+        if (!result.selfHosted && !appMetaValidation.ok) {
           var missingParts = [];
           if (!appMetaValidation.hasWebMappingApplicationType) missingParts.push("type=Web Mapping Application");
           if (!appMetaValidation.hasStoryMapTerm) missingParts.push("Story Map keyword/tag");
