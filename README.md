@@ -11,6 +11,18 @@ Monorepo for hosting Classic Storymaps landing and per-app viewer helper pages u
 - Extracted runtime release bundles under `runtimes/*/release-*` are treated as local fallback caches and are git-ignored.
 - The current Cascade fallback at `runtimes/cascade/release-1.23.0` is intentionally kept local so `scripts/build-cascade-runtime.sh` can recover when the upstream legacy build cannot reproduce the original deploy output.
 
+## Tests
+
+From the repository root, run the tests with Node.js 20 or later:
+
+```sh
+node --test scripts/tests/
+```
+
+Tests use Node's built-in test runner and require no additional dependencies.
+Add regression tests as `scripts/tests/*.test.mjs`. The Pages workflow runs
+the suite before building; a test failure stops the build and deployment.
+
 ## Next Steps
 1. Refine the site deployment plan prompt for phase sequencing and effort sizing.
 2. Define route contract and adapter matrix for phase-1 apps.

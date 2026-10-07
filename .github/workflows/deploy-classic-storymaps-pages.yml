@@ -27,6 +27,9 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Run tests
+        run: node --test scripts/tests/
+
       - name: Build runtimes, landing, and publish output
         run: |
           set -euo pipefail
