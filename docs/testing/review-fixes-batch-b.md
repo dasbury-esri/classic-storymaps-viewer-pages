@@ -5,7 +5,9 @@
 B1 adds deployment-prefix support and local link auditing. B2 restricts build
 permissions, pins Node 24 actions, verifies Cascade fallback downloads, and
 disables npm lifecycle scripts. No remote repository settings, branches, or
-deployments were changed during this work.
+deployments were changed during the local implementation checks. The subsequent
+owner-approved configuration change, push, and hosted verification are recorded
+below.
 
 ## Local Results
 
@@ -87,13 +89,31 @@ The Calcite URL is not versioned. If its bytes change, the build must fail until
 the new asset is reviewed and the manifest is deliberately updated. Do not
 automatically regenerate checksums during a build.
 
-## Remaining Hosted Checks
+## Hosted Verification
 
-No push, automated sign-in, or live-site test request was performed. These
-remain owner checkpoints, not verified outcomes:
+After owner approval, `SITE_BASE_PATH` was set to
+`/classic-storymaps-viewer-pages` and read back through the GitHub API. Pages
+reports workflow deployment at
+`https://dasbury-esri.github.io/classic-storymaps-viewer-pages/`, with no custom
+domain configured. The variable matches that project URL.
 
-1. Set the repository variable `SITE_BASE_PATH` for the intended public address.
-2. Confirm a branch workflow runs tests and builds without deploying.
-3. Confirm a main workflow passes its full-artifact link gate and deploys its
-   uploaded artifact. Local macOS builds do not substitute for an Ubuntu runner
-   or hosted Pages validation.
+[Workflow run 37574491722](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37574491722)
+completed successfully for `ee0de3abe26a7a65188e551ec14dac27e558b00f` on `main`:
+
+- Build and deploy jobs both succeeded.
+- Tests, all runtime and publish builds, artifact structure validation,
+  full-artifact link validation, and artifact upload passed on the hosted runner.
+- Pages configuration and deployment steps succeeded.
+- Normal public GET requests returned HTTP 200 for the landing, catalog, an
+  archived Map Tour page, and all eight runtime entry pages.
+- All 138 root-relative references inspected in those pages had the project
+  prefix; no unresolved build placeholders were found.
+- Served auth helpers, resource helpers, catalog config, and story loader
+  JavaScript matched local reviewed source by SHA-256.
+
+The run reported non-blocking legacy Cascade `dangerouslySetInnerHTML` lint
+warnings and an Ubuntu runner-image migration notice. These did not fail the
+build or deploy jobs.
+
+Branch-only hosted CI behavior and authenticated browser workflows remain
+unverified. No automated sign-in or crafted authentication request was used.
