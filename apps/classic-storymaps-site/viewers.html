@@ -431,6 +431,7 @@
   </main>
 
   <script src="assets/js/classic-storymaps-config.js"></script>
+  <script src="assets/js/arcgis-auth-helpers.js"></script>
   <script>
     const SUPPORT_STATE = {
       SUPPORTED: "supported",
@@ -451,6 +452,7 @@
     const omniInput = document.getElementById("omni-appid");
     const omniStatus = document.getElementById("omni-status");
     const AUTH_STORAGE_KEY = "arcgis_access_token";
+    const AUTH_EXPIRY_KEY = "arcgis_access_token_expires";
     const APP_ID_REGEX = /^[a-f0-9]{32}$/i;
     const AUTH_CONFIG = {
       clientId: window.__CLASSIC_STORYMAPS_CLIENT_ID__ || "4ZanYdCYK0mWsFLz",
@@ -463,28 +465,24 @@
 
     function getStoredToken() {
       try {
-        return sessionStorage.getItem(AUTH_STORAGE_KEY);
+        const token = sessionStorage.getItem(AUTH_STORAGE_KEY);
+        const expires = Number(sessionStorage.getItem(AUTH_EXPIRY_KEY));
+        if (token && (!Number.isSafeInteger(expires) || expires <= Date.now())) {
+          clearStoredToken();
+          return null;
+        }
+        return token;
       } catch {
         return null;
       }
     }
 
-    function setEsriAuthCookie(token) {
-      if (!token) {
-        return;
-      }
-
+    function setEsriAuthCookie(token, expiresIn, now = Date.now()) {
       try {
-        const cookiePayload = encodeURIComponent(JSON.stringify({
-          token: token,
-          ssl: window.location.protocol === "https:",
-          expires: Date.now() + (14 * 24 * 60 * 60 * 1000)
-        }));
-        const attrs = ["Path=/", "SameSite=Lax"];
-        if (window.location.protocol === "https:") {
-          attrs.push("Secure");
+        const cookie = window.ClassicArcgisAuthHelpers.buildEsriAuthCookie(token, expiresIn, window.location.protocol, now);
+        if (cookie) {
+          document.cookie = cookie;
         }
-        document.cookie = "esri_auth=" + cookiePayload + "; " + attrs.join("; ");
       } catch {
         // Ignore cookie write failures in restricted environments.
       }
@@ -498,18 +496,26 @@
       document.cookie = "esri_auth=; " + attrs.join("; ");
     }
 
-    function storeToken(token) {
+    function storeToken(token, expiresIn) {
+      const seconds = Number(expiresIn);
+      const now = Date.now();
+      if (!token || !Number.isSafeInteger(seconds) || seconds <= 0 || !Number.isSafeInteger(now + seconds * 1000)) {
+        clearStoredToken();
+        return;
+      }
       try {
         sessionStorage.setItem(AUTH_STORAGE_KEY, token);
+        sessionStorage.setItem(AUTH_EXPIRY_KEY, now + seconds * 1000);
       } catch {
         // Ignore session storage failures in locked-down environments.
       }
-      setEsriAuthCookie(token);
+      setEsriAuthCookie(token, seconds, now);
     }
 
     function clearStoredToken() {
       try {
         sessionStorage.removeItem(AUTH_STORAGE_KEY);
+        sessionStorage.removeItem(AUTH_EXPIRY_KEY);
       } catch {
         // Ignore session storage failures in locked-down environments.
       }
@@ -533,7 +539,11 @@
       }
 
       const params = new URLSearchParams(hash);
-      return params.get("access_token") || params.get("token");
+      const token = params.get("access_token") || params.get("token");
+      const expiresIn = Number(params.get("expires_in"));
+      return token && Number.isSafeInteger(expiresIn) && expiresIn > 0
+        ? { token, expiresIn }
+        : null;
     }
 
     function setAuthUi(token) {
@@ -556,15 +566,8 @@
         return;
       }
 
-      const state = encodeURIComponent(window.location.pathname + window.location.search);
-      const redirect = encodeURIComponent(AUTH_CONFIG.redirectUri);
-      const authUrl =
-        "https://www.arcgis.com/sharing/rest/oauth2/authorize" +
-        "?client_id=" + encodeURIComponent(AUTH_CONFIG.clientId) +
-        "&response_type=token" +
-        "&expiration=20160" +
-        "&redirect_uri=" + redirect +
-        "&state=" + state;
+      const state = window.location.pathname + window.location.search;
+      const authUrl = window.ClassicArcgisAuthHelpers.buildAuthorizeUrl(AUTH_CONFIG.clientId, AUTH_CONFIG.redirectUri, state);
 
       window.location.assign(authUrl);
     }
@@ -673,13 +676,14 @@
 
     const tokenFromHash = getTokenFromHash();
     if (tokenFromHash) {
-      storeToken(tokenFromHash);
+      storeToken(tokenFromHash.token, tokenFromHash.expiresIn);
       clearUrlHash();
-      setAuthUi(tokenFromHash);
+      setAuthUi(getStoredToken());
     } else {
       const storedToken = getStoredToken();
       if (storedToken) {
-        setEsriAuthCookie(storedToken);
+        const remainingSeconds = Math.floor((Number(sessionStorage.getItem(AUTH_EXPIRY_KEY)) - Date.now()) / 1000);
+        setEsriAuthCookie(storedToken, remainingSeconds);
       }
       setAuthUi(storedToken);
     }
