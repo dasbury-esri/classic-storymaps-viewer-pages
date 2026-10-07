@@ -326,10 +326,19 @@ Chromium.
      upstream `src/app/components/crowdsource/viewer/Viewer.babel.js` lines
      56, 130, 208, and 287). Forcing it false makes participation unavailable,
      whatever each story's settings say.
-3. **Add a URL guard to `index.html`.** Insert this script immediately after
-   `<head>`. Without it, `?edit=true` still crashes with
-   "x.default is not a constructor", because the AMD `mode!isBuilder` plugin
-   reads the URL independently:
+3. **Keep the builder URL guard.**
+   - `?edit=true` must never reach the app. Without a guard it crashes with
+     "x.default is not a constructor", because the AMD `mode!isBuilder` plugin
+     reads the URL independently.
+   - `scripts/build-classic-storymaps-runtime-publish.sh` already injects a
+     `classicstorymaps-builder-guard` script into every runtime's
+     `index.html`, Crowdsource included, during `sanitize_runtime_publish`.
+     It strips `edit`, `fromScratch`, and `fromscratch`. Confirm the published
+     Crowdsource page contains that guard, and do not add a second one.
+   - Only if the `?edit=true` browser check below still fails with the
+     publish guard in place, insert this script immediately after `<head>`
+     in the Crowdsource build output. This was the variant used in local
+     testing:
 
    ```html
    <script>(function(){try{var u=new URL(window.location.href),c=!1;["edit","fromScratch","fromscratch"].forEach(function(k){if(u.searchParams.has(k)){u.searchParams.delete(k);c=!0}});if(c){window.history.replaceState(null,"",u.toString())}}catch(e){}})();</script>
@@ -353,7 +362,8 @@ Chromium.
 - A `node --test` test runs the patch step against the release files. It
   must show:
   - each original string is gone and each replacement appears once;
-  - the guard is the first element in `<head>`;
+  - the published Crowdsource `index.html` contains
+    `classicstorymaps-builder-guard`;
   - the builder files are absent;
   - a missing patch target fails.
 - A check over `publish/viewers/*/index.html` fails if any file contains
@@ -377,3 +387,135 @@ Chromium.
 - The Cascade, Shortlist, and Map Series build scripts have the same silent
   copy-`src` fallback. Their published pages have no template tags today; a
   follow-up should make those builds fail loudly too.
+
+### D2. Replace the silent raw-source fallback in the Cascade, Shortlist, and Map Series builds
+
+Added 2026-10-07, at `5f3700e`. Do this after D1; it reuses D1's download,
+checksum, and extract approach.
+
+**Evidence: the scripts.**
+
+- `scripts/build-shortlist-runtime.sh` and `scripts/build-mapseries-runtime.sh`
+  (lines 27–34) copy `runtimes/<app>/upstream/src/` into the build output
+  when the grunt build fails or produces no `deploy/` folder. The only signal
+  is a stderr message.
+- `scripts/build-cascade-runtime.sh` tries three things after a failed build:
+  1. a local release cache (`runtimes/cascade/release-1.23.0`), which is
+     git-ignored and never present in CI;
+  2. an old build pulled from git history (`30d22e8…`);
+  3. raw `src/` plus CDN downloads (`stage_fallback_lib_assets`).
+
+**Evidence: the live viewers** (headless Chromium, 2026-10-07):
+
+- **Shortlist is live on the raw-source fallback.**
+  - It serves loose source modules such as
+    `app/storymaps/common/utils/CommonHelper.js`.
+  - `app/viewer-min.js` returns 404.
+  - It renders story `5a9c34acf59a49f0a67d5f7293b44d6b` ("The Raised Bogs of
+    Ireland"), but shows a "⚙ Edit ×" builder button to anonymous visitors,
+    because raw source runs in development mode.
+- **Map Series is a real grunt build** (`app/viewer-min.js` is present).
+  Story `77245a2c7bb540878fd3b24ebd048b20` ("Stewardship") renders.
+- **Cascade** has `app/viewer-min.js`, and Palau
+  (`dbc3574e3d0d4f4a81ae95f2e86b0dc2`) renders.
+
+**Consequence:** Shortlist's build already fails in CI. Making these scripts
+fail loudly without a replacement would break every deploy.
+
+**Official replacements.** Esri published built releases matching each
+pinned upstream version. Each contains `app/viewer-min.js` and
+`app/main-config.js`.
+
+- **Shortlist 2.12.0**
+  - URL: `https://github.com/Esri/storymap-shortlist/releases/download/V2.12.0/Storytelling-Shortlist-2.12.0.zip`
+  - SHA-256: `e315fde278ab354ea58e53b3862471d71b637ad4f29cfc9c36fd94b013851bdf`
+  - Files are at the zip root.
+- **Map Series 1.27.0**
+  - URL: `https://github.com/Esri/storymap-series/releases/download/V1.27.0/storymap-series-1.27.0.zip`
+  - SHA-256: `3c6ca06a3a268618e6561764b0c1484d22cf8f2b4a79b8b2e302caed904e5d41`
+  - Files are under a top-level `storymap-series-1.27.0/` folder.
+- **Cascade 1.23.0**
+  - URL: `https://github.com/Esri/storymap-cascade/releases/download/V1.23.0/Storymaps-Cascade-1.23.0.zip`
+  - SHA-256: `40b68fd330b232571146ef7aaf0a3942069355e8a0f4cf0719a66d3b6a7a267e`
+  - Files are at the zip root. Ignore the `__MACOSX/` folder.
+
+**Tested locally.** Each release, with `authorizedOwners: ["*"]`, was served
+and loaded in headless Chromium:
+
+- **Shortlist:** `5a9c34acf59a49f0a67d5f7293b44d6b` rendered, with no
+  "⚙ Edit ×" button.
+- **Map Series:** `77245a2c7bb540878fd3b24ebd048b20` rendered.
+- **Cascade:** Palau (`dbc3574e3d0d4f4a81ae95f2e86b0dc2`) rendered.
+
+All three had no visible Edit button, no console errors, and no failed
+requests. Map Series story `858c4126f0604d1a86dea06ffbdc23a3` also renders,
+but its own third-party map hosts no longer resolve. Do not use it as a gate.
+
+**Change.**
+
+1. **Shared release helper.** Add one helper, for example
+   `scripts/lib/stage-official-release.sh`, that:
+   - downloads the release URL;
+   - verifies its SHA-256 with `sha256sum -c`;
+   - extracts it into `runtimes/<app>/build`, stripping a single top-level
+     folder if present and skipping `__MACOSX/`;
+   - exits non-zero on any failure.
+
+   If D1 already added an equivalent helper, extend it rather than adding a
+   second one.
+2. **Site configuration on the release.** The release `index.html` lacks your
+   site's values, which live in `runtimes/<app>/upstream/src/index.html`:
+   the default `appid` and `authorizedOwners: ["*"]`.
+   - Read both values from that `src/index.html`. Do not hard-code them.
+   - Apply them to the release `index.html` by exact replacement of
+     `authorizedOwners: [""]` and `appid: ""`. Assert each occurs exactly
+     once.
+   - At review time the `src` values were: Cascade `f2e8448fef064238ace4f324ffc16fde`,
+     Map Series `167ca9b1c85e4c7ea5eac8c6be43358b`, Shortlist
+     `0584dbad6ebf433a96f1111f4cc7e3bd`, each with `authorizedOwners: ["*"]`.
+3. **Build order in each of the three scripts:**
+   1. Run the grunt build.
+   2. If it fails, or its output lacks `index.html` or `app/viewer-min.js`
+      (for Cascade, keep `has_required_cascade_viewer_files`), stage the
+      official release.
+   3. If that fails too, exit 1.
+
+   Then:
+   - remove every `cp -R "$RUNTIME_PATH/src"` fallback;
+   - remove Cascade's local-release and git-history fallbacks;
+   - remove `stage_fallback_lib_assets`;
+   - remove `runtimes/cascade/fallback-assets.sha256` if nothing else uses it.
+4. **Make the source visible and testable.**
+   - Support `CLASSIC_RUNTIME_SOURCE=release`, which skips grunt and stages
+     the release, so the fallback can be tested even where the build
+     succeeds.
+   - Each script writes a `BUILD_SOURCE` file into its build output,
+     containing `grunt` or `release:<version>`.
+   - The publish step keeps that file.
+5. **Record provenance.** Record each release's URL, version, and SHA-256 in
+   `runtimes/<app>/runtime-manifest.json`.
+6. **Out of scope.** Leave builder handling to the existing publish step:
+   the `classicstorymaps-builder-guard` injection and the removal of
+   `resources/tpl/builder`.
+
+**Done when:**
+
+- `node --test` tests show:
+  - the helper rejects a wrong SHA-256;
+  - each script exits non-zero when both grunt and the release fail
+    (simulate with a bad hash);
+  - after a full build, every runtime's `BUILD_SOURCE` is `grunt` or
+    `release:*`, never anything else.
+- With `CLASSIC_RUNTIME_SOURCE=release` set for each of the three runtimes, a
+  browser check loads:
+  - Shortlist `5a9c34acf59a49f0a67d5f7293b44d6b`;
+  - Map Series `77245a2c7bb540878fd3b24ebd048b20`;
+  - Cascade `dbc3574e3d0d4f4a81ae95f2e86b0dc2`.
+
+  Each must render its title, show no visible Edit button, and have no
+  console errors and no failed requests, both plain and with `&edit=true`.
+- A normal branch run (no override) passes. Record each runtime's
+  `BUILD_SOURCE` in the run summary or commit message. Expect Shortlist to
+  report `release:2.12.0`.
+- **Owner check:** after an owner-approved deploy, the live Shortlist viewer
+  no longer shows "⚙ Edit ×", and Map Series and Cascade still load.
