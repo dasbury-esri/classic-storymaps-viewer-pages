@@ -90,8 +90,37 @@ The first command needs public GitHub access and intentionally exits nonzero
 while drift remains. The second uses only temporary local repositories. The
 reconstruction check is not a deployment gate while its documented drift remains.
 
-## C3: Owner Decision Pending
+## C3: Generated Output Untracked
 
-No change to `publish/` tracking has been made. Untracking generated output,
-updating ignore rules, and validating a fresh-clone preview with Cascade's
-historical fallback require the owner's decision first.
+The owner approved untracking `publish/`, retaining local output and history,
+and documenting the build/preview procedure. The change uses
+`git rm -r --cached publish` and a root `/publish/` ignore rule. Local output
+remained on disk after the index-only removal. No history was rewritten.
+
+The new build-security regression failed while generated output was tracked,
+then passed after untracking and ignoring it. The same test directly restores
+Cascade's historical bundle and checks its required viewer files.
+
+Fresh-clone validation used a full-history clone of `16e13d9` with only the
+staged C3 changes applied. It started without `publish/index.html`, dependencies,
+build output, or a Cascade release cache:
+
+- All 44 tests passed under Node 24.21.0.
+- All ten workflow build scripts completed in order: eight runtimes, landing,
+  and runtime publishing. The local preview used `SITE_BASE_PATH=""`.
+- Cascade's log explicitly reported that its historical fallback bundle was
+  restored from Git history, without a preloaded release cache.
+- Artifact structure checks found all runtime entry pages and Cascade's
+  `viewer-min.js`, `colors-default.less`, and `variables.less`.
+- All three full-artifact link tests passed.
+- A loopback-only Python HTTP server served the resulting artifact. Browser
+  checks returned HTTP 200 for the root landing, catalog, Map Tour launcher,
+  Cascade entry point, viewer bundle, and sampled Calcite stylesheet.
+- Desktop landing and mobile catalog screenshots were inspected. C1's detailed
+  long-destination layout checks are recorded above. No automated sign-in or
+  live-site request was involved.
+
+The fresh clone demonstrates source-to-preview behavior after removal, while
+the original worktree's existing local `publish/` remains untouched. No Batch C
+commits were pushed as part of this work. Authenticated runtime behavior and a
+new hosted deployment are not claimed by these local checks.

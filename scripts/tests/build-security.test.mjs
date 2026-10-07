@@ -39,6 +39,27 @@ test('all npm runtime installs disable lifecycle scripts', () => {
   }
 });
 
+test('publish output is untracked and ignored while Cascade history remains usable', () => {
+  const tracked = spawnSync('git', ['ls-files', '-z', '--', 'publish/'], { cwd: repo, encoding: 'utf8' });
+  assert.equal(tracked.status, 0, tracked.stderr);
+  assert.equal(tracked.stdout.length, 0, 'Generated publish files must not be tracked');
+  const ignored = spawnSync('git', ['check-ignore', '--no-index', 'publish/index.html'], { cwd: repo, encoding: 'utf8' });
+  assert.equal(ignored.status, 0, 'Generated publish files must be ignored');
+  const temporary = mkdtempSync(path.join(os.tmpdir(), 'cascade-history-'));
+  try {
+    const script = readFileSync(path.join(repo, 'scripts/build-cascade-runtime.sh'), 'utf8');
+    const functions = script.slice(0, script.indexOf('\nrm -rf "$OUTPUT_PATH"'));
+    const result = spawnSync('bash', ['-s', '--', path.join(temporary, 'output')], {
+      cwd: repo,
+      input: functions + '\nstage_history_fallback_bundle "$1"\nhas_required_cascade_viewer_files "$1"\n',
+      encoding: 'utf8'
+    });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
 test('Cascade rejects altered fallback downloads before using them', () => {
   const temporary = mkdtempSync(path.join(os.tmpdir(), 'cascade-integrity-'));
   try {

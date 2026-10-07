@@ -11,6 +11,43 @@ Monorepo for hosting Classic Storymaps landing and per-app viewer helper pages u
 - Extracted runtime release bundles under `runtimes/*/release-*` are treated as local fallback caches and are git-ignored.
 - The current Cascade fallback at `runtimes/cascade/release-1.23.0` is intentionally kept local so `scripts/build-cascade-runtime.sh` can recover when the upstream legacy build cannot reproduce the original deploy output.
 
+## Local Build and Preview
+
+`publish/` is generated output and is no longer tracked. Build it locally or use
+the CI artifact; do not commit generated files. Existing historical copies stay
+in Git history. Cascade can restore its complete viewer bundle from commit
+`30d22e8aa38fce3553eec3dd33e8283e3ddb1770` even without a local release cache.
+Use a full-history clone, as CI does, rather than a shallow clone or source ZIP.
+
+Prerequisites: Node.js 24 with npm, Git, Bash, curl, tar, and `sha256sum` on PATH;
+Python 3 is used for the preview server. Dependency downloads need network
+access. From the repository root, run the same build sequence as CI:
+
+```sh
+set -e
+export SITE_BASE_PATH=""
+node --test scripts/tests/*.test.mjs
+bash scripts/build-maptour-runtime.sh
+bash scripts/build-swipe-runtime.sh
+bash scripts/build-mapjournal-runtime.sh
+bash scripts/build-mapseries-runtime.sh
+bash scripts/build-cascade-runtime.sh
+bash scripts/build-shortlist-runtime.sh
+bash scripts/build-crowdsource-runtime.sh
+bash scripts/build-basic-runtime.sh
+bash scripts/build-classic-storymaps-landing.sh
+bash scripts/build-classic-storymaps-runtime-publish.sh
+PUBLISH_CHECK_ROOT=publish node --test scripts/tests/check-links.test.mjs
+python3 -m http.server 8000 --bind 127.0.0.1 --directory publish
+```
+
+Open `http://127.0.0.1:8000/`. Stop the server with Ctrl+C. Choose another port
+if 8000 is occupied. This preview uses an empty base path so the output is served
+at the local root; GitHub Pages uses the repository base path described below.
+Builds write ignored dependencies/output inside runtime directories and may
+change tracked upstream build metadata. Review such changes separately; do not
+commit them as part of generated output.
+
 ## Tests
 
 From the repository root, run the tests with Node.js 20 or later:
