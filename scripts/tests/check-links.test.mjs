@@ -237,6 +237,32 @@ test('catalog has a return button pointing to the archive under the deployment p
   assert.equal(link[1], base + '/archive/');
 });
 
+test('catalog supports all eight runtimes with working launcher routes', () => {
+  const context = vm.createContext({ window: { location: { pathname: base + '/viewers/' } } });
+  vm.runInContext(readFileSync(path.join(publish, 'viewers/assets/js/classic-storymaps-config.js'), 'utf8'), context);
+  const apps = context.window.ClassicStoryMapsConfig.catalogApps;
+  assert.equal(apps.length, runtimes.length);
+  for (const app of apps) {
+    assert.equal(app.state, 'supported', app.runtime);
+    assert.equal(app.action, 'Open Launcher', app.runtime);
+    assert.equal(app.launchRoute, app.runtime + '-launcher.html');
+    assert.ok(existsSync(path.join(publish, 'viewers', app.launchRoute)));
+    assert.doesNotMatch(app.description, /in progress/i);
+  }
+});
+
+test('catalog cards omit support badges and retain all launcher links', () => {
+  const context = vm.createContext({ window: { location: { pathname: base + '/viewers/' } }, grid: {} });
+  vm.runInContext(readFileSync(path.join(publish, 'viewers/assets/js/classic-storymaps-config.js'), 'utf8'), context);
+  const html = readFileSync(path.join(publish, 'viewers/index.html'), 'utf8');
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+  vm.runInContext(script.slice(script.indexOf('    const SUPPORT_STATE'), script.indexOf('    const grid')), context);
+  vm.runInContext(script.slice(script.indexOf('    function getActionMarkup')), context);
+  assert.equal((context.grid.innerHTML.match(/<article\b/g) || []).length, runtimes.length);
+  assert.doesNotMatch(context.grid.innerHTML, /class="(?:badge|row)\b|In Progress|>Supported</);
+  assert.equal((context.grid.innerHTML.match(/class="link-btn"/g) || []).length, runtimes.length);
+});
+
 test('catalog routes and loader inference include the deployment prefix', () => {
   const context = vm.createContext({ window: { location: { pathname: base + '/viewers/maptour-launcher.html' } } });
   vm.runInContext(readFileSync(path.join(publish, 'viewers/assets/js/classic-storymaps-config.js'), 'utf8'), context);

@@ -115,10 +115,11 @@
     {
       runtime: "crowdsource",
       title: "Story Map Crowdsource",
-      state: "queued",
-      description: "Public contribution workflow with moderation and approval. Viewer support is currently in progress.",
+      state: "supported",
+      description: "View existing crowdsourced photos and stories in a map and gallery. Contributions and editing are disabled.",
       image: "assets/images/crowdsource.jpg",
-      action: "In Progress"
+      launchRoute: "crowdsource-launcher.html",
+      action: "Open Launcher"
     },
     {
       runtime: "basic",

@@ -261,41 +261,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      min-height: 225px;
+      min-height: 185px;
       height: 100%;
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .badge {
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 5px 8px;
-      border: 1px solid;
-      background: #fff;
-    }
-
-    .badge.supported {
-      color: var(--ok);
-      border-color: rgba(43, 127, 66, 0.35);
-    }
-
-    .badge.queued {
-      color: var(--queued);
-      border-color: rgba(185, 104, 16, 0.35);
-    }
-
-    .badge.prep {
-      color: var(--prep);
-      border-color: rgba(92, 96, 112, 0.35);
     }
 
     .title {
@@ -452,13 +419,7 @@
   <script src="assets/js/arcgis-auth-helpers.js"></script>
   <script>
     const SUPPORT_STATE = {
-      SUPPORTED: "supported",
-      QUEUED: "queued"
-    };
-
-    const SUPPORT_LABEL = {
-      [SUPPORT_STATE.SUPPORTED]: "Supported",
-      [SUPPORT_STATE.QUEUED]: "In Progress"
+      SUPPORTED: "supported"
     };
 
     const CLASSIC_CONFIG = window.ClassicStoryMapsConfig || {};
@@ -667,11 +628,6 @@
         return;
       }
 
-      if (runtime === "crowdsource") {
-        setOmniStatus("Crowdsource is currently marked In Progress on this site.", "error");
-        return;
-      }
-
       if (runtime === "unknown-classic") {
         setOmniStatus("Classic Story Map detected, but runtime type could not be classified.", "error");
         return;
@@ -726,16 +682,12 @@
     }
 
     function cardTemplate(app, index) {
-      const stateLabel = SUPPORT_LABEL[app.state] || "Coming Soon";
       const action = getActionMarkup(app);
 
       return `
         <article class="card" style="animation-delay:${Math.min(index * 0.04, 0.36)}s">
           <img src="${app.image}" alt="${app.title} thumbnail" loading="lazy">
           <div class="card-body">
-            <div class="row">
-              <span class="badge ${app.state}">${stateLabel}</span>
-            </div>
             <h2 class="title">${app.title}</h2>
             <p class="desc">${app.description}</p>
             <div class="action-row">${action}</div>
