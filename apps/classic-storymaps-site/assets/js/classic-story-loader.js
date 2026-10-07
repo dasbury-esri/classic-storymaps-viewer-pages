@@ -647,20 +647,6 @@
     return lines.join("\n");
   }
 
-  function addTokenToResourceUrl(url, token) {
-    if (!token) {
-      return url;
-    }
-
-    var u = String(url || "");
-    if (u.indexOf("token=") !== -1) {
-      return u;
-    }
-
-    var sep = u.indexOf("?") === -1 ? "?" : "&";
-    return u + sep + "token=" + encodeURIComponent(token);
-  }
-
   async function appendResourcesAndImages(zip, state, token, setStatus) {
     setStatus("Collecting item resources...", "warn");
 
@@ -682,7 +668,7 @@
       if (!resourcePath) continue;
 
       var resourceUrl = ARC_BASE + "/content/items/" + encodeURIComponent(item.id) + "/resources/" + encodePath(resourcePath);
-      resourceUrl = addTokenToResourceUrl(resourceUrl, token);
+      resourceUrl = window.ClassicArcgisResourceHelpers.withArcgisToken(resourceUrl, token);
 
       try {
         var r = await fetch(resourceUrl);
@@ -708,11 +694,7 @@
 
     for (var j = 0; j < filteredRefs.length; j += 1) {
       var ref = filteredRefs[j];
-      var fetchUrl = ref.url;
-
-      if (fetchUrl.indexOf("/sharing/rest/content/items/") !== -1) {
-        fetchUrl = addTokenToResourceUrl(fetchUrl, token);
-      }
+      var fetchUrl = window.ClassicArcgisResourceHelpers.withArcgisToken(ref.url, token);
 
       try {
         var imgRes = await fetch(fetchUrl);
