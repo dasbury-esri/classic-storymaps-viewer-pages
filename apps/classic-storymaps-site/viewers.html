@@ -90,6 +90,13 @@
       font-size: 0.79rem;
     }
 
+    .auth-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
     .auth-btn {
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -103,6 +110,16 @@
       letter-spacing: 0.01em;
       cursor: pointer;
       z-index: 1;
+    }
+
+    .auth-btn.archive-return {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--ink-1);
+      text-decoration: none;
+      white-space: nowrap;
     }
 
     .auth-btn.auth-btn--logged-in {
@@ -400,6 +417,7 @@
       <div class="hero-top">
         <p class="eyebrow">Classic Esri Story Maps Viewers</p>
         <div class="auth-wrap">
+          <a class="auth-btn archive-return" href="__SITE_BASE_PATH__/archive/">Back to Archive</a>
           <button id="auth-button" class="auth-btn" type="button">Sign In</button>
         </div>
       </div>

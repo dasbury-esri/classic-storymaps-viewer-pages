@@ -3509,18 +3509,6 @@ body {
 .site-logo:hover {
   color: #333333;
 }
-.esri-logo {
-  background-image: url("../../images/tailcoat/logo-esri.png");
-  padding-top: 48px;
-  width: 85px;
-  float: right;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 1.5),
-  screen and (min-device-pixel-ratio: 1.5) {
-  .esri-logo {
-    background-image: url("../../images/tailcoat/logo-esri@2x.png");
-  }
-}
 .navigation-bar {
   min-height: 83px;
 }

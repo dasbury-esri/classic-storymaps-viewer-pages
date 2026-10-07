@@ -89,6 +89,37 @@ sanitize_archive_html_file() {
   local file_path="$1"
 
   perl -0pi -e '
+    s{(<nav\b[^>]*class="(?:site-nav|drawer-nav)\b[^>]*>)(.*?)(</nav>)}{
+      my ($opening, $content, $closing) = ($1, $2, $3);
+      $content =~ s{<(?:a|span)([^>]*\bdata-langlabel="nav_gallery"[^>]*)>.*?</(?:a|span)>}{
+        my $attributes = $1;
+        $attributes =~ s/\s+href="[^"]*"//g;
+        $attributes =~ s/nav_gallery/nav_viewers/;
+        "<a$attributes href=\"/viewers/\">Viewers</a>";
+      }gse;
+      $content =~ s{<(?:a|span)([^>]*\bdata-langlabel="nav_mystories"[^>]*)>.*?</(?:a|span)>}{
+        my $attributes = $1;
+        $attributes =~ s/\s+href="[^"]*"//g;
+        $attributes =~ s/nav_mystories/nav_faq/;
+        "<a$attributes href=\"/archive/2017-12-10-pages/en__faq.html\">FAQs</a>";
+      }gse;
+      "$opening$content$closing";
+    }gse;
+    s{(<footer\b[^>]*>)(.*?)(</footer>)}{
+      my ($opening, $content, $closing) = ($1, $2, $3);
+      $content =~ s{(<section\b[^>]*class="footer-social-nav"[^>]*>)(.*?)(</section>)}{
+        my ($section_opening, $icons, $section_closing) = ($1, $2, $3);
+        $icons =~ s/\s+href="[^"]*"//g;
+        "$section_opening$icons$section_closing";
+      }gse;
+      "$opening$content$closing";
+    }gse;
+    s{(<div class="app-text">)(.*?)(</div>)}{
+      my ($opening, $content, $closing) = ($1, $2, $3);
+      $content =~ s{<(a|span)\b[^>]*>\s*GALLERY\s*</\1>}{}gi;
+      "$opening$content$closing";
+    }gse;
+    s{<(a|div)\b[^>]*\bclass="esri-logo(?:-footer)?"[^>]*>.*?</\1>}{}gs;
     s{\s*<script>window\.RufflePlayer=.*?</script>\s*}{}gs;
     s{\s*<script[^>]+ruffle\.js[^>]*></script>\s*}{}gs;
     s{\s*<script type="text/javascript">\s*"\d+"\);\s*</script>\s*<!-- End Wayback Rewrite JS Include -->\s*}{}gs;
@@ -226,7 +257,7 @@ add_archive_header_to_page() {
   fi
 
   perl -0pi -e '
-    s{<div class="page sticky-footer">}{<div class="page sticky-footer">\n<header id="header">\n  <div class="container">\n    <div class="row">\n      <div class="column-24">\n        <div class="site-brand">\n          <a class="drawer-toggle toggle-site-navigation icon-navigation tablet-show" data-direction="active-left" href="#"></a>\n          <a class="site-logo phone-hide" data-langlabel="sm-site-title" href="/archive/">Story Maps</a>\n        </div>\n        <nav class="site-nav tablet-hide">\n          <ul>\n            <li><a data-langlabel="nav_apps" href="/archive/">Apps</a></li>\n            <li><span data-langlabel="nav_gallery">Gallery</span></li>\n            <li><a data-langlabel="nav_resources" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>\n            <li><a data-langlabel="nav_blogs" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>\n            <li><a data-langlabel="nav_mystories" href="/archive/2017-12-10-pages/en__my-stories.html">My Stories</a></li>\n          </ul>\n        </nav>\n        <div class="esri-logo"></div>\n      </div>\n    </div>\n  </div>\n</header>}s;
+    s{<div class="page sticky-footer">}{<div class="page sticky-footer">\n<header id="header">\n  <div class="container">\n    <div class="row">\n      <div class="column-24">\n        <div class="site-brand">\n          <a class="drawer-toggle toggle-site-navigation icon-navigation tablet-show" data-direction="active-left" href="#"></a>\n          <a class="site-logo phone-hide" data-langlabel="sm-site-title" href="/archive/">Story Maps</a>\n        </div>\n        <nav class="site-nav tablet-hide">\n          <ul>\n            <li><a data-langlabel="nav_apps" href="/archive/">Apps</a></li>\n            <li><a data-langlabel="nav_viewers" href="/viewers/">Viewers</a></li>\n            <li><a data-langlabel="nav_resources" href="/archive/2017-12-10-pages/en__resources.html">Resources</a></li>\n            <li><a data-langlabel="nav_blogs" href="/archive/2017-12-10-pages/en__archive-blog.html">Blog</a></li>\n            <li><a data-langlabel="nav_faq" href="/archive/2017-12-10-pages/en__faq.html">FAQs</a></li>\n          </ul>\n        </nav>\n      </div>\n    </div>\n  </div>\n</header>}s;
   ' "$file_path"
 }
 
