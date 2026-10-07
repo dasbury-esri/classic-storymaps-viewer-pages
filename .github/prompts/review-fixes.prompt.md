@@ -224,3 +224,156 @@ before any change.
   - Document the local preview build in `README.md`.
 - **Done when:** a fresh clone builds and previews locally, and the Cascade
   fallback still works.
+
+## Batch D: Crowdsource (added 2026-10-06, at `9065a0f`)
+
+### D1. Publish a working, view-only Crowdsource viewer
+
+Classic Crowdsource must be **view-only**: no Participate (contributions) and
+no builder. This is an owner requirement.
+
+**Evidence: why it is broken.** Crowdsource has never worked on this site.
+
+- Every published version since onboarding (`d7edbc2`, 2026-03-12) has
+  served raw source.
+- `scripts/build-crowdsource-runtime.sh` (lines 29–37) falls back to copying
+  `runtimes/crowdsource/upstream/src/` when the 2018 grunt/webpack build
+  fails, which it does on the current toolchain. It then renames the EJS
+  template `index.ejs` to `index.html`.
+- In a browser, the live
+  `viewers/crowdsource/index.html?appid=f1fcc302b0864b0c94beffc5177da2b8`
+  makes one script request: the literal URL
+  `…/crowdsource/<%= pathMods.resourcePath %>app/main-config<%= pathMods.minPath %>.js`.
+  It gets HTTP 400 and the page stays blank.
+- Raw `src/` also has no `app/main-config.js`, only Babel source
+  (`main-config.babel.js`).
+- CI only checks that `index.html` exists, so nothing caught this.
+- Esri's own hosted viewer (`www.arcgis.com/apps/StoryMapCrowdsource/`) now
+  shows "has been retired" for this story.
+
+**Evidence: the fix, tested locally.** The steps below were applied to Esri's
+official release, served from a local HTTPS origin, and loaded in headless
+Chromium.
+
+- Desktop, `?edit=true`, `?fromScratch=true`, and a 390 px mobile view all
+  showed:
+  - no Participate button or text, and no contribution panel;
+  - builder mode off;
+  - gallery items present (12–14), with Explore Map opening the clustered
+    contribution map;
+  - no console errors and no failed requests.
+- On mobile, the bottom bar showed only Home, Map, and Gallery.
+
+**Change.** Each step must fail the build when it does not apply cleanly.
+
+1. **Use the official release, not the source build.** In
+   `scripts/build-crowdsource-runtime.sh`:
+   - download
+     `https://github.com/Esri/storymap-crowdsource/releases/download/v0.10.0/StoryMapsCrowdsource-0.10.0.zip`;
+   - verify SHA-256
+     `e6a5a2d775f63f3ea466613a5be89449cc4647b4792f4d91d89b21c6073b41dd`, as B2
+     does for the Cascade fallback assets;
+   - unzip it into the build output;
+   - delete the `src/` fallback and the `index.ejs` copy, and make any failure
+     stop the build.
+
+   v0.10.0 matches the pinned upstream version, and the bundle loads its
+   scripts by relative path, so it works under `SITE_BASE_PATH`.
+2. **Apply exact text replacements, asserting each target occurs exactly
+   once before replacing:**
+
+   **(a) jQuery 3 fix**, in `app/main-app.min.js`. Replace:
+
+   ```text
+   t.find("img").load(this.updateTitleWidth)
+   ```
+
+   with:
+
+   ```text
+   t.find("img").on("load",this.updateTitleWidth)
+   ```
+
+   **(b) Participation off**, in `app/main-app.min.js`. Replace:
+
+   ```text
+   UPDATE_SETTINGS_CONTRIBUTE_PARTICIPATION_ALLOWED:return n.allowed;default:return t}
+   ```
+
+   with:
+
+   ```text
+   UPDATE_SETTINGS_CONTRIBUTE_PARTICIPATION_ALLOWED:return!1;default:return!1}
+   ```
+
+   **(c) Builder off**, in `app/main-config.min.js`. Replace:
+
+   ```text
+   isBuilder:i("edit")||i("fromScratch")||i("fromscratch")||!1,fromScratch:i("fromScratch")||i("fromscratch")||!1
+   ```
+
+   with:
+
+   ```text
+   isBuilder:!1,fromScratch:!1
+   ```
+
+   - **(a)** Esri's release calls the jQuery 1/2 `.load(handler)` shorthand
+     with bundled jQuery 3.3.1. That throws `e.indexOf is not a function`,
+     and the cover never finishes (no Explore Map button).
+   - **(b)** This reducer feeds every Participate entry point: the header
+     button, both contribution panels, and the mobile Participate button (see
+     upstream `src/app/components/crowdsource/viewer/Viewer.babel.js` lines
+     56, 130, 208, and 287). Forcing it false makes participation unavailable,
+     whatever each story's settings say.
+3. **Add a URL guard to `index.html`.** Insert this script immediately after
+   `<head>`. Without it, `?edit=true` still crashes with
+   "x.default is not a constructor", because the AMD `mode!isBuilder` plugin
+   reads the URL independently:
+
+   ```html
+   <script>(function(){try{var u=new URL(window.location.href),c=!1;["edit","fromScratch","fromscratch"].forEach(function(k){if(u.searchParams.has(k)){u.searchParams.delete(k);c=!0}});if(c){window.history.replaceState(null,"",u.toString())}}catch(e){}})();</script>
+   ```
+
+4. **Delete the builder bundles from the output:**
+   - `app/main-app-builder.min.js`
+   - `app/main-app-builder.min.css`
+   - `app/main-app-builder-bootstrap.min.css`
+   - `app/main-app-builder-calcite.min.css`
+5. **Record provenance.**
+   - Add `runtimes/crowdsource/runtime-manifest.json` with: the release URL,
+     version `0.10.0`, the SHA-256, license Apache-2.0, `viewerOnly: true`,
+     and the patch list.
+   - Add `runtimes/crowdsource/patches/README.md` explaining each
+     replacement and why.
+   - Crowdsource is currently the only runtime without a manifest.
+
+**Done when:**
+
+- A `node --test` test runs the patch step against the release files. It
+  must show:
+  - each original string is gone and each replacement appears once;
+  - the guard is the first element in `<head>`;
+  - the builder files are absent;
+  - a missing patch target fails.
+- A check over `publish/viewers/*/index.html` fails if any file contains
+  `<%`. It must fail against today's build.
+- A browser check passes on desktop and at 390 px. Crowdsource forces HTTPS,
+  so test over an HTTPS origin. Load the appid above three ways: plain,
+  `&edit=true`, and `&fromScratch=true`. It must show:
+  - no `button.participate` element and no "Participate" text;
+  - builder mode false;
+  - gallery items present;
+  - Explore Map works on desktop;
+  - no console errors and no failed requests.
+- **Owner check:** after an owner-approved deploy, the owner opens the live
+  Crowdsource viewer on desktop and phone, and confirms there is no
+  Participate button and the map and gallery work.
+
+**Notes:**
+
+- View-only applies to this site only. Story owners' feature services can
+  still accept edits through ArcGIS itself.
+- The Cascade, Shortlist, and Map Series build scripts have the same silent
+  copy-`src` fallback. Their published pages have no template tags today; a
+  follow-up should make those builds fail loudly too.
