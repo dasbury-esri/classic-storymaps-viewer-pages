@@ -93,6 +93,13 @@ test('published HTML links stay under the base path and resolve on disk', () => 
   assert.equal(failures.length, 0, failures.length + ' link failures:\n' + failures.slice(0, 30).join('\n'));
 });
 
+test('published runtime entry points contain no uncompiled template tags', () => {
+  for (const runtime of runtimes) {
+    const html = readFileSync(path.join(publish, 'viewers', runtime, 'index.html'), 'utf8');
+    assert.doesNotMatch(html, /<%/, runtime + ': runtime entry point must be compiled');
+  }
+});
+
 test('archive root repeats the archive disclaimer below the historical copyright', () => {
   for (const filename of ['index.html', 'archive/index.html']) {
     const html = readFileSync(path.join(publish, filename), 'utf8');

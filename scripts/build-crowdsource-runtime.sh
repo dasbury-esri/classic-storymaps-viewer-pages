@@ -1,39 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-RUNTIME_PATH="${RUNTIME_PATH:-runtimes/crowdsource/upstream}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MANIFEST_PATH="${MANIFEST_PATH:-$SCRIPT_DIR/../runtimes/crowdsource/runtime-manifest.json}"
 OUTPUT_PATH="${OUTPUT_PATH:-runtimes/crowdsource/build}"
+source "$SCRIPT_DIR/lib/stage-official-release.sh"
 
 rm -rf "$OUTPUT_PATH"
-mkdir -p "$OUTPUT_PATH"
-
-build_ok=true
-pushd "$RUNTIME_PATH" >/dev/null
-  if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
-    npm ci --ignore-scripts || build_ok=false
-  else
-    npm install --ignore-scripts --no-package-lock --no-audit --no-fund || build_ok=false
-  fi
-
-  if [[ "$build_ok" == "true" ]]; then
-    if [[ ! -x "node_modules/.bin/grunt" ]]; then
-      npm install --ignore-scripts --no-save grunt-cli --no-audit --no-fund || build_ok=false
-    fi
-  fi
-
-  if [[ "$build_ok" == "true" ]]; then
-    ./node_modules/.bin/grunt --force || build_ok=false
-  fi
-popd >/dev/null
-
-if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" ]]; then
-  cp -R "$RUNTIME_PATH/deploy"/. "$OUTPUT_PATH"/
-else
-  echo "Crowdsource grunt build failed on this toolchain; using source fallback output from src/." >&2
-  cp -R "$RUNTIME_PATH/src"/. "$OUTPUT_PATH"/
-  if [[ ! -f "$OUTPUT_PATH/index.html" && -f "$OUTPUT_PATH/index.ejs" ]]; then
-    cp "$OUTPUT_PATH/index.ejs" "$OUTPUT_PATH/index.html"
-  fi
-fi
-
-echo "Crowdsource build output copied to $OUTPUT_PATH"
+stage_official_release "$MANIFEST_PATH" "$OUTPUT_PATH"
+node "$SCRIPT_DIR/patch-runtime-release.mjs" "$MANIFEST_PATH" "$OUTPUT_PATH"
+test -f "$OUTPUT_PATH/app/main-app.min.js"
+test -f "$OUTPUT_PATH/app/main-config.min.js"
+echo "Crowdsource verified view-only release copied to $OUTPUT_PATH"

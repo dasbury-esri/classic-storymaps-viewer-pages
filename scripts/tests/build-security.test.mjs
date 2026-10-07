@@ -34,7 +34,8 @@ test('all npm runtime installs disable lifecycle scripts', () => {
   for (const runtime of ['maptour', 'swipe', 'mapjournal', 'mapseries', 'cascade', 'shortlist', 'crowdsource']) {
     const script = readFileSync(path.join(repo, 'scripts/build-' + runtime + '-runtime.sh'), 'utf8');
     const installs = script.split('\n').filter((line) => /\bnpm (?:ci|install)\b/.test(line));
-    assert.ok(installs.length > 0);
+    if (runtime === 'crowdsource') assert.equal(installs.length, 0, 'Crowdsource uses only the verified release');
+    else assert.ok(installs.length > 0);
     for (const install of installs) assert.ok(install.includes('--ignore-scripts'), runtime + ': ' + install.trim());
   }
 });

@@ -1,0 +1,38 @@
+{
+  "manifestVersion": "1.0",
+  "appId": "crowdsource",
+  "displayName": "Story Map Crowdsource",
+  "license": "Apache-2.0",
+  "viewerOnly": true,
+  "release": {
+    "version": "0.10.0",
+    "url": "https://github.com/Esri/storymap-crowdsource/releases/download/v0.10.0/StoryMapsCrowdsource-0.10.0.zip",
+    "sha256": "e6a5a2d775f63f3ea466613a5be89449cc4647b4792f4d91d89b21c6073b41dd"
+  },
+  "patches": [
+    {
+      "name": "jquery-3-image-load",
+      "file": "app/main-app.min.js",
+      "find": "t.find(\"img\").load(this.updateTitleWidth)",
+      "replace": "t.find(\"img\").on(\"load\",this.updateTitleWidth)"
+    },
+    {
+      "name": "participation-disabled",
+      "file": "app/main-app.min.js",
+      "find": "UPDATE_SETTINGS_CONTRIBUTE_PARTICIPATION_ALLOWED:return n.allowed;default:return t}",
+      "replace": "UPDATE_SETTINGS_CONTRIBUTE_PARTICIPATION_ALLOWED:return!1;default:return!1}"
+    },
+    {
+      "name": "builder-disabled",
+      "file": "app/main-config.min.js",
+      "find": "isBuilder:i(\"edit\")||i(\"fromScratch\")||i(\"fromscratch\")||!1,fromScratch:i(\"fromScratch\")||i(\"fromscratch\")||!1",
+      "replace": "isBuilder:!1,fromScratch:!1"
+    }
+  ],
+  "removeFiles": [
+    "app/main-app-builder.min.js",
+    "app/main-app-builder.min.css",
+    "app/main-app-builder-bootstrap.min.css",
+    "app/main-app-builder-calcite.min.css"
+  ]
+}
