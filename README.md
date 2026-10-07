@@ -33,6 +33,10 @@ without expiry metadata require signing in again. Sign-out clears the local
 token, expiry metadata, and `esri_auth` cookie; it does not revoke already issued
 tokens at ArcGIS.
 
+OAuth returns accept only `access_token` with a matching, single-use random
+128-bit state stored in the initiating tab. The pending state and return hash
+are cleared on callback; a valid callback restores the locally stored path.
+
 The `esri_auth` cookie remains JavaScript-readable with `Path=/` because the
 legacy runtimes consume it. Other Pages sites served from
 `https://dasbury-esri.github.io` can read this session cookie. Cookie paths,

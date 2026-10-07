@@ -1,11 +1,15 @@
 import assert from 'node:assert/strict';
+import { webcrypto } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import test from 'node:test';
 import vm from 'node:vm';
 
 const pageUrl = new URL('../../apps/classic-storymaps-site/viewers.html', import.meta.url);
 const helperUrl = new URL('../../apps/classic-storymaps-site/assets/js/arcgis-auth-helpers.js', import.meta.url);
 const page = readFileSync(pageUrl, 'utf8');
+const require = createRequire(import.meta.url);
+const pendingState = { state: '0123456789abcdef0123456789abcdef', returnPath: '/viewers/?app=maptour' };
 
 function authContext() {
   const storage = new Map();
@@ -15,14 +19,28 @@ function authContext() {
     Date,
     AUTH_STORAGE_KEY: 'arcgis_access_token',
     AUTH_EXPIRY_KEY: 'arcgis_access_token_expires',
+    AUTH_STATE_KEY: 'arcgis_oauth_state',
     AUTH_CONFIG: { clientId: 'test-client', redirectUri: 'https://site.example/viewers/' },
     document: { cookie: '' },
+    alert: (message) => { context.alertMessage = message; },
     sessionStorage: {
       getItem: (key) => storage.get(key) ?? null,
       setItem: (key, value) => storage.set(key, String(value)),
       removeItem: (key) => storage.delete(key)
     },
     window: {
+      crypto: {
+        getRandomValues: (bytes) => {
+          context.randomByteLength = bytes.byteLength;
+          return webcrypto.getRandomValues(bytes);
+        }
+      },
+      history: {
+        replaceState: (state, title, url) => {
+          context.historyUrl = url;
+          context.window.location.hash = '';
+        }
+      },
       location: {
         protocol: 'https:',
         pathname: '/viewers/',
@@ -50,7 +68,8 @@ test('login requests a 120-minute token', () => {
 
 test('OAuth return reads expires_in with the token', () => {
   const context = authContext();
-  context.window.location.hash = '#access_token=test-token&expires_in=1800';
+  context.sessionStorage.setItem(context.AUTH_STATE_KEY, JSON.stringify(pendingState));
+  context.window.location.hash = '#access_token=test-token&expires_in=1800&state=' + pendingState.state;
   const returned = context.getTokenFromHash();
   assert.equal(returned.token, 'test-token');
   assert.equal(returned.expiresIn, 1800);
@@ -90,5 +109,95 @@ test('missing or invalid lifetimes do not create a session', () => {
 });
 
 test('catalog source contains no legacy fourteen-day token lifetime', () => {
-  assert.doesNotMatch(page, /20160|14\s*\*\s*24|1209600/);
+  assert.equal(/20160|14\s*\*\s*24|1209600/.test(page), false);
+});
+
+test('login stores a cryptographically random 128-bit state and the return path', () => {
+  const context = authContext();
+  context.beginArcgisLogin();
+  assert.equal(context.randomByteLength, 16);
+  const stored = JSON.parse(context.sessionStorage.getItem(context.AUTH_STATE_KEY));
+  assert.match(stored.state, /^[a-f0-9]{32}$/);
+  assert.equal(stored.returnPath, '/viewers/?app=maptour');
+  assert.equal(new URL(context.authorizeUrl).searchParams.get('state'), stored.state);
+  assert.equal(context.getTokenFromHash(), null);
+  assert.equal(context.sessionStorage.getItem(context.AUTH_STATE_KEY), JSON.stringify(stored));
+  context.beginArcgisLogin();
+  const next = JSON.parse(context.sessionStorage.getItem(context.AUTH_STATE_KEY));
+  assert.notEqual(next.state, stored.state);
+});
+
+test('matching callback returns the token and path and consumes state and hash once', () => {
+  const context = authContext();
+  context.sessionStorage.setItem(context.AUTH_STATE_KEY, JSON.stringify(pendingState));
+  const hash = '#access_token=test-token&expires_in=1800&state=' + pendingState.state;
+  context.window.location.hash = hash;
+  const returned = context.getTokenFromHash();
+  assert.equal(returned.returnPath, pendingState.returnPath);
+  assert.equal(returned.token, 'test-token');
+  assert.equal(context.sessionStorage.getItem(context.AUTH_STATE_KEY), null);
+  assert.equal(context.window.location.hash, '');
+  context.window.location.hash = hash;
+  assert.equal(context.getTokenFromHash(), null);
+});
+
+for (const [label, stored, hash] of [
+  ['missing returned state', JSON.stringify(pendingState), '#access_token=test-token&expires_in=1800'],
+  ['mismatched state', JSON.stringify(pendingState), '#access_token=test-token&expires_in=1800&state=other'],
+  ['missing stored state', null, '#access_token=test-token&expires_in=1800&state=' + pendingState.state],
+  ['malformed stored state', '{invalid', '#access_token=test-token&expires_in=1800&state=' + pendingState.state],
+  ['legacy token parameter', JSON.stringify(pendingState), '#token=test-token&expires_in=1800'],
+  ['legacy token even with matching state', JSON.stringify(pendingState), '#token=test-token&expires_in=1800&state=' + pendingState.state]
+]) {
+  test('callback rejects ' + label + ' and clears pending state and hash', () => {
+    const context = authContext();
+    if (stored) context.sessionStorage.setItem(context.AUTH_STATE_KEY, stored);
+    context.window.location.hash = hash;
+    assert.equal(context.getTokenFromHash(), null);
+    assert.equal(context.sessionStorage.getItem(context.AUTH_STATE_KEY), null);
+    assert.equal(context.window.location.hash, '');
+  });
+}
+
+test('login does not redirect when session storage cannot retain state', () => {
+  const context = authContext();
+  context.sessionStorage.setItem = () => { throw new Error('storage disabled'); };
+  context.beginArcgisLogin();
+  assert.equal(context.authorizeUrl, undefined);
+  assert.ok(context.alertMessage);
+});
+
+test('catalog startup restores only the stored return path after validation', () => {
+  const context = authContext();
+  const stored = { ...pendingState, returnPath: '/viewers/?appid=local-test-id' };
+  context.sessionStorage.setItem(context.AUTH_STATE_KEY, JSON.stringify(stored));
+  context.window.location.hash = '#access_token=test-token&expires_in=1800&state=' + stored.state;
+  context.setAuthUi = () => {};
+  const startup = page.slice(page.indexOf('    const tokenFromHash = getTokenFromHash();'), page.indexOf('    omniForm.addEventListener('));
+  vm.runInContext(startup, context);
+  assert.equal(context.historyUrl, stored.returnPath);
+  assert.equal(context.getStoredToken(), 'test-token');
+  assert.equal(context.sessionStorage.getItem(context.AUTH_STATE_KEY), null);
+});
+
+test('pure OAuth parser accepts matching access_token returns and rejects malformed returns', () => {
+  const { parseAuthReturn } = require(helperUrl.pathname);
+  const hash = '#access_token=test-token&expires_in=1800&state=' + pendingState.state;
+  assert.deepEqual(parseAuthReturn(hash, pendingState), {
+    token: 'test-token', expiresIn: 1800, returnPath: pendingState.returnPath
+  });
+  for (const invalidHash of [
+    '#token=test-token',
+    '#access_token=test-token&expires_in=1800',
+    '#access_token=test-token&expires_in=1800&state=other',
+    '#access_token=test-token&state=' + pendingState.state,
+    '#access_token=test-token&expires_in=-1&state=' + pendingState.state,
+    '#access_token=test-token&expires_in=invalid&state=' + pendingState.state,
+    '#error=access_denied&state=' + pendingState.state
+  ]) {
+    assert.equal(parseAuthReturn(invalidHash, pendingState), null);
+  }
+  assert.equal(parseAuthReturn(hash, null), null);
+  assert.equal(parseAuthReturn(hash, { ...pendingState, returnPath: '//foreign.example/' }), null);
+  assert.equal(parseAuthReturn(hash, { ...pendingState, returnPath: '/\\foreign.example/' }), null);
 });

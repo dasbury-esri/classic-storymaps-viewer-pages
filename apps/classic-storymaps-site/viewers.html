@@ -453,6 +453,7 @@
     const omniStatus = document.getElementById("omni-status");
     const AUTH_STORAGE_KEY = "arcgis_access_token";
     const AUTH_EXPIRY_KEY = "arcgis_access_token_expires";
+    const AUTH_STATE_KEY = "arcgis_oauth_state";
     const APP_ID_REGEX = /^[a-f0-9]{32}$/i;
     const AUTH_CONFIG = {
       clientId: window.__CLASSIC_STORYMAPS_CLIENT_ID__ || "4ZanYdCYK0mWsFLz",
@@ -530,20 +531,19 @@
     }
 
     function getTokenFromHash() {
-      const hash = window.location.hash.startsWith("#")
-        ? window.location.hash.substring(1)
-        : window.location.hash;
-
-      if (!hash) {
+      if (!window.location.hash) {
         return null;
       }
 
-      const params = new URLSearchParams(hash);
-      const token = params.get("access_token") || params.get("token");
-      const expiresIn = Number(params.get("expires_in"));
-      return token && Number.isSafeInteger(expiresIn) && expiresIn > 0
-        ? { token, expiresIn }
-        : null;
+      try {
+        const storedState = sessionStorage.getItem(AUTH_STATE_KEY);
+        sessionStorage.removeItem(AUTH_STATE_KEY);
+        return window.ClassicArcgisAuthHelpers.parseAuthReturn(window.location.hash, JSON.parse(storedState));
+      } catch {
+        return null;
+      } finally {
+        clearUrlHash();
+      }
     }
 
     function setAuthUi(token) {
@@ -566,10 +566,16 @@
         return;
       }
 
-      const state = window.location.pathname + window.location.search;
-      const authUrl = window.ClassicArcgisAuthHelpers.buildAuthorizeUrl(AUTH_CONFIG.clientId, AUTH_CONFIG.redirectUri, state);
-
-      window.location.assign(authUrl);
+      try {
+        const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+        const state = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+        const returnPath = window.location.pathname + window.location.search;
+        sessionStorage.setItem(AUTH_STATE_KEY, JSON.stringify({ state, returnPath }));
+        const authUrl = window.ClassicArcgisAuthHelpers.buildAuthorizeUrl(AUTH_CONFIG.clientId, AUTH_CONFIG.redirectUri, state);
+        window.location.assign(authUrl);
+      } catch {
+        alert("Sign-in requires secure random values and session storage. Enable storage and try again.");
+      }
     }
 
     function setOmniStatus(message, kind) {
@@ -677,7 +683,7 @@
     const tokenFromHash = getTokenFromHash();
     if (tokenFromHash) {
       storeToken(tokenFromHash.token, tokenFromHash.expiresIn);
-      clearUrlHash();
+      window.history.replaceState({}, "", tokenFromHash.returnPath);
       setAuthUi(getStoredToken());
     } else {
       const storedToken = getStoredToken();

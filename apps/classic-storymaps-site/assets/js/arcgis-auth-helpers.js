@@ -31,7 +31,28 @@
     return "esri_auth=" + payload + "; " + attrs.join("; ");
   }
 
-  const helpers = { TOKEN_EXPIRATION_MINUTES, buildAuthorizeUrl, buildEsriAuthCookie };
+  function parseAuthReturn(hash, storedState) {
+    if (typeof hash !== "string" || !storedState || typeof storedState.state !== "string" || !storedState.state) {
+      return null;
+    }
+    const returnPath = storedState.returnPath;
+    if (typeof returnPath !== "string" || !returnPath.startsWith("/") || returnPath.startsWith("//") || /[\\\u0000-\u001f\u007f]/.test(returnPath)) {
+      return null;
+    }
+
+    const params = new URLSearchParams(hash.startsWith("#") ? hash.substring(1) : hash);
+    if (params.has("error") || params.getAll("state").length !== 1 || params.get("state") !== storedState.state
+      || params.getAll("access_token").length !== 1 || params.getAll("expires_in").length !== 1) {
+      return null;
+    }
+    const token = params.get("access_token");
+    const expiresIn = Number(params.get("expires_in"));
+    return token && Number.isSafeInteger(expiresIn) && expiresIn > 0
+      ? { token, expiresIn, returnPath }
+      : null;
+  }
+
+  const helpers = { TOKEN_EXPIRATION_MINUTES, buildAuthorizeUrl, buildEsriAuthCookie, parseAuthReturn };
   if (typeof window !== "undefined") {
     window.ClassicArcgisAuthHelpers = helpers;
   }
