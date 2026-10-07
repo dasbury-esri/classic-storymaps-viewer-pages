@@ -23,6 +23,31 @@ Tests use Node's built-in test runner and require no additional dependencies.
 Add regression tests as `scripts/tests/*.test.mjs`. The Pages workflow runs
 the suite before building; a test failure stops the build and deployment.
 
+## Deployment Base Path
+
+Both publish scripts accept `SITE_BASE_PATH`, defaulting to empty for a root
+custom domain. Use `/classic-storymaps-viewer-pages` for the GitHub Pages project
+address, or another absolute path for a nested deployment. The workflow reads
+the GitHub repository variable `SITE_BASE_PATH`; configure it for the intended
+address before deploying. This change does not set the repository variable.
+
+Source HTML uses `__SITE_BASE_PATH__` for handwritten root links. Build the
+landing before previewing it; the scripts substitute the configured prefix and
+rewrite generated HTML and CSS URLs. Compatibility redirects and catalog
+runtime links retain the same prefix. Unmirrored Wayback references remain
+external archive URLs, whose availability is not checked by the local tests.
+
+The default link tests build the real landing with lightweight runtime fixtures
+so they can run before the legacy runtime builds. To audit the full artifact
+after building all runtimes and publishing with the same base path:
+
+```sh
+SITE_BASE_PATH=/classic-storymaps-viewer-pages PUBLISH_CHECK_ROOT=publish \
+	node --test scripts/tests/check-links.test.mjs
+```
+
+Use an empty `SITE_BASE_PATH` in that command for a root-domain build.
+
 ## Authentication and Shared-Origin Risk
 
 Owner decision for review fix A1: continue on the shared GitHub Pages origin

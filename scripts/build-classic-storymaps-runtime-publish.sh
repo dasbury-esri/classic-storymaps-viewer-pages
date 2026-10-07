@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export SITE_BASE_PATH="${SITE_BASE_PATH:-}"
+SITE_BASE_PATH="${SITE_BASE_PATH%/}"
+node "$SCRIPT_DIR/apply-site-base-path.mjs" --validate
+
 PUBLISH_ROOT="${PUBLISH_ROOT:-publish/viewers}"
 
 runtime_names=(maptour swipe mapjournal mapseries cascade shortlist crowdsource basic)
@@ -49,7 +54,9 @@ sanitize_runtime_publish() {
 
   # Remove builder bundles from production publish output.
   find "$runtime_publish_dir/app" -maxdepth 1 -type f \( -iname '*builder*.js' -o -iname '*builder*.css' \) -delete 2>/dev/null || true
-  rm -rf "$runtime_publish_dir/resources/tpl/builder" 2>/dev/null || true
+  find "$runtime_publish_dir/resources/tpl/builder" -depth ! -type d \
+    ! -path "$runtime_publish_dir/resources/tpl/builder/icons/builder-help.png" -delete 2>/dev/null || true
+  find "$runtime_publish_dir/resources/tpl/builder" -depth -type d -empty -delete 2>/dev/null || true
 
   # Neutralize builder query parameters in deployed viewers.
   local index_file="$runtime_publish_dir/index.html"
@@ -97,6 +104,7 @@ for runtime_name in "${runtime_names[@]}"; do
   require_runtime_build "$runtime_name"
   copy_runtime_build "$runtime_name"
   sanitize_runtime_publish "$runtime_name"
+  node "$SCRIPT_DIR/apply-site-base-path.mjs" "$PUBLISH_ROOT/$runtime_name"
 done
 
 echo "Classic Storymaps runtime publish output copied to $PUBLISH_ROOT for: ${runtime_names[*]}"

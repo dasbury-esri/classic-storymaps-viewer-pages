@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export SITE_BASE_PATH="${SITE_BASE_PATH:-}"
+SITE_BASE_PATH="${SITE_BASE_PATH%/}"
+node "$SCRIPT_DIR/apply-site-base-path.mjs" --validate
+
 SRC_DIR="${SRC_DIR:-apps/classic-storymaps-site}"
 OUT_DIR="${OUT_DIR:-publish/viewers}"
 COMPAT_OUT_DIR_STORIES="${COMPAT_OUT_DIR_STORIES:-publish/templates/classic-stories}"
@@ -187,6 +192,12 @@ sanitize_archive_html_file() {
     s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet"}{href="/archive/2017-12-10-pages/en__archive-forum.html"}g;
     s{href="[^"]*links\.esri\.com/storymaps/story_maps_geonet_ideas"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
     s{href="[^"]*storymaps\.arcgis\.com/feedback/"}{href="/archive/2017-12-10-pages/en__archive-feedback.html"}g;
+    s{<!--\[if\b.*?<!\[endif\]-->}{}gs;
+    s{src="/viewers/assets/images/map-tour\.jpg"}{src="/viewers/assets/images/map-tour.png"}g;
+    s{src="/viewers/assets/images/(tabbed-viewer|side-accordion)\.jpg"}{src="/viewers/assets/images/map-series-$1.jpg"}g;
+    s{src="/viewers/assets/images/bulleted\.jpg"}{src="/viewers/assets/images/map-series-bulleted.png"}g;
+    s{src="/viewers/assets/images/custom\.jpg"}{src="/viewers/assets/images/custom.png"}g;
+    s{((?:href|src)=")(/web/\d+[^" ]*)"}{$1https://web.archive.org$2"}g;
   ' "$file_path"
 }
 
@@ -233,8 +244,8 @@ write_compat_redirect_stub() {
   <title>Redirecting...</title>
   <script>
     (function() {
-      var fromPrefix = '${from_prefix}';
-      var toPrefix = '/viewers';
+      var fromPrefix = '${SITE_BASE_PATH}${from_prefix}';
+      var toPrefix = '${SITE_BASE_PATH}/viewers';
       var path = String(window.location.pathname || '');
       var lowerPath = path.toLowerCase();
       var lowerFrom = fromPrefix.toLowerCase();
@@ -346,5 +357,7 @@ for compat_spec in "${compat_specs[@]}"; do
     write_compat_redirect_stub "$compat_out_dir/$launcher_file" "$compat_prefix"
   done
 done
+
+node "$SCRIPT_DIR/apply-site-base-path.mjs" "$OUT_DIR" "$COMPAT_OUT_DIR_STORIES" "$COMPAT_OUT_DIR_STORYMAPS" "$ROOT_PAGE_OUT" "$(dirname "$ARCHIVE_PAGE_OUT")"
 
 echo "Classic Storymaps canonical landing build output copied to $OUT_DIR"
