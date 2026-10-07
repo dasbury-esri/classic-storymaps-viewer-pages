@@ -762,7 +762,24 @@
     return zipBlob;
   }
 
+  function describeSelfHostedDestination(url, appLabel) {
+    try {
+      var parsed = new URL(url);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        return null;
+      }
+      return {
+        url: parsed.href,
+        label: "Open " + appLabel + " Viewer (" + parsed.hostname + ")"
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
   function ensureUi(form, statusEl) {
+    statusEl.style.minWidth = "0";
+    statusEl.style.overflowWrap = "anywhere";
     var titleEl = document.getElementById("story-title");
     if (!titleEl) {
       titleEl = document.createElement("p");
@@ -802,9 +819,14 @@
       }
     }
 
+    var openBtn = document.getElementById("open-story-btn");
+    openBtn.style.maxWidth = "100%";
+    openBtn.style.overflowWrap = "anywhere";
+    openBtn.style.whiteSpace = "normal";
+
     return {
       titleEl: titleEl,
-      openBtn: document.getElementById("open-story-btn"),
+      openBtn: openBtn,
       downloadItemBtn: document.getElementById("download-item-btn"),
       downloadDataBtn: document.getElementById("download-data-btn"),
       downloadZipBtn: document.getElementById("download-zip-btn"),
@@ -981,6 +1003,10 @@
 
       var appLabel = APP_LABEL_BY_ID[result.classicType] || launcherAppLabel;
       var titleType = result.selfHosted ? "self-hosted " + appLabel : appLabel;
+      var destination = result.selfHosted ? describeSelfHostedDestination(state.viewerUrl, appLabel) : null;
+      if (result.selfHosted) {
+        state.viewerUrl = destination ? destination.url : null;
+      }
 
       if (result.selfHosted) {
         setTitle("Found item title: '" + (result.item.title || "(Untitled)") + "' (" + titleType + ")", "warn");
@@ -996,10 +1022,12 @@
       setDisabled(ui.downloadAllBtn, result.selfHosted);
 
       if (result.selfHosted) {
-        setStatus("Valid app id: " + result.item.id + " (self-hosted URL detected)", "warn");
+        setStatus(destination
+          ? "Valid app id: " + result.item.id + " (self-hosted). Destination: " + destination.url
+          : "Item has no valid HTTP(S) viewer URL.", "warn");
       }
 
-      ui.openBtn.textContent = "Open " + appLabel + " Viewer";
+      ui.openBtn.textContent = destination ? destination.label : "Open " + appLabel + " Viewer";
     }
 
     function applyWebmapState(webmapId, itemTitle, typeLabel, webmapItem, webmapData) {
