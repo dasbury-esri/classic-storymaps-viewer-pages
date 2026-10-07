@@ -101,7 +101,18 @@ The downloaded CI Pages artifact independently confirmed the recorded sources:
 Cascade `release:1.23.0`, Shortlist `release:2.12.0`, Map Series `grunt`,
 and Crowdsource `release:0.10.0`.
 
-Live owner checks remain pending. No production deployment is authorized by
-this verification record. After an approved deployment, the owner must confirm
-Shortlist no longer shows Edit and that Map Series and Cascade still load,
-alongside the Crowdsource desktop/phone checks above.
+### Approved Production Deployment
+
+The owner explicitly approved deployment to `main`. Merge commit `3a07f78`
+preserved the newer Batch E planning commit without implementing E1. All 60
+tests, all ten local build scripts, and all 12 published-output checks passed
+again before the push.
+
+[Production run 37699888733](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37699888733)
+completed both build and GitHub Pages deployment successfully. The live
+catalog returned HTTP 200, and read-only requests confirmed the same four
+`BUILD_SOURCE` values listed above. No automated sign-in was performed.
+
+Live owner checks remain pending: confirm Shortlist no longer shows Edit and
+that Map Series and Cascade still load, alongside the Crowdsource
+desktop/phone checks above.
