@@ -116,3 +116,30 @@ catalog returned HTTP 200, and read-only requests confirmed the same four
 Live owner checks remain pending: confirm Shortlist no longer shows Edit and
 that Map Series and Cascade still load, alongside the Crowdsource
 desktop/phone checks above.
+
+## Catalog Follow-Up Deployment
+
+The owner approved committing and deploying the catalog update in `f6ffbf4`.
+Crowdsource now has an active launcher and is accepted by the catalog's app-ID
+form. All eight cards omit support badges, with reduced card spacing.
+Both new catalog regressions failed before the fix. All 62 Node 24 tests,
+all ten local build scripts, and all 14 published-output checks passed.
+Desktop and mobile layout checks passed locally.
+
+[Production run 37703609435](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37703609435)
+completed build and deployment successfully. A fresh browser then tested the
+public HTTPS catalog with real ArcGIS requests and normal certificate
+validation, without signing in or mocking responses. It confirmed eight
+active launchers, no badges, and successful app-ID submission for
+`467eccf026ca416cae01a2c6f086b2b9`. The new tab rendered "The 2016 Esri UC
+Selfie Story Map" with 12 gallery items, no Participate button, and no page,
+console, HTTP, or failed-request errors.
+
+### Where to Test
+
+Use the [production catalog](https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/)
+for owner acceptance testing. Enter the ID above and select Open Viewer.
+Do not use the local `127.0.0.1` previews to verify a production deployment.
+The earlier local Crowdsource failure was an HTTP-only preview attempting
+to serve an HTTPS runtime; the earlier production In Progress message was
+the catalog update awaiting deployment, not a runtime regression.
