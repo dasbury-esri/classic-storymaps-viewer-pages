@@ -519,3 +519,81 @@ but its own third-party map hosts no longer resolve. Do not use it as a gate.
   report `release:2.12.0`.
 - **Owner check:** after an owner-approved deploy, the live Shortlist viewer
   no longer shows "⚙ Edit ×", and Map Series and Cascade still load.
+
+## Batch E: link to the converter (added 2026-10-07, at `a94a20f`)
+
+Owner decision, 2026-10-07: the landing page offers a Convert button. It
+opens the Classic converter (the `ArcGIS-StoryMaps-Classic-Converter-App`
+repository) in a new tab, with the story's item ID. The two sites stay
+separate:
+
+- each has its own ArcGIS sign-in;
+- no token passes between them;
+- the converter decides who may convert: the story's owner, or an
+  administrator of the owner's organization.
+
+### E1. Add a Convert button, hidden until configured
+
+**Evidence:**
+
+- `applyFoundState` (`classic-story-loader.js:995`) already has what the
+  button needs:
+  - the resolved item, `result.item.id` (`resolveClassicStory` has already
+    followed URL-only items);
+  - its runtime, `result.classicType`;
+  - `result.selfHosted` and `result.itemData`.
+- At converter commit `55ae366`,
+  `converter-app/src/components/enabledTemplates.ts` enables Map Tour, Swipe,
+  Map Journal, Map Series, and Cascade. Shortlist, Crowdsource, and Basic are
+  not supported yet.
+
+**Change:**
+
+1. `apps/classic-storymaps-site/assets/js/classic-storymaps-config.js`:
+   - Add a top-level `converterUrl: ""`. An empty value means no button.
+   - Add `convertible: true` to the `maptour`, `swipe`, `mapjournal`,
+     `mapseries`, and `cascade` entries.
+   - Add a comment saying the converter's `enabledTemplates.ts` is the source
+     of truth, and the two lists change together.
+2. `ensureUi`:
+   - Add `<button id="convert-story-btn" type="button" disabled hidden>Convert
+     to ArcGIS StoryMaps</button>` beside "Open Story Viewer".
+   - Under it, add a one-line note: "Sign in as the story's owner or an
+     administrator of its organization."
+3. `applyFoundState`:
+   - Show the button and its note only when `converterUrl` parses as an
+     `https:` URL.
+   - Enable the button only when the item is not self-hosted, its data
+     loaded, and its runtime has `convertible: true`.
+   - When the button is disabled, put the reason in its `title`:
+     - "Self-hosted stories can't be converted here."
+     - "<label> stories can't be converted yet."
+     - "The story's data didn't load."
+   - `resetButtons` disables it. The web map launcher state
+     (`applyWebmapState`) keeps it hidden.
+4. Click handler:
+   - Re-check `state.item.id` against `APP_ID_REGEX`.
+   - Build the link with `new URL(converterUrl)` and
+     `searchParams.set("appid", id)`.
+   - Open it with `window.open(url, "_blank", "noopener,noreferrer")`.
+   - Add no other parameter, and never a token.
+
+**Done when:**
+
+- `node --test` tests, extending the pattern in
+  `scripts/tests/story-destination.test.mjs`, each failing first, show:
+  - with an empty `converterUrl`, the button is hidden;
+  - with a URL set, the enabled state and the reason are correct for all
+    eight runtimes, a self-hosted story, and a story whose data didn't load;
+  - the opened URL is exactly `<converterUrl>?appid=<id>`;
+  - an invalid ID opens nothing.
+- **Browser check** on a local build, with `converterUrl` set in an
+  uncommitted edit:
+  - a Map Journal enables the button, which opens the converter with
+    `?appid=` in a new tab;
+  - a Shortlist shows the button disabled, with its reason.
+- The commit ships `converterUrl: ""`.
+- **Owner step:** set `converterUrl` only after the converter's D1 and D2 are
+  in a deployed release. Today that would be
+  `https://regal-sable-0a6dde.netlify.app/`; later it will be
+  `https://convert.classicstorymaps.com/`.
