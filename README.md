@@ -24,6 +24,31 @@ The explicit file glob works on the Node 24 runtime used by CI.
 Add regression tests as `scripts/tests/*.test.mjs`. The Pages workflow runs
 the suite before building; a test failure stops the build and deployment.
 
+## Runtime Import Reproducibility
+
+With Node.js 20 or later, Git, and access to the public source repositories:
+
+```sh
+node scripts/check-runtime-reproducibility.mjs
+node scripts/check-runtime-reproducibility.mjs maptour
+```
+
+The default checks Map Tour, Swipe, and Map Journal. Each check fetches the
+manifest's pinned commit into a temporary directory, applies its listed patches
+in order, and compares the complete imported tree against the local `upstream/`
+tree. Existing import scripts are not invoked because they replace that tree.
+No builds, dependency installs, or changes to `upstream/` occur.
+
+The command emits one JSON array and exits nonzero for any patch failure,
+missing or unexpected file, content difference, or executable/symlink mode
+difference. Comparison includes tracked working-tree files and nonignored
+untracked files, but excludes ignored build caches. It is byte-exact: line-ending
+changes remain differences. After a patch failure, remaining patches are still
+attempted and the partial result is compared, without claiming reproducibility.
+
+See [Batch C verification](docs/testing/review-fixes-batch-c.md) for the recorded
+results and patch work still needed.
+
 ## Deployment Base Path
 
 Both publish scripts accept `SITE_BASE_PATH`, defaulting to empty for a root

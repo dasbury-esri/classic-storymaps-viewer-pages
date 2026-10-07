@@ -1,0 +1,1266 @@
+[
+  {
+    "runtime": "maptour",
+    "ref": "2e56c7e08801fc6bbfc2bc27e0d220688a7120a6",
+    "matches": false,
+    "patchesApplied": [
+      "runtimes/maptour/patches/0002-iis-web-config-addition.patch"
+    ],
+    "patchFailures": [
+      {
+        "patch": "runtimes/maptour/patches/0001-production-behavior-align.patch",
+        "error": "error: patch failed: MapTour/src/app/main-app.js:27\nerror: MapTour/src/app/main-app.js: patch does not apply\nerror: patch failed: MapTour/src/app/storymaps/core/Core.js:511\nerror: MapTour/src/app/storymaps/core/Core.js: patch does not apply\nerror: patch failed: MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js:390\nerror: MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js: patch does not apply\nerror: patch failed: MapTour/src/app/storymaps/ui/crossfader/CrossFader.js:342\nerror: MapTour/src/app/storymaps/ui/crossfader/CrossFader.js: patch does not apply\nerror: patch failed: MapTour/src/app/storymaps/utils/Helper.js:61\nerror: MapTour/src/app/storymaps/utils/Helper.js: patch does not apply\nerror: patch failed: MapTour/src/index.html:39\nerror: MapTour/src/index.html: patch does not apply\nerror: patch failed: MapTour/src/lib/jquery.exif.js:230\nerror: MapTour/src/lib/jquery.exif.js: patch does not apply"
+      }
+    ],
+    "differences": [
+      {
+        "path": "MapTour/.jshintrc",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/Gruntfile.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/license.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/.project",
+        "kind": "missing"
+      },
+      {
+        "path": "MapTour/src/.settings/com.aptana.formatter.epl.prefs",
+        "kind": "missing"
+      },
+      {
+        "path": "MapTour/src/.settings/org.eclipse.core.resources.prefs",
+        "kind": "missing"
+      },
+      {
+        "path": "MapTour/src/app/main-app.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/maptour-config.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/Builder.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/Builder.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/BuilderPanel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SaveErrorPopupSocial.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SaveErrorPopupSocial.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabColors.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabColors.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabExtent.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabExtent.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabHeader.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/builder/SettingsPopupTabHeader.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/core/Core.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/core/Core.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/BuildConfigBuilder.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/BuildConfigViewer.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/AddPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/AddPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/BuilderView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/BuilderView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/Common.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/FeatureServiceManager.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/HelpPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/HelpPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/ImportPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/ImportPopupViewHome.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/ImportPopupViewHome.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewAdvanced.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewAdvanced.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewHome.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewHome.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewHostedFSCreation.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/InitPopupViewHostedFSCreation.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/MapTourBuilderHelper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/OrganizePopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/OrganizePopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewCSV.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewCSV.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewFlickr.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewFlickr.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewGeoTag.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewGeoTag.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewPicasa.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewPicasa.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewYoutube.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/PopupViewYoutube.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabFields.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabFields.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabLayout.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabLayout.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabZoom.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SettingsPopupTabZoom.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SharePopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/builder/SharePopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/Config.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/FeatureServiceManager.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/FieldConfig.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/MainView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/MainView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/MapTourHelper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/TourData.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/TourPointAttributes.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/core/WebApplicationData.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/Responsive.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/desktop/Carousel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/desktop/Carousel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/desktop/PicturePanel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/AddButton.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/Carousel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/Carousel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/Common.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/InfoView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/InfoView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/IntroView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/IntroView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/ListView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/maptour/ui/mobile/ListView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/EmbedBar/EmbedBar.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/autoplay/Autoplay.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/autoplay/Autoplay.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/bannerNotification/BannerNotification.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/crossfader/CrossFader.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/crossfader/CrossFader.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/header/Header.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/header/Header.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/inlineFieldEdit/InlineFieldEdit.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/inlineFieldEdit/InlineFieldEdit.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/loadingIndicator/LoadingIndicator.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/loadingIndicator/LoadingIndicator.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/mapCommand/MapCommand.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/mapCommand/MapCommand.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/multiTips/MultiTips.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/ui/multiTips/MultiTips.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/FlickrConnector.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/Helper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/MovableGraphic.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/PicasaConnector.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/ResamplePicture.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/WebMapHelper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/YoutubeConnector.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/app/storymaps/utils/arcgis-html-sanitizer.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/index.html",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/_jquery.1.9.1.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap-slider/css/slider.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap-slider/js/bootstrap-slider.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap-slider/less/slider.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap.file-input.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap/css/bootstrap.min.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/bootstrap/js/bootstrap.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/colorbox/colorbox.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/colorbox/jquery.colorbox-min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/cubiq.iscroll.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/cubiq.swipeview.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/jquery-ui-1.10.0.custom.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/jquery.exif.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/jquery.fastClick.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/jquery.hammer.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/jquery.ui.touch-punch.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/megapix-image.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/spectrum/spectrum.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/spectrum/spectrum.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/lib/spin.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/OpenSans-Regular-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/OpenSans-Semibold-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/opensans-all/OpenSans-Regular-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/opensans-all/OpenSans-Semibold-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/sharing/LICENSE.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/sharing/README.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/sharing/config.json",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/sharing/storymaps-icons-ie7.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/font/sharing/storymaps-icons.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/HELP-US-OUT.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/css/font-awesome.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/css/font-awesome.min.css",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/fonts/fontawesome-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/animated.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/bordered-pulled.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/core.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/fixed-width.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/font-awesome.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/icons.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/larger.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/list.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/mixins.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/path.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/rotated-flipped.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/screen-reader.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/stacked.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/less/variables.less",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_animated.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_bordered-pulled.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_core.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_fixed-width.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_icons.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_larger.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_list.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_mixins.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_path.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_rotated-flipped.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_screen-reader.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_stacked.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/_variables.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/icons/font-awesome-4.7.0/scss/font-awesome.scss",
+        "kind": "modified"
+      },
+      {
+        "path": "MapTour/src/resources/nls/template.js",
+        "kind": "modified"
+      },
+      {
+        "path": "README.md",
+        "kind": "modified"
+      },
+      {
+        "path": "license.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "samples/csv_file__address__four_fields/Locations.csv",
+        "kind": "modified"
+      },
+      {
+        "path": "samples/csv_file__address__one_field/Locations.csv",
+        "kind": "modified"
+      },
+      {
+        "path": "samples/csv_file__lat_long/Locations.csv",
+        "kind": "modified"
+      },
+      {
+        "path": "samples/shapefile/Locations.shp.xml",
+        "kind": "modified"
+      }
+    ]
+  },
+  {
+    "runtime": "swipe",
+    "ref": "7e0fb19e1758638bacff788a513372b4bf4fc0c8",
+    "matches": false,
+    "patchesApplied": [],
+    "patchFailures": [
+      {
+        "patch": "runtimes/swipe/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch",
+        "error": "error: patch failed: Swipe/src/index.html:131\nerror: Swipe/src/index.html: patch does not apply"
+      },
+      {
+        "patch": "runtimes/swipe/patches/0002-force-viewer-only-in-production.patch",
+        "error": "error: corrupt patch at runtimes/swipe/patches/0002-force-viewer-only-in-production.patch:77"
+      }
+    ],
+    "differences": [
+      {
+        "path": "README.md",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/Gruntfile.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/deploy/.gitkeep",
+        "kind": "missing"
+      },
+      {
+        "path": "Swipe/src/.project",
+        "kind": "missing"
+      },
+      {
+        "path": "Swipe/src/app/main-app.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/Builder.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/Builder.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/BuilderPanel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SaveErrorPopupSocial.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SaveErrorPopupSocial.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabColors.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabColors.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabExtent.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabExtent.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabHeader.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/builder/SettingsPopupTabHeader.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/core/Core.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/core/Core.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/BuildConfigBuilder.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/BuildConfigViewer.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/BuilderView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/BuilderView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/HelpPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/HelpPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/InitMapPicker.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/InitMapPicker.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/InitPopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/InitPopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabDataModel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabDataModel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabLayout.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabLayout.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabLegend.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabLegend.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabSwipePopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SettingsPopupTabSwipePopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SharePopup.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/builder/SharePopup.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/Config.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/Data.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/MainView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/MainView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/SwipeHelper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/core/WebApplicationData.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/MapSwipe.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/MapSwipe.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/Responsive.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/SpyGlass.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/SpyGlass.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/desktop/SeriesPanel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/desktop/SeriesPanel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/desktop/SidePanel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/desktop/SidePanel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/mobile/Carousel.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/mobile/Carousel.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/mobile/MobileSwipeView.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/swipe/ui/mobile/MobileSwipeView.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/EmbedBar/EmbedBar.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/css/browse-dialog.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/js/BrowseIdDlg.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/js/Grid.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/js/PortalItemStore.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/js/_RefreshMixin.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/SelectMapWidget/browse-dialog/js/templates/BrowseIdDlg.html",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/autoplay/Autoplay.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/autoplay/Autoplay.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/bannerNotification/BannerNotification.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/header/Header.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/header/Header.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/inlineFieldEdit/InlineFieldEdit.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/inlineFieldEdit/InlineFieldEdit.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/loadingIndicator/LoadingIndicator.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/loadingIndicator/LoadingIndicator.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/mapCommand/MapCommand.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/ui/mapCommand/MapCommand.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/utils/Helper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/utils/WebMapHelper.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/storymaps/utils/arcgis-html-sanitizer.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/app/swipe-config.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/index.html",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib-build/i18n.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib-build/text.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/_jquery.1.9.1.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/animateClip.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/bootstrap-slider/css/slider.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/bootstrap-slider/js/bootstrap-slider.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/bootstrap-slider/less/slider.less",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/bootstrap/css/bootstrap.min.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/bootstrap/js/bootstrap.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/cubiq.swipeview.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/fuelux/wizard.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/fuelux/wizard.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/jquery-ui-1.10.3.custom.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/jquery.fastClick.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/jquery.ui.touch-punch.min.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/nicEdit.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/spectrum/spectrum.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/lib/spectrum/spectrum.js",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/OpenSans-Regular-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/OpenSans-Semibold-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/opensans-all/OpenSans-Regular-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/opensans-all/OpenSans-Semibold-webfont.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/sharing/LICENSE.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/sharing/README.txt",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/sharing/config.json",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/sharing/storymaps-icons-ie7.css",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/font/sharing/storymaps-icons.svg",
+        "kind": "modified"
+      },
+      {
+        "path": "Swipe/src/resources/nls/template.js",
+        "kind": "modified"
+      },
+      {
+        "path": "license.txt",
+        "kind": "modified"
+      }
+    ]
+  },
+  {
+    "runtime": "mapjournal",
+    "ref": "2a51369e8e0e90c10ac0340a6496219df218b73e",
+    "matches": false,
+    "patchesApplied": [],
+    "patchFailures": [
+      {
+        "patch": "runtimes/mapjournal/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch",
+        "error": "error: patch with only garbage at runtimes/mapjournal/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch:4"
+      }
+    ],
+    "differences": [
+      {
+        "path": "src/app/storymaps/common/_resources/nls/uk/core.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/common/_resources/nls/uk/mapcontrols.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/common/_resources/nls/uk/media.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/common/_resources/nls/uk/webmap.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/tpl/core/Config.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/tpl/core/WebApplicationData.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/app/storymaps/tpl/ui/MainStage.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/index.html",
+        "kind": "modified"
+      },
+      {
+        "path": "src/lib-app/clipboard/clipboard.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/resources/tpl/builder/nls/uk/template.js",
+        "kind": "modified"
+      },
+      {
+        "path": "src/resources/tpl/viewer/nls/uk/template.js",
+        "kind": "modified"
+      }
+    ]
+  }
+]
