@@ -89,7 +89,19 @@ tests failed against all three unpatched releases before the patch was added.
 Use `RUNTIME_FILTER=shortlist,mapseries,cascade` with the browser command
 above to run only D2 checks. Without a filter it checks D1 and D2.
 
-Normal branch CI and live owner checks remain separate gates. No production
-deployment is authorized by this verification record. After an approved
-deployment, the owner must confirm Shortlist no longer shows Edit and that
-Map Series and Cascade still load.
+### Branch CI
+
+The normal, no-override run on `validation/batch-d-releases` passed:
+[GitHub Actions run 37699155290](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37699155290).
+It tested D1 commit `8bdea2e` and D2 commit `84ddd72`. Tests, all runtime
+builds, artifact structure, and published-link validation passed. The deploy
+job was skipped.
+
+The downloaded CI Pages artifact independently confirmed the recorded sources:
+Cascade `release:1.23.0`, Shortlist `release:2.12.0`, Map Series `grunt`,
+and Crowdsource `release:0.10.0`.
+
+Live owner checks remain pending. No production deployment is authorized by
+this verification record. After an approved deployment, the owner must confirm
+Shortlist no longer shows Edit and that Map Series and Cascade still load,
+alongside the Crowdsource desktop/phone checks above.
