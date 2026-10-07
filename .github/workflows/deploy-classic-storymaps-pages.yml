@@ -49,6 +49,15 @@ jobs:
           bash scripts/build-classic-storymaps-landing.sh
           bash scripts/build-classic-storymaps-runtime-publish.sh
 
+      - name: Record runtime build sources
+        run: |
+          set -euo pipefail
+          for runtime in cascade shortlist mapseries crowdsource; do
+            source=$(cat "publish/viewers/$runtime/BUILD_SOURCE")
+            [[ "$source" =~ ^(grunt|release:[0-9]+\.[0-9]+\.[0-9]+)$ ]]
+            printf '%s: %s\n' "$runtime" "$source" >> "$GITHUB_STEP_SUMMARY"
+          done
+
       - name: Add Pages deploy metadata
         run: |
           set -euo pipefail

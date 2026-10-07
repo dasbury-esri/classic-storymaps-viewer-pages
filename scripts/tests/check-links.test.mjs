@@ -41,6 +41,7 @@ before(() => {
     mkdirSync(build, { recursive: true });
     writeFileSync(path.join(build, 'index.html'), '<!doctype html><html><head></head><body><img src="/viewers/' + runtime + '/image.png"></body></html>');
     writeFileSync(path.join(build, 'image.png'), 'fixture');
+    writeFileSync(path.join(build, 'BUILD_SOURCE'), runtime === 'crowdsource' ? 'release:0.10.0\n' : 'grunt\n');
     if (runtime === 'shortlist') {
       mkdirSync(path.join(build, 'resources/tpl/builder/icons'), { recursive: true });
       writeFileSync(path.join(build, 'resources/tpl/builder/icons/builder-help.png'), 'shared viewer icon');
@@ -91,6 +92,13 @@ test('published HTML links stay under the base path and resolve on disk', () => 
   }
   assert.ok(checked > 100, 'Check the real landing and archive links');
   assert.equal(failures.length, 0, failures.length + ' link failures:\n' + failures.slice(0, 30).join('\n'));
+});
+
+test('published release-capable runtimes retain valid build-source markers', () => {
+  for (const runtime of ['cascade', 'shortlist', 'mapseries', 'crowdsource']) {
+    const source = readFileSync(path.join(publish, 'viewers', runtime, 'BUILD_SOURCE'), 'utf8').trim();
+    assert.match(source, /^(?:grunt|release:\d+\.\d+\.\d+)$/, runtime);
+  }
 });
 
 test('published runtime entry points contain no uncompiled template tags', () => {

@@ -1,6 +1,19 @@
 {
   "manifestVersion": "1.0",
   "appId": "mapseries",
+  "patches": [
+    {
+      "name": "valid-url-appid-precedence",
+      "file": "app/viewer-min.js",
+      "find": "getAppID:function(e){var t=this.getUrlParams();if(app.indexCfg",
+      "replace": "getAppID:function(e){var t=this.getUrlParams();if(typeof t.appid===\"string\"&&/^[a-f0-9]{32}$/i.test(t.appid))return t.appid;if(app.indexCfg"
+    }
+  ],
+  "release": {
+    "version": "1.27.0",
+    "url": "https://github.com/Esri/storymap-series/releases/download/V1.27.0/storymap-series-1.27.0.zip",
+    "sha256": "3c6ca06a3a268618e6561764b0c1484d22cf8f2b4a79b8b2e302caed904e5d41"
+  },
   "displayName": "Story Map Series",
   "supportStage": "supported",
   "route": "/templates/classic-storymaps/mapseries",

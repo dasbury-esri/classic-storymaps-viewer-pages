@@ -1,6 +1,19 @@
 {
   "manifestVersion": "1.0",
   "appId": "shortlist",
+  "patches": [
+    {
+      "name": "valid-url-appid-precedence",
+      "file": "app/viewer-min.js",
+      "find": "getAppID:function(e){var t=this.getUrlParams();return app.indexCfg",
+      "replace": "getAppID:function(e){var t=this.getUrlParams();if(typeof t.appid===\"string\"&&/^[a-f0-9]{32}$/i.test(t.appid))return t.appid;return app.indexCfg"
+    }
+  ],
+  "release": {
+    "version": "2.12.0",
+    "url": "https://github.com/Esri/storymap-shortlist/releases/download/V2.12.0/Storytelling-Shortlist-2.12.0.zip",
+    "sha256": "e315fde278ab354ea58e53b3862471d71b637ad4f29cfc9c36fd94b013851bdf"
+  },
   "displayName": "Story Map Shortlist",
   "supportStage": "supported",
   "route": "/templates/classic-storymaps/shortlist",

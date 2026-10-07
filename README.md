@@ -7,19 +7,30 @@ Monorepo for hosting Classic Storymaps landing and per-app viewer helper pages u
 - `apps/` - app-specific page implementations
 - `docs/` - deployment, operations, and architecture notes
 
-## Local Runtime Caches
-- Extracted runtime release bundles under `runtimes/*/release-*` are treated as local fallback caches and are git-ignored.
-- The current Cascade fallback at `runtimes/cascade/release-1.23.0` is intentionally kept local so `scripts/build-cascade-runtime.sh` can recover when the upstream legacy build cannot reproduce the original deploy output.
+## Verified Runtime Releases
+
+Crowdsource always uses Esri's verified 0.10.0 release with view-only patches.
+Cascade, Shortlist, and Map Series attempt Grunt first, then download a pinned
+official release if the build fails or lacks compiled viewer files. Each ZIP
+must match its runtime manifest's SHA-256; failure stops the build. Raw source,
+local release caches, and historical publish snapshots are not fallbacks.
+
+Set `CLASSIC_RUNTIME_SOURCE=release` when running any of those three build
+scripts to exercise the release path directly. Release configuration inherits
+`appid` and `authorizedOwners` from the runtime's source entry point. Their
+release-only ID-selection patches prefer a valid URL `appid` while retaining
+the source default when the URL ID is absent or malformed. Their
+`BUILD_SOURCE` files record `grunt` or `release:<version>` and survive publishing;
+CI records these values in its run summary. Old ignored `release-*` directories
+are no longer used. See [Batch D verification](docs/testing/review-fixes-batch-d.md).
 
 ## Local Build and Preview
 
 `publish/` is generated output and is no longer tracked. Build it locally or use
 the CI artifact; do not commit generated files. Existing historical copies stay
-in Git history. Cascade can restore its complete viewer bundle from commit
-`30d22e8aa38fce3553eec3dd33e8283e3ddb1770` even without a local release cache.
-Use a full-history clone, as CI does, rather than a shallow clone or source ZIP.
+in Git history, but builds no longer depend on them.
 
-Prerequisites: Node.js 24 with npm, Git, Bash, curl, tar, and `sha256sum` on PATH;
+Prerequisites: Node.js 24 with npm, Git, Bash, curl, tar, unzip, and `sha256sum` on PATH;
 Python 3 is used for the preview server. Dependency downloads need network
 access. From the repository root, run the same build sequence as CI:
 
@@ -113,8 +124,8 @@ Use an empty `SITE_BASE_PATH` in that command for a root-domain build.
 All pushed branches run tests and builds; only `main` can deploy. CI uses pinned
 Node 24 actions, grants deployment permissions only to the deploy job, and runs
 the full-artifact link audit before upload. Runtime npm installations disable
-lifecycle scripts. Cascade's downloaded fallback files must match
-`runtimes/cascade/fallback-assets.sha256` before use.
+lifecycle scripts. Downloaded runtime releases must match their manifest's
+SHA-256 before extraction.
 
 See [Batch B verification](docs/testing/review-fixes-batch-b.md) for local build
 results, action and checksum provenance, fallback limitations, and pending

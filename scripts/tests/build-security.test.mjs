@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import os from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -40,43 +39,10 @@ test('all npm runtime installs disable lifecycle scripts', () => {
   }
 });
 
-test('publish output is untracked and ignored while Cascade history remains usable', () => {
+test('publish output is untracked and ignored', () => {
   const tracked = spawnSync('git', ['ls-files', '-z', '--', 'publish/'], { cwd: repo, encoding: 'utf8' });
   assert.equal(tracked.status, 0, tracked.stderr);
   assert.equal(tracked.stdout.length, 0, 'Generated publish files must not be tracked');
   const ignored = spawnSync('git', ['check-ignore', '--no-index', 'publish/index.html'], { cwd: repo, encoding: 'utf8' });
   assert.equal(ignored.status, 0, 'Generated publish files must be ignored');
-  const temporary = mkdtempSync(path.join(os.tmpdir(), 'cascade-history-'));
-  try {
-    const script = readFileSync(path.join(repo, 'scripts/build-cascade-runtime.sh'), 'utf8');
-    const functions = script.slice(0, script.indexOf('\nrm -rf "$OUTPUT_PATH"'));
-    const result = spawnSync('bash', ['-s', '--', path.join(temporary, 'output')], {
-      cwd: repo,
-      input: functions + '\nstage_history_fallback_bundle "$1"\nhas_required_cascade_viewer_files "$1"\n',
-      encoding: 'utf8'
-    });
-    assert.equal(result.status, 0, result.stdout + result.stderr);
-  } finally {
-    rmSync(temporary, { recursive: true, force: true });
-  }
-});
-
-test('Cascade rejects altered fallback downloads before using them', () => {
-  const temporary = mkdtempSync(path.join(os.tmpdir(), 'cascade-integrity-'));
-  try {
-    const curl = path.join(temporary, 'curl');
-    writeFileSync(curl, '#!/bin/bash\nwhile [[ "$#" -gt 0 ]]; do\n  if [[ "$1" == "-o" ]]; then printf "altered asset" > "$2"; exit 0; fi\n  shift\ndone\nexit 1\n', { mode: 0o755 });
-    const script = readFileSync(path.join(repo, 'scripts/build-cascade-runtime.sh'), 'utf8');
-    const functions = script.slice(0, script.indexOf('\nrm -rf "$OUTPUT_PATH"'));
-    const result = spawnSync('bash', ['-s', '--', path.join(temporary, 'output')], {
-      cwd: repo,
-      env: { ...process.env, PATH: temporary + path.delimiter + process.env.PATH },
-      input: functions + '\nCASCADE_FALLBACK_CHECKSUMS="' + path.join(repo, 'runtimes/cascade/fallback-assets.sha256') + '"\nstage_fallback_lib_assets "$1"\n',
-      encoding: 'utf8'
-    });
-    assert.notEqual(result.status, 0, 'Altered downloads must fail the build');
-    assert.match(result.stdout + result.stderr, /FAILED|did not match/);
-  } finally {
-    rmSync(temporary, { recursive: true, force: true });
-  }
 });

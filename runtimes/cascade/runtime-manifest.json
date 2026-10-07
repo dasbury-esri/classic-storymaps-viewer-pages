@@ -1,6 +1,19 @@
 {
   "manifestVersion": "1.0",
   "appId": "cascade",
+  "patches": [
+    {
+      "name": "valid-url-appid-precedence",
+      "file": "app/viewer-min.js",
+      "find": "getAppID:function(e){var t=this.getUrlParams();return app.indexCfg",
+      "replace": "getAppID:function(e){var t=this.getUrlParams();if(typeof t.appid===\"string\"&&/^[a-f0-9]{32}$/i.test(t.appid))return t.appid;return app.indexCfg"
+    }
+  ],
+  "release": {
+    "version": "1.23.0",
+    "url": "https://github.com/Esri/storymap-cascade/releases/download/V1.23.0/Storymaps-Cascade-1.23.0.zip",
+    "sha256": "40b68fd330b232571146ef7aaf0a3942069355e8a0f4cf0719a66d3b6a7a267e"
+  },
   "displayName": "Story Map Cascade",
   "supportStage": "supported",
   "route": "/templates/classic-storymaps/cascade",

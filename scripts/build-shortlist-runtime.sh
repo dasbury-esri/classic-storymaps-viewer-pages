@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MANIFEST_PATH="${MANIFEST_PATH:-$SCRIPT_DIR/../runtimes/shortlist/runtime-manifest.json}"
+source "$SCRIPT_DIR/lib/stage-official-release.sh"
 RUNTIME_PATH="${RUNTIME_PATH:-runtimes/shortlist/upstream}"
 OUTPUT_PATH="${OUTPUT_PATH:-runtimes/shortlist/build}"
+case "${CLASSIC_RUNTIME_SOURCE:-auto}" in auto|release) ;; *) echo 'Invalid CLASSIC_RUNTIME_SOURCE' >&2; exit 1 ;; esac
 
 rm -rf "$OUTPUT_PATH"
 mkdir -p "$OUTPUT_PATH"
 
+build_ok=false
+if [[ "${CLASSIC_RUNTIME_SOURCE:-auto}" != "release" ]]; then
 build_ok=true
 pushd "$RUNTIME_PATH" >/dev/null
   if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
@@ -23,14 +29,18 @@ pushd "$RUNTIME_PATH" >/dev/null
     ./node_modules/.bin/grunt --force || build_ok=false
   fi
 popd >/dev/null
-
-if [[ "$build_ok" == "true" && -d "$RUNTIME_PATH/deploy" ]]; then
-  cp -R "$RUNTIME_PATH/deploy"/. "$OUTPUT_PATH"/
-else
-  if [[ "$build_ok" != "true" ]]; then
-    echo "Shortlist grunt build failed on this toolchain; using source fallback output from src/." >&2
-  fi
-  cp -R "$RUNTIME_PATH/src"/. "$OUTPUT_PATH"/
 fi
+
+if [[ "$build_ok" == "true" && -f "$RUNTIME_PATH/deploy/index.html" && -f "$RUNTIME_PATH/deploy/app/viewer-min.js" ]]; then
+  cp -R "$RUNTIME_PATH/deploy"/. "$OUTPUT_PATH"/
+  printf 'grunt\n' > "$OUTPUT_PATH/BUILD_SOURCE"
+else
+  echo "Shortlist staging verified official release." >&2
+  stage_official_release "$MANIFEST_PATH" "$OUTPUT_PATH"
+  node "$SCRIPT_DIR/patch-runtime-release.mjs" "$MANIFEST_PATH" "$OUTPUT_PATH" "$RUNTIME_PATH/src/index.html"
+fi
+test -f "$OUTPUT_PATH/index.html"
+test -f "$OUTPUT_PATH/app/viewer-min.js"
+test -f "$OUTPUT_PATH/app/main-config.js"
 
 echo "Shortlist build output copied to $OUTPUT_PATH"
