@@ -7,7 +7,7 @@ test('CI runs the Node test harness before building', () => {
     new URL('../../.github/workflows/deploy-classic-storymaps-pages.yml', import.meta.url),
     'utf8'
   );
-  const testStep = workflow.indexOf('run: node --test scripts/tests/');
+  const testStep = workflow.indexOf('run: node --test scripts/tests/*.test.mjs');
   const buildStep = workflow.indexOf('- name: Build runtimes, landing, and publish output');
 
   assert.ok(testStep >= 0, 'CI must run the Node test harness');

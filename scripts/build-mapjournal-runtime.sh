@@ -20,13 +20,13 @@ mkdir -p "$OUTPUT_PATH"
 build_ok=true
 pushd "$RUNTIME_PATH" >/dev/null
   if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
-    npm ci || build_ok=false
+    npm ci --ignore-scripts || build_ok=false
   else
-    npm install --no-package-lock --no-audit --no-fund || build_ok=false
+    npm install --ignore-scripts --no-package-lock --no-audit --no-fund || build_ok=false
   fi
   if [[ "$build_ok" == "true" ]]; then
     if [[ ! -x "node_modules/.bin/grunt" ]]; then
-      npm install --no-save grunt-cli --no-audit --no-fund || build_ok=false
+      npm install --ignore-scripts --no-save grunt-cli --no-audit --no-fund || build_ok=false
     fi
   fi
   if [[ "$build_ok" == "true" ]]; then

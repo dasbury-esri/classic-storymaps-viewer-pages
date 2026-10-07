@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+CASCADE_FALLBACK_CHECKSUMS="$SCRIPT_DIR/../runtimes/cascade/fallback-assets.sha256"
+
 RUNTIME_PATH="${RUNTIME_PATH:-runtimes/cascade/upstream}"
 OUTPUT_PATH="${OUTPUT_PATH:-runtimes/cascade/build}"
 CASCADE_RELEASE_FALLBACK_PATH="${CASCADE_RELEASE_FALLBACK_PATH:-runtimes/cascade/release-1.23.0}"
@@ -68,6 +71,10 @@ stage_fallback_lib_assets() {
     -o "$output_path/lib/font-awesome/fonts/fontawesome-webfont.ttf"
   curl -fsSL "https://esri.github.io/calcite-bootstrap/assets/css/calcite-bootstrap.min.css" \
     -o "$output_path/lib/calcite-bootstrap/css/calcite-bootstrap-open.min.css"
+
+  pushd "$output_path" >/dev/null
+    sha256sum -c "$CASCADE_FALLBACK_CHECKSUMS"
+  popd >/dev/null
 }
 
 rm -rf "$OUTPUT_PATH"
@@ -76,14 +83,14 @@ mkdir -p "$OUTPUT_PATH"
 build_ok=true
 pushd "$RUNTIME_PATH" >/dev/null
   if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
-    npm ci || build_ok=false
+    npm ci --ignore-scripts || build_ok=false
   else
-    npm install --no-package-lock --no-audit --no-fund || build_ok=false
+    npm install --ignore-scripts --no-package-lock --no-audit --no-fund || build_ok=false
   fi
 
   if [[ "$build_ok" == "true" ]]; then
     if [[ ! -x "node_modules/.bin/grunt" ]]; then
-      npm install --no-save grunt-cli --no-audit --no-fund || build_ok=false
+      npm install --ignore-scripts --no-save grunt-cli --no-audit --no-fund || build_ok=false
     fi
   fi
 

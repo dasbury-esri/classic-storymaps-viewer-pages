@@ -16,10 +16,11 @@ Monorepo for hosting Classic Storymaps landing and per-app viewer helper pages u
 From the repository root, run the tests with Node.js 20 or later:
 
 ```sh
-node --test scripts/tests/
+node --test scripts/tests/*.test.mjs
 ```
 
 Tests use Node's built-in test runner and require no additional dependencies.
+The explicit file glob works on the Node 24 runtime used by CI.
 Add regression tests as `scripts/tests/*.test.mjs`. The Pages workflow runs
 the suite before building; a test failure stops the build and deployment.
 
@@ -42,11 +43,20 @@ so they can run before the legacy runtime builds. To audit the full artifact
 after building all runtimes and publishing with the same base path:
 
 ```sh
-SITE_BASE_PATH=/classic-storymaps-viewer-pages PUBLISH_CHECK_ROOT=publish \
-	node --test scripts/tests/check-links.test.mjs
+SITE_BASE_PATH=/classic-storymaps-viewer-pages PUBLISH_CHECK_ROOT=publish node --test scripts/tests/check-links.test.mjs
 ```
 
 Use an empty `SITE_BASE_PATH` in that command for a root-domain build.
+
+All pushed branches run tests and builds; only `main` can deploy. CI uses pinned
+Node 24 actions, grants deployment permissions only to the deploy job, and runs
+the full-artifact link audit before upload. Runtime npm installations disable
+lifecycle scripts. Cascade's downloaded fallback files must match
+`runtimes/cascade/fallback-assets.sha256` before use.
+
+See [Batch B verification](docs/testing/review-fixes-batch-b.md) for local build
+results, action and checksum provenance, fallback limitations, and pending
+hosted checks.
 
 ## Authentication and Shared-Origin Risk
 

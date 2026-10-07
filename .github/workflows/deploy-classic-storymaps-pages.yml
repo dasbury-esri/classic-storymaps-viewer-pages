@@ -4,33 +4,36 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - '**'
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       SITE_BASE_PATH: ${{ vars.SITE_BASE_PATH }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
 
       - name: Run tests
-        run: node --test scripts/tests/
+        run: node --test scripts/tests/*.test.mjs
 
       - name: Build runtimes, landing, and publish output
         run: |
@@ -64,15 +67,27 @@ jobs:
           test -f publish/viewers/cascade/resources/styles/calcite/colors-default.less
           test -f publish/viewers/cascade/resources/styles/calcite/variables.less
 
+      - name: Validate published links
+        env:
+          PUBLISH_CHECK_ROOT: publish
+        run: node --test scripts/tests/check-links.test.mjs
+
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: publish
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
