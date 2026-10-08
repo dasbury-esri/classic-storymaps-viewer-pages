@@ -4,8 +4,25 @@ Recorded: 2026-10-08 01:28:11+00:00[UTC].
 
 ## Status and Test Targets
 
-These changes are local and uncommitted. No deployment was performed for this
-audit. Production still has the previous example-page links.
+The owner-approved changes are now deployed at
+<https://dasbury-esri.github.io/classic-storymaps-viewer-pages/archive/>.
+The initial audit below predates deployment; its original test counts and
+observations are retained separately from the checkpoint verification.
+
+### Deployment Checkpoint
+
+Verified: 2026-10-08 03:24:06+00:00[UTC]. Commit
+`5a458e1e848a140bfff2affe6746aa225ad5d793` deployed successfully in
+[Pages run 37721947193](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37721947193).
+All 74 Node tests, ten build scripts and 25 complete-publish link checks passed.
+Production HTML contains all thirteen pending link replacements. Twelve actual
+new-tab checks passed with no opener; eight applicable runtime destinations passed
+the browser validator without errors. Introduction entry 2's nested Cascade also
+passed on production. Audubon's missing layer remains owner-accepted. NOAA's href
+is corrected, but its zero-size tile failed normal clicking and remains open.
+See [the current triage ledger](archive-link-audit.md) for dispositions and limits.
+
+### Initial Test Targets
 
 - Updated pages: <https://127.0.0.1:61326/classic-storymaps-viewer-pages/archive/>.
   This loopback-only preview uses a temporary self-signed HTTPS certificate.
@@ -50,7 +67,7 @@ Spyglass example instead of the diabetes Swipe story.
 All example links open with `target="_blank"` and `rel="noopener noreferrer"`.
 Overview and other site navigation are not converted into new-tab links.
 
-## Verification
+## Initial Verification
 
 - All 66 Node tests passed. Each new regression failed before its corresponding
   fix, including the owner-selected Map Tour destinations.
@@ -67,7 +84,8 @@ Overview and other site navigation are not converted into new-tab links.
 - Desktop 1440x900 and mobile 390x844: all eight Overview image sets loaded. Real
   clicks on both owner-selected Map Tour links opened the expected destinations
   in new tabs with `window.opener === null`. Map Tour screenshots were inspected.
-- No full runtime rebuild or deployment was performed; runtime source is unchanged.
+- At the initial audit, no full runtime rebuild or deployment was performed.
+  The later checkpoint includes the Map Series staged-bundle patch and all builds.
 
 This is startup and representative-interaction coverage, not an exhaustive check
 of every story point, embedded page, external link, or later media asset. Public

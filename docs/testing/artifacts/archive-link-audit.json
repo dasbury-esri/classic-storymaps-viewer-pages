@@ -1,6 +1,21 @@
 {
   "recorded": "2026-10-08T01:45:51.187Z",
   "triage": {
+    "deploymentCheckpoint": {
+      "verifiedAt": "2026-10-08 03:24:06+00:00[UTC]",
+      "commit": "5a458e1e848a140bfff2affe6746aa225ad5d793",
+      "workflowUrl": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37721947193",
+      "productionUrl": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/",
+      "deploymentResult": "success",
+      "preflight": {"nodeTestsPassed": 74, "buildScriptsPassed": 10, "publishLinkTestsPassed": 25},
+      "buildSources": {"mapseries": "grunt", "cascade": "release:1.23.0", "shortlist": "release:2.12.0", "crowdsource": "release:0.10.0"},
+      "taskIds": ["AL-009", "AL-012", "AL-017", "AL-018", "AL-035", "AL-037", "AL-038", "AL-042", "AL-047", "AL-058", "AL-059", "AL-060", "AL-062"],
+      "productionLinks": "All 13 replacements are present on their referring production pages; exact old hrefs are absent and new-tab attributes are present. Viewer links include noopener and noreferrer.",
+      "browserVerification": "Twelve production links opened their expected destinations in fresh anonymous Chromium tabs with window.opener === null. Eight applicable distinct runtime targets passed the existing startup, media and representative-interaction validator with zero errors. Introduction entry 2 loaded its embedded Cascade under the project-prefixed viewer path and rendered What's a Story Map? and its narrative. The archived 20 Towns title and content rendered. Audubon's original title and narrative rendered; its known missing layer remains owner-accepted and Cancel was not independently retested.",
+      "runtimeArtifacts": "classic-example-audit-1EtMf1",
+      "unresolved": {"AL-047": "The deployed NOAA href is the exact owner-selected Wayback capture, but normal tile clicks failed. At 1280x720, a.party-tile.noaa computed to display:inline with a 0x0 bounding box. Keep open for tile rendering and normal-click verification; no forced click used to claim success."},
+      "limits": "Per-task verification paragraphs below predate this checkpoint; their local/pending statements are superseded by this record and current statuses. Original crawl observations remain unchanged. This is not an exhaustive certification of story media, all presentation entries, or external dependencies."
+    },
     "guide": "../archive-link-audit.md",
     "observationPolicy": "Original classifications, responses and scope counts remain historical. Current status is in each destination's triage object. IDs are stable, not array indexes for future crawls.",
     "statuses": {
@@ -1645,7 +1660,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/story_map_tour_html_formatting_in_caption_example",
-      "triage": {"id": "AL-009", "status": "pending-deployment", "replacementUrl": "/viewers/maptour/index.html?appid=d5b2c90d8a53466f9c3efb0f25d13325", "verification": "FAQ regression failed before the fix and passed afterward, preserving the original item, Map Tour label, deployment base prefix and isolated new-tab behavior. Browser loaded Some Places to Eat in San Diego, California with 56 places through the deployed viewer. Visible captions preserve the red Website hyperlink, bold neighborhood, separator and italic photo credit. Navigation to The Fish Market changed the caption and loaded its photo and map tiles. Individual restaurant URLs and all 56 media entries were not recertified. FAQ link change remains local pending deployment."},
+      "triage": {"id": "AL-009", "status": "resolved", "replacementUrl": "/viewers/maptour/index.html?appid=d5b2c90d8a53466f9c3efb0f25d13325", "verification": "FAQ regression failed before the fix and passed afterward, preserving the original item, Map Tour label, deployment base prefix and isolated new-tab behavior. Browser loaded Some Places to Eat in San Diego, California with 56 places through the deployed viewer. Visible captions preserve the red Website hyperlink, bold neighborhood, separator and italic photo credit. Navigation to The Fish Market changed the caption and loaded its photo and map tiles. Individual restaurant URLs and all 56 media entries were not recertified. FAQ link change remains local pending deployment."},
       "final": "https://www.arcgis.com/apps/MapTour/index.html?appid=d5b2c90d8a53466f9c3efb0f25d13325",
       "status": 200,
       "title": "Item Replacement",
@@ -2046,7 +2061,7 @@
     },
     {
       "url": "http://storymaps.esri.com/stories/2013/20towns/",
-      "triage": {"id": "AL-012", "status": "pending-deployment", "replacementUrl": "https://storymaps.esri.com/archives/stories/2013/20towns/", "verification": "Generated link regression failed before the fix and passed afterward. Chromium rendered the archived town list and narrative; analytics/consent errors remain. Local preview rebuilt; production link not yet updated."},
+      "triage": {"id": "AL-012", "status": "resolved", "replacementUrl": "https://storymaps.esri.com/archives/stories/2013/20towns/", "verification": "Generated link regression failed before the fix and passed afterward. Chromium rendered the archived town list and narrative; analytics/consent errors remain. Local preview rebuilt; production link not yet updated."},
       "final": "https://storymaps.esri.com/stories/2013/20towns/",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -2851,7 +2866,7 @@
     },
     {
       "url": "http://www.esrinl.nl/storymaps/Flitsmeister/Flitsrisico/index.html",
-      "triage": {"id": "AL-017", "status": "pending-deployment", "replacementUrl": "/viewers/basic/index.html?appid=30066075caa947178f6c2ae438e7efa4", "verification": "Local example replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
+      "triage": {"id": "AL-017", "status": "resolved", "replacementUrl": "/viewers/basic/index.html?appid=30066075caa947178f6c2ae438e7efa4", "verification": "Local example replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
       "final": "http://www.esrinl.nl/storymaps/Flitsmeister/Flitsrisico/index.html",
       "status": 404,
       "title": "Page not found",
@@ -2871,7 +2886,7 @@
     },
     {
       "url": "https://classicstorymaps.com/viewers/maptour/?webmap=ad0d1a4a0c5e474fb52f8062de68d035",
-      "triage": {"id": "AL-018", "status": "pending-deployment", "replacementUrl": "/viewers/maptour/index.html?appid=016c31c6dcd54c7ca635cc63e4bc82a4", "verification": "Owner-selected Epic Flight replacement is local. The story's separate live mixed-content repair is resolved under RT-001; archive-link deployment remains."},
+      "triage": {"id": "AL-018", "status": "resolved", "replacementUrl": "/viewers/maptour/index.html?appid=016c31c6dcd54c7ca635cc63e4bc82a4", "verification": "Owner-selected Epic Flight replacement is local. The story's separate live mixed-content repair is resolved under RT-001; archive-link deployment remains."},
       "final": "https://classicstorymaps.com/viewers/maptour/?webmap=ad0d1a4a0c5e474fb52f8062de68d035",
       "title": "",
       "error": "UND_ERR_CONNECT_TIMEOUT",
@@ -9231,7 +9246,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/an_introduction_presentation",
-      "triage": {"id": "AL-035", "status": "pending-deployment", "replacementUrl": "/viewers/mapseries/index.html?appid=4aaf9036c7324b0cb5c8ee3e609126e7", "verification": "Public original item confirmed. Generated Resources link regression failed before correction and passed afterward. Opening slide renders. Production viewer exposed a second defect: entry 2 was rewritten to /templates/classic-storymaps/cascade and returned 404. Staged Grunt-bundle patch now derives the current /viewers base while preserving legacy deployments; upstream source is unchanged. Fresh local Grunt build loads entry 2 as What's a Story Map? under the project-prefixed Cascade viewer with narrative content. A later embedded Two Koreas story also loaded. Original opening image decoded at 1500x891. Later navigation did not remain on the requested entries 3/5, so those specific slides and all remaining dependencies are not certified. Official-release bundles are intentionally unchanged; nested recovery was verified only with the Grunt build. Link and runtime patch both await deployment."},
+      "triage": {"id": "AL-035", "status": "resolved", "replacementUrl": "/viewers/mapseries/index.html?appid=4aaf9036c7324b0cb5c8ee3e609126e7", "verification": "Public original item confirmed. Generated Resources link regression failed before correction and passed afterward. Opening slide renders. Production viewer exposed a second defect: entry 2 was rewritten to /templates/classic-storymaps/cascade and returned 404. Staged Grunt-bundle patch now derives the current /viewers base while preserving legacy deployments; upstream source is unchanged. Fresh local Grunt build loads entry 2 as What's a Story Map? under the project-prefixed Cascade viewer with narrative content. A later embedded Two Koreas story also loaded. Original opening image decoded at 1500x891. Later navigation did not remain on the requested entries 3/5, so those specific slides and all remaining dependencies are not certified. Official-release bundles are intentionally unchanged; nested recovery was verified only with the Grunt build. Link and runtime patch both await deployment."},
       "final": "https://story.maps.arcgis.com/apps/MapSeries/index.html?appid=4aaf9036c7324b0cb5c8ee3e609126e7",
       "status": 200,
       "title": "Item Replacement",
@@ -9368,7 +9383,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/make_your_story_map_sing",
-      "triage": {"id": "AL-037", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=dcd5d01e2b0342fe90cf3b8ca9ab8302", "verification": "Original presentation loads as ways to make your story map sing in the deployed Cascade viewer. Scrolling reached Make sure it works! with its heading visible; the two visible resource images decoded at 1920x1089 and 539x520. Generated-link regression failed before replacement and passed afterward, preserving the presentation label, deployment prefix and isolated new-tab behavior. All later media and external links were not certified. Resources link remains local pending deployment."},
+      "triage": {"id": "AL-037", "status": "resolved", "replacementUrl": "/viewers/cascade/index.html?appid=dcd5d01e2b0342fe90cf3b8ca9ab8302", "verification": "Original presentation loads as ways to make your story map sing in the deployed Cascade viewer. Scrolling reached Make sure it works! with its heading visible; the two visible resource images decoded at 1920x1089 and 539x520. Generated-link regression failed before replacement and passed afterward, preserving the presentation label, deployment prefix and isolated new-tab behavior. All later media and external links were not certified. Resources link remains local pending deployment."},
       "final": "https://story.maps.arcgis.com/apps/Cascade/index.html?appid=dcd5d01e2b0342fe90cf3b8ca9ab8302",
       "status": 200,
       "title": "Item Replacement",
@@ -9401,7 +9416,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/smotm_dec2017",
-      "triage": {"id": "AL-038", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=36b4887370d141fcbb35392f996c82d9", "verification": "The original Bare Earth item loads its geology narrative in the deployed Cascade viewer. Scrolling reached the visible Landslides heading and the visible resource image decoded at 1920x1080. Both historical-home anchors now point to the original item in the current viewer, retaining the existing text/image. Regression failed before correction and passed afterward, checking both anchors, base prefix, new-tab isolation and no retired href. Later media, maps and outbound destinations were not exhaustively checked. Both archive links remain local pending deployment."},
+      "triage": {"id": "AL-038", "status": "resolved", "replacementUrl": "/viewers/cascade/index.html?appid=36b4887370d141fcbb35392f996c82d9", "verification": "The original Bare Earth item loads its geology narrative in the deployed Cascade viewer. Scrolling reached the visible Landslides heading and the visible resource image decoded at 1920x1080. Both historical-home anchors now point to the original item in the current viewer, retaining the existing text/image. Regression failed before correction and passed afterward, checking both anchors, base prefix, new-tab isolation and no retired href. Later media, maps and outbound destinations were not exhaustively checked. Both archive links remain local pending deployment."},
       "final": "https://wadnr.maps.arcgis.com/apps/Cascade/index.html?appid=36b4887370d141fcbb35392f996c82d9",
       "status": 200,
       "title": "Item Replacement",
@@ -9701,7 +9716,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/audubon",
-      "triage": {"id": "AL-042", "status": "pending-deployment", "replacementUrl": "/viewers/mapseries/index.html?appid=3c48121bd41945d68aacd1ded71841a4", "ownerDecision": "Retain the original Audubon story in the current Map Series viewer. Owner reports readers can click Cancel to bypass the dead map data and most of the app works. The missing layer is an accepted limitation, not a repaired service. No substitute story or new in-app warning requested.", "verification": "Original item 3c48121bd41945d68aacd1ded71841a4 is public and loads as Arizona's Birds and Water in the local Map Series viewer. Opening narrative and navigation to Arizona Water Initiative work, but the StrategicVision planning-area layer fails. Anonymous HTTPS requests to the service info endpoint and MapServer/0 return HTTP 404 with an HTML Not Found page, independently confirming the browser's failed requests are not only a CORS restriction. Entry 2 uses Web Map abbc3cbe61cd4072a2ec8f5ef09a917b; its sole operational layer StrategicVision_222 stores http://gisweb2.azwater.gov/arcgis/rest/services/OpenData/StrategicVision/MapServer/0. Generated tile regression failed before correction and passed afterward, preserving the tile, item ID, base prefix and isolated new-tab behavior. Cancel workaround is owner-reported, not independently retested. No ArcGIS writes or sign-in attempted. Archive link change remains local pending deployment.", "webmapId": "abbc3cbe61cd4072a2ec8f5ef09a917b", "layerId": "StrategicVision_222", "failedHttpsUrl": "https://gisweb2.azwater.gov/arcgis/rest/services/OpenData/StrategicVision/MapServer/0?f=json"},
+      "triage": {"id": "AL-042", "status": "resolved", "replacementUrl": "/viewers/mapseries/index.html?appid=3c48121bd41945d68aacd1ded71841a4", "ownerDecision": "Retain the original Audubon story in the current Map Series viewer. Owner reports readers can click Cancel to bypass the dead map data and most of the app works. The missing layer is an accepted limitation, not a repaired service. No substitute story or new in-app warning requested.", "verification": "Original item 3c48121bd41945d68aacd1ded71841a4 is public and loads as Arizona's Birds and Water in the local Map Series viewer. Opening narrative and navigation to Arizona Water Initiative work, but the StrategicVision planning-area layer fails. Anonymous HTTPS requests to the service info endpoint and MapServer/0 return HTTP 404 with an HTML Not Found page, independently confirming the browser's failed requests are not only a CORS restriction. Entry 2 uses Web Map abbc3cbe61cd4072a2ec8f5ef09a917b; its sole operational layer StrategicVision_222 stores http://gisweb2.azwater.gov/arcgis/rest/services/OpenData/StrategicVision/MapServer/0. Generated tile regression failed before correction and passed afterward, preserving the tile, item ID, base prefix and isolated new-tab behavior. Cancel workaround is owner-reported, not independently retested. No ArcGIS writes or sign-in attempted. Archive link change remains local pending deployment.", "webmapId": "abbc3cbe61cd4072a2ec8f5ef09a917b", "layerId": "StrategicVision_222", "failedHttpsUrl": "https://gisweb2.azwater.gov/arcgis/rest/services/OpenData/StrategicVision/MapServer/0?f=json"},
       "final": "http://audubon.maps.arcgis.com/apps/MapSeries/index.html?appid=3c48121bd41945d68aacd1ded71841a4",
       "status": 200,
       "title": "Item Replacement",
@@ -9876,7 +9891,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/noaa",
-      "triage": {"id": "AL-047", "status": "pending-deployment", "replacementUrl": "https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html", "verification": "Owner-selected capture returned HTTP 200 in Chromium with title NOAA's National Ocean Service: Story Maps and Story Maps heading. Generated NOAA tile regression failed before the change and passed afterward. Local preview rebuilt; production-link verification remains."},
+      "triage": {"id": "AL-047", "status": "open", "replacementUrl": "https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html", "verification": "Owner-selected capture returned HTTP 200 in Chromium with title NOAA's National Ocean Service: Story Maps and Story Maps heading. Generated NOAA tile regression failed before the change and passed afterward. Local preview rebuilt; production-link verification remains."},
       "final": "https://oceanservice.noaa.gov/map-stories/welcome.html",
       "status": 200,
       "title": "Page Not Found: Error 404",
@@ -10477,7 +10492,7 @@
     },
     {
       "url": "https://storymaps.esri.com/stories/honoring-our-veterans/index.html",
-      "triage": {"id": "AL-058", "status": "pending-deployment", "replacementUrl": "/viewers/crowdsource/index.html?appid=467eccf026ca416cae01a2c6f086b2b9", "verification": "Local example replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
+      "triage": {"id": "AL-058", "status": "resolved", "replacementUrl": "/viewers/crowdsource/index.html?appid=467eccf026ca416cae01a2c6f086b2b9", "verification": "Local example replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
       "final": "https://storymaps.esri.com/stories/honoring-our-veterans/index.html",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -10497,7 +10512,7 @@
     },
     {
       "url": "https://storymaps.esri.com/stories/shortlist-sandiego",
-      "triage": {"id": "AL-059", "status": "pending-deployment", "replacementUrl": "/viewers/shortlist/index.html?appid=0584dbad6ebf433a96f1111f4cc7e3bd", "verification": "Local replacement verified alongside the trailing-slash alias AL-060; production-link verification remains."},
+      "triage": {"id": "AL-059", "status": "resolved", "replacementUrl": "/viewers/shortlist/index.html?appid=0584dbad6ebf433a96f1111f4cc7e3bd", "verification": "Local replacement verified alongside the trailing-slash alias AL-060; production-link verification remains."},
       "final": "https://storymaps.esri.com/stories/shortlist-sandiego",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -10517,7 +10532,7 @@
     },
     {
       "url": "https://storymaps.esri.com/stories/shortlist-sandiego/",
-      "triage": {"id": "AL-060", "status": "pending-deployment", "replacementUrl": "/viewers/shortlist/index.html?appid=0584dbad6ebf433a96f1111f4cc7e3bd", "verification": "Local replacement verified alongside the slashless alias AL-059; production-link verification remains."},
+      "triage": {"id": "AL-060", "status": "resolved", "replacementUrl": "/viewers/shortlist/index.html?appid=0584dbad6ebf433a96f1111f4cc7e3bd", "verification": "Local replacement verified alongside the slashless alias AL-059; production-link verification remains."},
       "final": "https://storymaps.esri.com/stories/shortlist-sandiego/",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -11344,7 +11359,7 @@
     },
     {
       "url": "https://www.staridasgeography.gr/web-gis/story-maps/map-series/footpaths-of-erissos/en/",
-      "triage": {"id": "AL-062", "status": "pending-deployment", "replacementUrl": "/viewers/mapseries/index.html?appid=167ca9b1c85e4c7ea5eac8c6be43358b", "verification": "Local Paris Cafes replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
+      "triage": {"id": "AL-062", "status": "resolved", "replacementUrl": "/viewers/mapseries/index.html?appid=167ca9b1c85e4c7ea5eac8c6be43358b", "verification": "Local Paris Cafes replacement and browser check recorded in archive-examples-audit.md; production-link verification remains."},
       "final": "https://www.staridasgeography.gr/web-gis/story-maps/map-series/footpaths-of-erissos/en/",
       "status": 404,
       "title": "404 Not Found",

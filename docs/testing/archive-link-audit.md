@@ -4,9 +4,10 @@ Recorded: 2026-10-08 01:45:51+00:00[UTC].
 
 This is the working burn-down list for the original read-only crawl and its
 follow-up fixes. Original observations remain below and in the JSON evidence;
-they are not current failure counts. Repository link fixes remain local until
-deployment is approved. The owner's remote Story Locator and Epic Flight repairs
-have been verified independently of a site deployment.
+they are not current failure counts. The owner-approved checkpoint is deployed:
+twelve link tasks are newly resolved and NOAA remains open after a tile-click
+failure. The owner's remote Story Locator and Epic Flight repairs were verified
+independently of this site deployment.
 
 ## Triage Rules
 
@@ -24,21 +25,21 @@ resolved or accepted, never merely implemented locally.
 For closure, record the selected destination or repair, a focused regression when
 code changes, and a browser check of the actual destination and intended behavior.
 For repository changes, run the required tests/builds before an approved push and
-verify the deployed links afterward. No commit, push, or deployment is authorized
-by this checklist conversion.
+verify the deployed links afterward. The checklist conversion itself did not
+authorize deployment; the owner subsequently approved the checkpoint below.
 
 ## Burn-down
 
 | Status | Tasks |
 | --- | ---: |
-| open | 45 |
+| open | 46 |
 | needs-verification | 7 |
-| pending-deployment | 13 |
-| resolved | 2 |
+| pending-deployment | 0 |
+| resolved | 14 |
 | accepted | 2 |
 | Total | 69 |
 
-**65 outstanding; 4 closed (2 repaired, 2 accepted).** These are task counts,
+**53 outstanding; 16 closed (14 repaired, 2 accepted).** These are task counts,
 not failed-link counts: 62 destination tasks, four groups covering 55 placeholder
 occurrences, and three follow-ups. ENV-001 is a local-tooling issue, not a
 production defect. URL aliases retain separate IDs so none disappear from the
@@ -54,31 +55,49 @@ Root-relative replacement URLs are viewer routes before deployment base-prefixin
 Update both the ledger and this checklist/count table when closing a task. A new
 crawl is fresh evidence, not permission to overwrite the ledger or renumber IDs.
 
-### Ready for Deployment
+### Deployed Checkpoint
 
-All thirteen tasks below have local fixes. Next action: obtain deployment approval,
-run the required tests and all ten deployment build scripts, deploy, then click
-each affected production reference and confirm its new-tab behavior and target.
-Keep them unchecked until that production verification is recorded. Detailed
-example evidence is in [the example audit](archive-examples-audit.md).
+Verified: 2026-10-08 03:24:06+00:00[UTC]. Commit
+`5a458e1e848a140bfff2affe6746aa225ad5d793` deployed successfully in
+[Pages run 37721947193](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37721947193).
+Preflight passed all 74 Node tests, all ten build scripts, and 25 checks against
+the complete publish output. Production remains on the GitHub Pages project URL;
+the inactive custom domain was not enabled.
 
-- [ ] AL-009 `pending-deployment`: FAQ caption-formatting example recovered through the current Map Tour viewer using the original item. Caption markup, hyperlink, place navigation, photo and map tiles verified; see the AL-009 follow-up below.
-- [ ] AL-012 `pending-deployment`: Playlist's 20 Towns link now uses the owner-selected archived page; town list and narrative verified.
-- [ ] AL-017 `pending-deployment`: Flitsmeister replaced by Wildlife Strikes in Basic.
-- [ ] AL-018 `pending-deployment`: Kentucky/custom-domain Map Tour link replaced by Epic Flight; its live data repair is separately closed as RT-001.
-- [ ] AL-035 `pending-deployment`: Original introduction presentation recovered through Map Series, plus a staged Grunt-bundle fix for embedded viewer base paths. Opening slide and formerly failing entry 2 verified locally; see the AL-035 follow-up and deployment caveats below.
-- [ ] AL-037 `pending-deployment`: "Make Your Story Map Sing" opens its original Cascade item. Narrative, scroll to "Make sure it works!", and two visible resource images verified; generated-link regression passed after first failing. Later media and external destinations are not certified.
-- [ ] AL-038 `pending-deployment`: Both "The Bare Earth" home-page links open the original Cascade item. Narrative, scrolling to Landslides, and its visible image verified. Regression covers both anchors while preserving historical text/image; later dependencies are not exhaustively certified.
-- [ ] AL-042 `pending-deployment`: Owner approved retaining the original Audubon story in Map Series, accepting the dead planning-area layer. Owner reports Cancel bypasses the failed data. Tile regression passed after first failing; no substitute story, service repair, or new in-app warning. See the accepted limitation below.
-- [ ] AL-047 `pending-deployment`: NOAA tile uses the owner-selected Wayback capture; HTTP 200, title/heading, and generated-link regression verified.
-- [ ] AL-058 `pending-deployment`: Veterans example replaced by Selfie in Crowdsource.
-- [ ] AL-059 `pending-deployment`: San Diego Shortlist slashless URL replaced by the local Shortlist viewer.
-- [ ] AL-060 `pending-deployment`: San Diego Shortlist trailing-slash alias; verify together with AL-059.
-- [ ] AL-062 `pending-deployment`: Footpaths of Erissos replaced by Paris Cafes in Map Series.
+All thirteen replacement hrefs and new-tab attributes were verified in live HTML
+on their referring pages. Twelve representative production clicks opened the
+expected destinations with `window.opener === null`; NOAA's zero-size tile failed
+normal clicking and remains open. Eight distinct applicable runtime destinations
+passed startup, media and representative-interaction checks with zero browser
+errors. Production markers were Map Series `grunt`, Cascade `release:1.23.0`,
+Shortlist `release:2.12.0`, and Crowdsource `release:0.10.0`.
+
+The introduction's entry 2 loaded its embedded Cascade at the project-prefixed
+viewer URL and rendered "What's a Story Map?" and its narrative. The archived
+20 Towns title and content rendered. Audubon's original title and narrative
+rendered; the missing layer remains accepted, and Cancel remains owner-reported.
+These checks do not certify every presentation entry or external dependency.
+Runtime artifacts: `classic-example-audit-1EtMf1` in the session's temporary
+directory. This checkpoint supersedes local/pending statements in the historical
+follow-ups and per-task JSON verification paragraphs.
+
+- [x] AL-009 `resolved`: Original FAQ caption-formatting example recovered in Map Tour; live link, popup and runtime checks passed.
+- [x] AL-012 `resolved`: Playlist's 20 Towns example opens the owner-selected archive with matching title and content.
+- [x] AL-017 `resolved`: Flitsmeister replaced by Wildlife Strikes in Basic; live checks passed.
+- [x] AL-018 `resolved`: Kentucky/custom-domain Map Tour link replaced by Epic Flight; live checks passed, with RT-001's data repair retained.
+- [x] AL-035 `resolved`: Original introduction presentation recovered through Map Series; production entry 2 and its embedded Cascade passed. Other entries and the release fallback are not certified.
+- [x] AL-037 `resolved`: Original "Make Your Story Map Sing" Cascade opens; live link, popup and runtime checks passed.
+- [x] AL-038 `resolved`: Both "The Bare Earth" anchors use the original Cascade item; live hrefs, representative popup and runtime checks passed.
+- [x] AL-042 `resolved`: Original Audubon link opens in Map Series with its title and narrative. The owner-accepted missing layer is not repaired; Cancel was not independently retested.
+- [x] AL-058 `resolved`: Veterans replaced by Selfie in Crowdsource; live checks passed.
+- [x] AL-059 `resolved`: San Diego Shortlist slashless alias replaced by the current viewer; live checks passed.
+- [x] AL-060 `resolved`: San Diego Shortlist trailing-slash alias verified together with AL-059.
+- [x] AL-062 `resolved`: Footpaths replaced by Paris Cafes in Map Series; live checks passed.
 
 ### P1: Story and Organization Examples
 
-Next bounded organization-recovery check: AL-044. For retired endpoints,
+Next bounded check: NOAA's tile rendering (AL-047), then organization recovery
+for AL-044. For retired endpoints,
 inspect the public item and try the matching supported viewer. Verify actual
 content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
@@ -89,6 +108,7 @@ destination unavailable. Do not infer that an item was deleted from a blank host
 - [ ] AL-044 `open`: City of Boston organization gallery is blank; find a preserved gallery or suitable destination.
 - [ ] AL-045 `open`: Montana FWP organization example is blank; test its Cascade item with the viewer.
 - [ ] AL-046 `open`: NCC organization gallery is blank; find a preserved gallery or suitable destination.
+- [ ] AL-047 `open`: Correct NOAA Wayback href is deployed, but its empty tile has a 0x0 bounding box at 1280x720 and cannot be clicked normally. Repair tile rendering and verify an actual new-tab click; do not treat the href check as closure.
 - [ ] AL-049 `open`: NPS organization example returns 404; test the referenced Journal item or find a preserved example.
 - [ ] AL-050 `open`: Nature Conservancy organization example returns 404; find a preserved Ogooue field-notes story.
 - [ ] AL-051 `open`: TPL organization example is blank; test its Journal item with the viewer.
@@ -173,7 +193,7 @@ anonymously in a browser; record a content-matching decision for destination dri
 ### Closed
 
 - [x] AL-015 `resolved`: Story Locator's owner repaired the JavaScript string and made the Web Map public. Fresh anonymous startup without overrides passed; title/list render, loading clears, and no sign-in prompt appears. Individual story destinations are not recertified.
-- [x] RT-001 `resolved`: Epic Flight's owner changed both layer URLs to HTTPS. Fresh unmocked load and second-entry navigation passed without browser errors. The archive replacement link remains pending under AL-018.
+- [x] RT-001 `resolved`: Epic Flight's owner changed both layer URLs to HTTPS. Fresh unmocked load and second-entry navigation passed without browser errors. The archive replacement link is also resolved under AL-018.
 - [x] AL-020 `accepted`: Developer `/en/` redirect to the root is valid; no fix required.
 - [x] AL-048 `accepted`: NPCA redirect to its mapping resource hub is valid; no fix required.
 
@@ -380,11 +400,13 @@ deployment of that link change; its data limitation remains documented here.
 
 The owner selected
 <https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html>.
-The NOAA organization tile now uses that exact capture in the rebuilt local
-preview. Chromium confirmed HTTP 200, title "NOAA's National Ocean Service: Story
+The NOAA organization tile now uses that exact capture in production.
+Earlier Chromium verification confirmed HTTP 200, title "NOAA's National Ocean Service: Story
 Maps", and the Story Maps heading. The targeted regression failed before the
-change and passed afterward. This link correction is not deployed; the original
-soft-404 observation remains historical evidence.
+change and passed afterward. Postdeployment normal-click checks failed: the
+empty `a.party-tile.noaa` computed to `display:inline` with a 0x0 bounding box at
+1280x720. AL-047 remains open for rendering and actual-click verification.
+The original soft-404 observation remains historical evidence.
 
 ## Playlist Follow-up
 
@@ -454,9 +476,9 @@ production-only:
 
 Those six, plus the subsequent NOAA, 20 Towns, FAQ caption-example, introduction
 presentation, singing-presentation, Bare Earth, and owner-approved Audubon link fixes,
-are the thirteen destination tasks now pending deployment.
+were the thirteen destination tasks included in the deployed checkpoint above.
 The earlier 34 automatic flags are not the full
-manually reviewed triage inventory. Deploying those fixes will not repair the
+manually reviewed triage inventory. Deploying those fixes did not repair the
 whole archive; the current checklist also includes blank destinations, download
 label mismatches, placeholders, and verification/decision tasks.
 
