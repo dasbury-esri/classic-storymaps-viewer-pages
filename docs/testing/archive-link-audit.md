@@ -5,8 +5,8 @@ Recorded: 2026-10-08 01:45:51+00:00[UTC].
 This is the working burn-down list for the original read-only crawl and its
 follow-up fixes. Original observations remain below and in the JSON evidence;
 they are not current failure counts. The owner-approved checkpoint is deployed:
-twelve link tasks are newly resolved and NOAA remains open after a tile-click
-failure. The owner's remote Story Locator and Epic Flight repairs were verified
+twelve link tasks are newly resolved. NOAA's subsequent local rendering repair
+and the owner-selected Boston replacement await deployment. The owner's remote Story Locator and Epic Flight repairs were verified
 independently of this site deployment.
 
 ## Triage Rules
@@ -32,9 +32,9 @@ authorize deployment; the owner subsequently approved the checkpoint below.
 
 | Status | Tasks |
 | --- | ---: |
-| open | 46 |
+| open | 44 |
 | needs-verification | 7 |
-| pending-deployment | 0 |
+| pending-deployment | 2 |
 | resolved | 14 |
 | accepted | 2 |
 | Total | 69 |
@@ -96,8 +96,8 @@ follow-ups and per-task JSON verification paragraphs.
 
 ### P1: Story and Organization Examples
 
-Next bounded check: NOAA's tile rendering (AL-047), then organization recovery
-for AL-044. For retired endpoints,
+Next bounded check: Montana FWP (AL-045). The owner-selected Boston replacement
+and NOAA's local rendering repair await deployment. For retired endpoints,
 inspect the public item and try the matching supported viewer. Verify actual
 content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
@@ -105,10 +105,10 @@ destination unavailable. Do not infer that an item was deleted from a blank host
 
 - [ ] AL-013 `open`: Countdown Ports example returns 404; locate a preserved working example.
 - [ ] AL-014 `open`: Countdown Refugee Camps example returns 404; locate a preserved working example.
-- [ ] AL-044 `open`: City of Boston organization gallery is blank; find a preserved gallery or suitable destination.
+- [ ] AL-044 `pending-deployment`: Owner-selected BostonMaps gallery filtered to StoryMaps replaces the retired gallery. Exact URL, readable tile, isolated new tab and visible gallery result verified locally; deploy and repeat the production click before closure.
 - [ ] AL-045 `open`: Montana FWP organization example is blank; test its Cascade item with the viewer.
 - [ ] AL-046 `open`: NCC organization gallery is blank; find a preserved gallery or suitable destination.
-- [ ] AL-047 `open`: Correct NOAA Wayback href is deployed, but its empty tile has a 0x0 bounding box at 1280x720 and cannot be clicked normally. Repair tile rendering and verify an actual new-tab click; do not treat the href check as closure.
+- [ ] AL-047 `pending-deployment`: Correct Wayback href is already deployed. Local styles and readable organization labels fix the zero-size tile; desktop/mobile normal clicks passed with the archived stylesheet blocked. Deploy and repeat the production click before closure.
 - [ ] AL-049 `open`: NPS organization example returns 404; test the referenced Journal item or find a preserved example.
 - [ ] AL-050 `open`: Nature Conservancy organization example returns 404; find a preserved Ogooue field-notes story.
 - [ ] AL-051 `open`: TPL organization example is blank; test its Journal item with the viewer.
@@ -396,6 +396,27 @@ regression failed before the change and passed afterward, preserving the tile,
 item ID, deployment prefix, and isolated new-tab behavior. AL-042 is pending
 deployment of that link change; its data limitation remains documented here.
 
+## AL-044 Follow-up: Owner-Selected Gallery
+
+The original "Story Maps Homepage Gallery App", item
+`4a31b22b1f914f95a13283dfb127100d`, remains public and owned by `BostonGIS`.
+Its saved `values.group` is `af3c6e28332246d4abef51ffbbfce186`. Anonymous requests
+to both the group's metadata and content endpoints return ArcGIS error 403 with
+message code `GWM_0003`, despite HTTP 200. This is an access failure, not evidence
+that the group was deleted. No sign-in or access change was attempted.
+
+The owner selected this replacement:
+<https://boston.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap>.
+This is the BostonMaps organization gallery filtered to StoryMaps, not recovery
+of the inaccessible historical group. The generated Boston tile now points directly
+to that exact URL, preserving all four query parameters and its readable label.
+
+The regression failed against the old shortlink and passed after the change.
+The local landing build passed. A normal tile click opened the exact URL in a
+new tab with `window.opener === null`; "Gallery for BostonMaps" and the "Land Use
+Update" result were visible without signing in. Individual gallery stories were
+not recertified. AL-044 remains pending deployment and a production click check.
+
 ## NOAA Follow-up
 
 The owner selected
@@ -405,8 +426,25 @@ Earlier Chromium verification confirmed HTTP 200, title "NOAA's National Ocean S
 Maps", and the Story Maps heading. The targeted regression failed before the
 change and passed afterward. Postdeployment normal-click checks failed: the
 empty `a.party-tile.noaa` computed to `display:inline` with a 0x0 bounding box at
-1280x720. AL-047 remains open for rendering and actual-click verification.
-The original soft-404 observation remains historical evidence.
+1280x720. The original soft-404 and zero-size observations remain historical evidence.
+
+The homepage relies on a remote archived `newhome.css`, which can fail or arrive
+late. The local repair supplies scoped organization-tile styles and readable
+labels for all twelve existing organization links, preserving their destinations.
+No local logo assets were available; no replacement logos were invented. The
+styles explicitly set sizing so later archived CSS cannot change the tile layout.
+
+The new generated-stylesheet/content regression failed before the fix and passed
+afterward. Desktop 1440x900 and mobile 390x844 screenshots and bounds checks showed
+readable tiles without text overflow. With `newhome.css` blocked, normal NOAA clicks
+opened the exact capture with its matching title and `window.opener === null` in
+fresh anonymous browsers on both viewports. Only the legacy stylesheet was blocked;
+the destination content was not overridden. No forced click or sign-in was used.
+This rendering repair is local and pending deployment; the other organizations'
+unresolved destination findings are not closed by restoring their controls.
+All 75 Node tests passed after the repair. The landing build passed; the ten-build
+deployment gate has not been rerun and no code has been pushed or deployed for
+this follow-up.
 
 ## Playlist Follow-up
 

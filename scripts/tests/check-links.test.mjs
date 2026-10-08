@@ -304,6 +304,25 @@ test('Audubon organization tile opens the owner-approved original Map Series', (
   assert.doesNotMatch(html, /href="[^"]*links\.esri\.com\/storymaps\/user\/audubon/);
 });
 
+test('organization tiles retain local styling and accessible NOAA content', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  assert.ok(html.includes('href="' + base + '/viewers/assets/css/archive/organization-tiles.css"'));
+  assert.ok(existsSync(path.join(publish, 'viewers/assets/css/archive/organization-tiles.css')));
+  const tile = html.match(/<a\b[^>]*class="party-tile noaa"[^>]*>([\s\S]*?)<\/a>/);
+  assert.ok(tile?.[1].includes('NOAA'), 'NOAA has visible, accessible link content');
+});
+
+test('Boston organization tile opens the owner-selected filtered gallery', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  const tile = html.match(/<a\b[^>]*class="party-tile boston"[^>]*>City of Boston<\/a>/);
+  assert.ok(tile, 'Preserve the readable Boston organization tile');
+  const href = tile[0].match(/\bhref="([^"]+)"/)[1].replaceAll('&amp;', '&');
+  assert.equal(href, 'https://boston.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap');
+  assert.ok(tile[0].includes('target="_blank"'));
+  assert.ok(tile[0].includes('rel="noopener noreferrer"'));
+  assert.doesNotMatch(html, /href="[^"]*links\.esri\.com\/storymaps\/user\/city_boston/);
+});
+
 test('NOAA organization tile uses the owner-selected Wayback capture', () => {
   const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
   const tile = html.match(/<a\b[^>]*class="party-tile noaa"[^>]*>/);

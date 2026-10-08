@@ -24,12 +24,32 @@ const replacements = [
 
 const viewerUrl = (runtime, id, parameter = 'appid') => `/viewers/${runtime}/index.html?${parameter}=${id}`;
 
+const organizationLabels = {
+  audubon: 'Audubon',
+  noaa: 'NOAA',
+  usda: 'USDA',
+  npca: 'NPCA',
+  boston: 'City of Boston',
+  trust: 'Trust for Public Land',
+  nature: 'The Nature Conservancy',
+  natparksrvc: 'National Park Service',
+  montana: 'Montana FWP',
+  ncc: 'NCC',
+  raster: 'Blue Raster',
+  padcnr: 'PA DCNR',
+};
+
 for (const file of process.argv.slice(2)) {
   let html = readFileSync(file, 'utf8');
   html = html.replace(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g, (anchor, attributes, href, body) => {
     const url = new URL(href.replaceAll('&amp;', '&'), 'https://example.invalid');
     if (url.hostname === 'links.esri.com' && url.pathname === '/storymaps/user/audubon') {
       return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('mapseries', '3c48121bd41945d68aacd1ded71841a4')}"`);
+    }
+    if (url.hostname === 'links.esri.com' && url.pathname === '/storymaps/user/city_boston') {
+      attributes = attributes.replace(/\bhref="[^"]*"/, 'href="https://boston.maps.arcgis.com/home/gallery.html?sortField=relevance&amp;sortOrder=desc&amp;mode=keyword&amp;focus=applications-storymap"')
+        .replace(/\s+(?:target|rel)="[^"]*"/g, '');
+      return `<a${attributes} target="_blank" rel="noopener noreferrer">${body}</a>`;
     }
     if (url.hostname === 'links.esri.com' && url.pathname === '/storymaps/smotm_dec2017') {
       return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('cascade', '36b4887370d141fcbb35392f996c82d9')}"`);
@@ -67,5 +87,14 @@ for (const file of process.argv.slice(2)) {
     if (!sample) return block;
     return opening + content.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>\s*View Sample\s*<\/a>)/gi, `$1${sample}$2`) + closing;
   });
+  if (html.includes('class="party-tile ')) {
+    html = html.replace(/(<a\b[^>]*class="party-tile ([^"]+)"[^>]*>)\s*(<\/a>)/g,
+      (anchor, opening, organization, closing) => organizationLabels[organization]
+        ? opening + organizationLabels[organization] + closing : anchor);
+    const stylesheet = '/viewers/assets/css/archive/organization-tiles.css';
+    if (!html.includes(stylesheet)) {
+      html = html.replace('</head>', `<link rel="stylesheet" href="${stylesheet}">\n</head>`);
+    }
+  }
   writeFileSync(file, html);
 }
