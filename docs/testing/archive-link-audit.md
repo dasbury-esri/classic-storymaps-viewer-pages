@@ -9,13 +9,15 @@ twelve link tasks were resolved at that checkpoint. NOAA's subsequent rendering
 repair and the owner-selected Boston replacement are also deployed and verified.
 The owner's remote Story Locator and Epic Flight repairs were verified
 independently of this site deployment.
+The subsequent archive follow-up deployment below closes fourteen more tasks and
+publishes the shared internal-only footer.
 
 ## Triage Rules
 
 - `open`: a confirmed failure needs a replacement, recovery, or explicit unavailable state.
 - `needs-verification`: repeat the check or decide whether the destination matches its label.
 - `pending-deployment`: a local fix passed its focused check; keep unchecked until verified live.
-- `resolved`: the reported failure was fixed and its relevant live behavior was verified.
+- `resolved`: the agreed repair or unavailable state was verified live.
 - `accepted`: investigated and no fix needed; not a repaired failure.
 
 Use the stable IDs below when choosing the next task. Each destination task covers
@@ -42,8 +44,9 @@ The shared-footer regression failed before the change and passed afterward. All
 90 Node tests passed, including footer identity, internal link resolution, header
 parity and copyright preservation. Local desktop 1440x900 and mobile 390x844
 screenshots confirmed matching Apps/homepage footers with readable, unclipped text.
-Normal footer clicks reached Apps and FAQs. These changes are local, not deployed;
-the original crawl observations below are not a fresh audit of the changed footer.
+Normal footer clicks reached Apps and FAQs. These local checks preceded the archive
+follow-up deployment below; the original crawl observations are not a fresh audit
+of the changed footer.
 
 ## Burn-down
 
@@ -51,12 +54,12 @@ the original crawl observations below are not a fresh audit of the changed foote
 | --- | ---: |
 | open | 31 |
 | needs-verification | 6 |
-| pending-deployment | 14 |
-| resolved | 16 |
+| pending-deployment | 0 |
+| resolved | 30 |
 | accepted | 2 |
 | Total | 69 |
 
-**51 outstanding; 18 closed (16 repaired, 2 accepted).** These are task counts,
+**37 outstanding; 32 closed (30 resolved, 2 accepted).** These are task counts,
 not failed-link counts: 62 destination tasks, four groups covering 55 placeholder
 occurrences, and three follow-ups. ENV-001 is a local-tooling issue, not a
 production defect. URL aliases retain separate IDs so none disappear from the
@@ -71,6 +74,41 @@ original crawl. Root `triage.supplementalTasks` covers placeholders and follow-u
 Root-relative replacement URLs are viewer routes before deployment base-prefixing.
 Update both the ledger and this checklist/count table when closing a task. A new
 crawl is fresh evidence, not permission to overwrite the ledger or renumber IDs.
+
+### Archive Follow-up Deployment
+
+Verified: 2026-10-08 17:36:07+00:00[UTC]. Commit
+`b030e1ab78347628b75bf2dd6b1baf03bd97296a` deployed successfully in
+[Pages run 37817207834](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37817207834).
+Preflight passed 90 Node tests, all ten builds and 41 complete-publish checks.
+Both workflow jobs succeeded. Production remains at the GitHub Pages project URL;
+no custom domain was enabled.
+
+All fourteen task references match their selected URLs or unavailable states in
+live HTML. Six shared footers and the organization stylesheet match the tested
+build. Normal production clicks opened both Countdown archives and all five
+original Cascade guides at the exact destinations with no opener and matching
+visible titles or instructional text.
+
+At desktop 1440x900 and mobile 390x844, all seven unavailable entries caused no
+navigation or popup on normal clicks; Tab visited only the five retained links
+in order. Tiles and footers had no overflow. Footer Home, Apps and FAQs clicks
+reached the correct destinations at both sizes. Mobile screenshots and a fresh
+desktop Apps-footer capture were inspected. An earlier desktop element capture
+showed preceding content and was not used as visual proof. Browser artifacts:
+temporary `classic-checkpoint-live-jpuF3C`.
+
+The Cascade validator reported 5/5 passing, but Sections also recorded a late
+canceled YouTube iframe request (`ECuarAmpK00`, `net::ERR_ABORTED`). A separate
+production-click run rendered all five topics without failed guide requests.
+Runtime artifacts: temporary `classic-example-audit-zz9OhA`. This is not exhaustive
+certification of embedded videos or map layers. Countdown closure covers the
+owner-selected links, not the documented missing chart or map-selection issues.
+Unavailable states do not restore the original organization content.
+
+This checkpoint supersedes earlier local/pending statements for the fourteen
+tasks in the sections below and the shared footer. Original crawl evidence and
+historical investigation notes remain intact.
 
 ### Deployed Checkpoint
 
@@ -142,22 +180,23 @@ Standalone Chromium at desktop 1440x900 and mobile 390x844 confirmed no navigati
 or popup on any disabled entry, no text overflow, and Tab visiting only the five
 retained links in order. Screenshots were inspected; artifacts are in the session's
 temporary `classic-party-unavailable-h5O9m0` directory. All 83 Node tests and the
-local landing build passed. These changes are not pushed or deployed.
+local landing build passed. The archive follow-up deployment above subsequently
+verified these states live.
 
 Audubon, NOAA, Boston, NPCA and PA DCNR remain linked. NPCA and PA DCNR were
 rechecked: their shortlinks end at HTTP 200 mapping hubs with relevant content.
 Audubon's previously accepted missing-layer limitation is unchanged. Individual
 stories within the retained hubs were not recertified.
 
-- [ ] AL-043 `pending-deployment`: Blue Raster now supplies a consulting/marketing page rather than the archived example. Marked unavailable locally; its website is not down.
-- [ ] AL-045 `pending-deployment`: Owner-approved unavailable Montana entry; original item is inaccessible and organization gallery requires sign-in.
-- [ ] AL-046 `pending-deployment`: Owner-approved unavailable NCC entry; original gallery group returns 403 and organization gallery requires sign-in.
-- [ ] AL-049 `pending-deployment`: NPS original story URL still returns 404; unavailable locally.
-- [ ] AL-050 `pending-deployment`: Nature Conservancy's original field-notes URL still returns 404; unavailable locally.
-- [ ] AL-051 `pending-deployment`: Trust for Public Land still opens a blank retired-app page; unavailable locally.
-- [ ] AL-052 `pending-deployment`: USDA still opens a blank retired-app page; unavailable locally.
+- [x] AL-043 `resolved`: Blue Raster's archived example is explicitly unavailable on production; its consulting website is not down.
+- [x] AL-045 `resolved`: Owner-approved unavailable Montana entry verified live; original item access was not repaired.
+- [x] AL-046 `resolved`: Owner-approved unavailable NCC entry verified live; original group access was not repaired.
+- [x] AL-049 `resolved`: NPS unavailable state verified live; original story URL remains documented as 404.
+- [x] AL-050 `resolved`: Nature Conservancy unavailable state verified live; original field-notes URL remains documented as 404.
+- [x] AL-051 `resolved`: Trust for Public Land unavailable state verified live; original retired app was not repaired.
+- [x] AL-052 `resolved`: USDA unavailable state verified live; original retired app was not repaired.
 
-Verify the unavailable states on production before closing these tasks. Their JSON
+These unavailable states were verified on production before closure. Their JSON
 `disposition` is `unavailable`; unlike replacements, they have no replacement URL.
 
 ### Cascade Tutorial Guides
@@ -171,15 +210,15 @@ browser errors; artifacts are in temporary `classic-example-audit-NHW5bv`.
 
 Normal clicks from the local tutorial opened each correct guide in an isolated
 new tab. Selected instructional text was scrolled into view for each topic below.
-All 88 Node tests and the landing build passed. These changes are not pushed or
-deployed; verify the live tutorial links before closure. The checks do not certify
-every map layer, transition or embedded video within the guides.
+All 88 Node tests and the landing build passed at that local checkpoint. The
+archive follow-up deployment above subsequently verified the live tutorial links.
+The checks do not certify every map layer, transition or embedded video.
 
-- [ ] AL-053 `pending-deployment`: Original Sections guide recovered; section-composition instructions rendered.
-- [ ] AL-054 `pending-deployment`: Original Transitions guide recovered; Swipe Vertical instructions rendered.
-- [ ] AL-055 `pending-deployment`: Original Map Legends guide recovered; contextual-graphics guidance rendered.
-- [ ] AL-056 `pending-deployment`: Original Multi-View Map guide recovered; Interaction Disabled guidance rendered.
-- [ ] AL-057 `pending-deployment`: Original Media guide recovered; Add Images to a Story instructions rendered.
+- [x] AL-053 `resolved`: Original Sections guide verified live; section-composition instructions rendered. Canceled iframe observation recorded above.
+- [x] AL-054 `resolved`: Original Transitions guide verified live; Swipe Vertical instructions rendered.
+- [x] AL-055 `resolved`: Original Map Legends guide verified live; contextual-graphics guidance rendered.
+- [x] AL-056 `resolved`: Original Multi-View Map guide verified live; Interaction Disabled guidance rendered.
+- [x] AL-057 `resolved`: Original Media guide verified live; Add Images to a Story instructions rendered.
 
 ### P1: Story and Organization Examples
 
@@ -189,8 +228,8 @@ content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
 destination unavailable. Do not infer that an item was deleted from a blank host.
 
-- [ ] AL-013 `pending-deployment`: Owner selected the exact official Ports archive URL. Local link regression passed; the observed blank volume chart remains documented.
-- [ ] AL-014 `pending-deployment`: Owner selected the exact official Refugee Camps archive URL. Rewrite reinstated and local regression passed; the blocked HTTP map service and entry-selection error remain documented.
+- [x] AL-013 `resolved`: Exact owner-selected Ports archive URL verified live with isolated popup and matching title. The observed blank volume chart remains documented.
+- [x] AL-014 `resolved`: Exact owner-selected Refugee Camps archive URL verified live with isolated popup and matching title. The blocked HTTP map service and entry-selection error are not repaired.
 
 The owner explicitly selected
 [Ports](https://storymaps.esri.com/archives/stories/2013/ports/) and
@@ -199,8 +238,8 @@ Both generated links use these exact URLs and retain isolated new-tab behavior.
 The restored Refugee Camps regression failed before its rewrite and passed after;
 both Countdown checks, the neighboring Playlist check and the landing build passed.
 This supersedes the earlier decision gate, not the runtime observations below.
-No push or deployment was requested. Verify both live links after an approved
-deployment before closing these link tasks.
+The owner subsequently approved the archive follow-up deployment above; both live
+links were verified before closure.
 
 Both official archive candidates preserve the original stories. Their temporary
 route regressions failed before the rewrites and passed afterward; local clicks
