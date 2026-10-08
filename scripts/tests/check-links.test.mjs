@@ -317,6 +317,183 @@ test('archive headers and mobile drawers replace My Stories with FAQs', () => {
   assert.ok(checked > 30, 'Check the full archive navigation set');
 });
 
+test('published pages retain My Stories text without links', () => {
+  for (const file of htmlFiles(publish)) {
+    const html = readFileSync(file, 'utf8');
+    for (const anchor of html.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)) {
+      const label = anchor[2].replace(/<[^>]*>/g, '').trim();
+      assert.notEqual(label, 'My Stories', file);
+      assert.doesNotMatch(anchor[1], /(?:\/my-stories(?:\/|[?#]|$)|en__my-stories\.html)/i, file);
+    }
+  }
+  const tutorial = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__cascade__tutorial.html'), 'utf8');
+  assert.match(tutorial, /My Stories/);
+});
+
+test('archive links to retired hosts use owner-selected destinations', () => {
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'classic-product-links-'));
+  const file = path.join(directory, 'fixture.html');
+  const destination = 'https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic';
+  try {
+    writeFileSync(file, [
+      '<a href="https://storymaps-classic.arcgis.com/en/app-list/?old=1#section" target="_blank">Classic apps</a>',
+      '<a href="//STORYMAPS-CLASSIC.ARCGIS.COM/anything">Classic gallery</a>',
+      '<a href="https://web.archive.org/web/20171210000000/https://storymaps-classic.arcgis.com/en/">Archived link</a>',
+      '<a href="https://storymaps-classic.arcgis.com/en/my-stories/">My Stories</a>',
+      '<a href="https://storymaps-classic.arcgis.com.example.org/en/">Unrelated</a>',
+      '<a href="http://storymaps.arcgis.com/en/app-list/cascade/">Legacy Cascade</a>',
+      '<a href="http://crossingtherubikhan.com/old-post/?from=story#more" target="_blank">Travel blog</a>',
+      '<a href="//WWW.CROSSINGTHERUBICON.COM/blog/">Rally blog</a>',
+      '<a href="https://crossingtherubikhan.com.example.org/blog/">Unrelated blog</a>',
+    ].join('\n'));
+    execFileSync(process.execPath, ['scripts/refresh-archive-examples.mjs', file], { cwd: repo });
+    const html = readFileSync(file, 'utf8');
+    assert.ok(html.includes(`<a href="${destination}" target="_blank">Classic apps</a>`));
+    assert.ok(html.includes(`<a href="${destination}">Classic gallery</a>`));
+    assert.ok(html.includes(`<a href="${destination}">Archived link</a>`));
+    assert.ok(html.includes(`<a href="${destination}">Legacy Cascade</a>`));
+    const travelArchive = 'https://web.archive.org/web/20171023101933/http://crossingtherubikhan.com/';
+    assert.ok(html.includes(`<a href="${travelArchive}" target="_blank">Travel blog</a>`));
+    assert.ok(html.includes(`<a href="${travelArchive}">Rally blog</a>`));
+    assert.ok(html.includes('<a href="/archive/2017-12-10-pages/en__archive-blog.html">Unrelated blog</a>'));
+    assert.match(html, /\nMy Stories\n/);
+    assert.ok(html.includes('<a href="https://storymaps-classic.arcgis.com.example.org/en/">Unrelated</a>'));
+    for (const published of htmlFiles(publish)) {
+      assert.doesNotMatch(readFileSync(published, 'utf8'), /<a\b[^>]*href="(?:https?:)?\/\/storymaps-classic\.arcgis\.com(?:[/?#"])/i, published);
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('viewer policy disables My Stories and routes audited retired links without blocking unrelated links', () => {
+  const callbacks = {};
+  const anchor = (href, textContent = '') => {
+    const attributes = new Map([['href', href], ['target', '_blank']]);
+    return {
+      textContent,
+      querySelectorAll: () => [],
+      matches: selector => selector.startsWith('a[href]') && attributes.has('href'),
+      getAttribute: name => attributes.get(name),
+      setAttribute: (name, value) => attributes.set(name, value),
+      removeAttribute: name => attributes.delete(name),
+    };
+  };
+  const initial = anchor('https://storymaps.arcgis.com/en/my-stories/?from=tutorial');
+  const ordinary = anchor('https://example.org/my-stories/', 'Unrelated stories');
+  const classic = anchor('https://storymaps-classic.arcgis.com/en/', 'Classic Story Maps');
+  const travel = anchor('https://www.crossingtherubikhan.com/blog/', 'Travel blog');
+  const document = {
+    baseURI: 'https://preview.example/project/viewers/cascade/index.html',
+    currentScript: { src: 'https://preview.example/project/viewers/assets/js/social-link-policy.js' },
+    documentElement: {},
+    head: { appendChild() {} },
+    createElement: () => ({}),
+    querySelectorAll: () => [initial, ordinary, classic, travel],
+    addEventListener: (name, callback) => { callbacks[name] = callback; },
+  };
+  vm.runInNewContext(readFileSync(path.join(repo, 'apps/classic-storymaps-site/assets/js/social-link-policy.js'), 'utf8'), {
+    document, URL, WeakSet,
+    MutationObserver: class {
+      constructor(callback) { callbacks.mutation = callback; }
+      observe() {}
+    },
+  });
+  assert.equal(initial.getAttribute('href'), undefined);
+  assert.equal(initial.getAttribute('target'), undefined);
+  assert.equal(ordinary.getAttribute('href'), 'https://example.org/my-stories/');
+  const productUrl = 'https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic';
+  assert.equal(classic.getAttribute('href'), productUrl);
+  for (const href of [
+    'http://storymaps-classic.arcgis.com/en/app-list/?old=1#section',
+    '//STORYMAPS-CLASSIC.ARCGIS.COM/anything',
+    'http://storymaps.arcgis.com/en/app-list/cascade/',
+    'https://storymaps.arcgis.com/en/app-list/cascade/',
+    'https://storymaps.arcgis.com/en/app-list/',
+    'https://storymaps.arcgis.com/en/gallery/',
+  ]) {
+    const linked = anchor(href, 'Classic apps');
+    callbacks.mutation([{ type: 'childList', addedNodes: [linked] }]);
+    assert.equal(linked.getAttribute('href'), productUrl);
+    assert.equal(linked.textContent, 'Classic apps');
+    assert.equal(linked.getAttribute('target'), '_blank');
+    assert.equal(linked.getAttribute('rel'), 'noopener noreferrer');
+    callbacks.mutation([{ type: 'attributes', target: linked }]);
+    assert.equal(linked.getAttribute('href'), productUrl);
+  }
+  const unrelatedClassic = anchor('https://storymaps-classic.arcgis.com.example.org/en/');
+  callbacks.mutation([{ type: 'childList', addedNodes: [unrelatedClassic] }]);
+  assert.equal(unrelatedClassic.getAttribute('href'), 'https://storymaps-classic.arcgis.com.example.org/en/');
+  const modernStory = anchor('https://storymaps.arcgis.com/stories/749af21064e34f029bdd53946d9d941a');
+  callbacks.mutation([{ type: 'childList', addedNodes: [modernStory] }]);
+  assert.equal(modernStory.getAttribute('href'), 'https://storymaps.arcgis.com/stories/749af21064e34f029bdd53946d9d941a');
+  const audit = JSON.parse(readFileSync(path.join(repo, 'docs/testing/artifacts/deployed-link-audit-2026-10-08/results.json'), 'utf8'));
+  const travelArchive = 'https://web.archive.org/web/20171023101933/http://crossingtherubikhan.com/';
+  assert.equal(travel.getAttribute('href'), travelArchive);
+  const travelLinks = audit.destinations.filter(entry => entry.assessment === 'DA-007');
+  assert.equal(travelLinks.length, 10);
+  for (const href of [...travelLinks.map(entry => entry.url), '//WWW.CROSSINGTHERUBICON.COM/blog/?old=1#more', 'https://crossingtherubicon.com/']) {
+    const linked = anchor(href, 'Original travel label');
+    callbacks.mutation([{ type: 'childList', addedNodes: [linked] }]);
+    assert.equal(linked.getAttribute('href'), travelArchive);
+    assert.equal(linked.textContent, 'Original travel label');
+    assert.equal(linked.getAttribute('target'), '_blank');
+    assert.equal(linked.getAttribute('rel'), 'noopener noreferrer');
+    callbacks.mutation([{ type: 'attributes', target: linked }]);
+    assert.equal(linked.getAttribute('href'), travelArchive);
+  }
+  const unrelatedTravel = anchor('https://crossingtherubikhan.com.example.org/blog/');
+  callbacks.mutation([{ type: 'childList', addedNodes: [unrelatedTravel] }]);
+  assert.equal(unrelatedTravel.getAttribute('href'), 'https://crossingtherubikhan.com.example.org/blog/');
+  const retired = audit.destinations.filter(entry => entry.assessment === 'DA-003');
+  assert.equal(retired.length, 8);
+  for (const entry of retired) {
+    const destination = new URL(entry.url);
+    const runtime = destination.pathname.includes('MapSeries') ? 'mapseries'
+      : destination.pathname.includes('StoryMapCrowdsource') ? 'crowdsource' : 'cascade';
+    const linked = anchor(entry.url + '&locale=en#section-2', 'Original label');
+    callbacks.mutation([{ type: 'childList', addedNodes: [linked] }]);
+    assert.equal(linked.getAttribute('href'), '/project/viewers/' + runtime + '/index.html' + destination.search + '&locale=en#section-2');
+    assert.equal(linked.textContent, 'Original label');
+    assert.equal(linked.getAttribute('target'), '_blank');
+    assert.equal(linked.getAttribute('rel'), 'noopener noreferrer');
+    const rewritten = linked.getAttribute('href');
+    callbacks.mutation([{ type: 'attributes', target: linked }]);
+    assert.equal(linked.getAttribute('href'), rewritten);
+  }
+  for (const href of [
+    retired[0].url.replace('nation.maps.arcgis.com', 'unrelated.example'),
+    retired[0].url.replace('7a0c165e7b404073b686f95ef98d6241', '00000000000000000000000000000000'),
+  ]) {
+    const untouched = anchor(href);
+    callbacks.mutation([{ type: 'childList', addedNodes: [untouched] }]);
+    assert.equal(untouched.getAttribute('href'), href);
+  }
+  for (const dynamic of [
+    anchor('/project/archive/2017-12-10-pages/en__my-stories.html#start'),
+    anchor('https://storymaps-classic.arcgis.com/en/my-stories/'),
+    anchor('https://example.org/redirect', 'My Stories'),
+  ]) {
+    callbacks.mutation([{ type: 'childList', addedNodes: [dynamic] }]);
+    assert.equal(dynamic.getAttribute('href'), undefined);
+    let prevented = false;
+    callbacks.click({ target: dynamic, preventDefault() { prevented = true; }, stopImmediatePropagation() {} });
+    assert.equal(prevented, true);
+  }
+});
+
+test('example links avoid the custom domain and resolve relatively on either deployment', () => {
+  for (const file of htmlFiles(publish)) {
+    assert.doesNotMatch(readFileSync(file, 'utf8'), /<a\b[^>]*href="(?:https?:)?\/\/(?:www\.)?classicstorymaps\.com/i, file);
+  }
+  const launcher = readFileSync(path.join(publish, 'viewers/maptour-launcher.html'), 'utf8');
+  const href = launcher.match(/<a\b[^>]*id="demo-link"[^>]*href="([^"]+)"/)?.[1];
+  assert.equal(href, 'maptour/index.html?webmap=a5019e8c55d547eab69c0777dcd7509a');
+  for (const origin of ['https://example.test/', 'https://example.test/classic-storymaps-viewer-pages/']) {
+    assert.equal(new URL(href, origin + 'viewers/maptour-launcher.html').href, origin + 'viewers/' + href);
+  }
+});
+
 test('archive pages share an internal-only footer matching header navigation', () => {
   const pages = [path.join(publish, 'index.html'), path.join(publish, 'viewers/archive-root.html'), ...htmlFiles(path.join(publish, 'archive'))];
   const root = readFileSync(pages[0], 'utf8');

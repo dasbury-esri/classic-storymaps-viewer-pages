@@ -114,6 +114,21 @@ for (const file of process.argv.slice(2)) {
     }
     const originalHref = href.replace(/^(?:https?:\/\/web\.archive\.org)?\/web\/\d+(?:id_)?\//, '');
     const blogUrl = new URL(originalHref, 'https://example.invalid');
+    if (label === 'My Stories' || /(?:^|\/)en__my-stories\.html$/.test(blogUrl.pathname)
+      || (/^storymaps(?:-classic)?\.(?:arcgis|esri)\.com$/.test(blogUrl.hostname)
+        && /(?:^|\/)my-stories\/?$/.test(blogUrl.pathname))) {
+      return body;
+    }
+    if (/^https?:$/.test(blogUrl.protocol)
+      && /^(?:www\.)?(?:crossingtherubicon|crossingtherubikhan)\.com$/.test(blogUrl.hostname)) {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://web.archive.org/web/20171023101933/http://crossingtherubikhan.com/"');
+    }
+    if (/^https?:$/.test(blogUrl.protocol)
+      && (blogUrl.hostname === 'storymaps-classic.arcgis.com'
+        || (blogUrl.hostname === 'storymaps.arcgis.com'
+          && /^\/en\/(?:app-list(?:\/cascade)?|gallery)\/?$/.test(blogUrl.pathname)))) {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic"');
+    }
     if (blogUrl.hostname === 'links.esri.com' && blogUrl.pathname === '/storymaps/newsletter_signup') {
       return anchor.replace(/\bhref="[^"]*"/, 'href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup"');
     }

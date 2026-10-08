@@ -4,6 +4,115 @@
   "commit": "b3ba1d7c22dbbbb1cf2240fe4b9d0e6656eb4bee",
   "deployment": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37836630862",
   "base": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/",
+  "triage": {
+    "storyRepairBacklog": {
+      "scope": "All remaining open and needs-verification findings, grouped by affected item ID and browser-verified title. Exclude individual story repairs from site cleanup when deferred; retain original finding statuses and evidence rather than marking unresolved work fixed.",
+      "siteLevelFixesRemaining": 0,
+      "pendingDeploymentFindingIds": ["DA-001", "DA-002", "DA-003", "DA-005", "DA-006", "DA-007"],
+      "distinctStories": 15,
+      "distinctDestinations": 80,
+      "storyDestinationPairs": 84,
+      "grouping": "Group by referring story appid/webmap, except a story launch failure is assigned to the destination item (DA-004). Deduplicate each destination index within a story. Title whitespace is trimmed. Indices refer to destinations[].index; URL, label, status and original checks remain in that evidence.",
+      "stories": [
+        {"itemId": "dc91db9f6409462b887ebb1695b9c201", "title": "Explore a Tapestry of World Ecosystems", "findings": {"DA-004": [105], "DA-008": [303]}},
+        {"itemId": "0584dbad6ebf433a96f1111f4cc7e3bd", "title": "San Diego Shortlist", "findings": {"DA-008": [208, 224], "DA-009": [192], "DA-010": [228], "DA-011": [196, 210, 211], "DA-012": [190, 195, 214, 215, 217], "DA-013": [200]}},
+        {"itemId": "50aea84a9853491f994f775cb989ea92", "title": "The Ten Most Damaging Hurricanes in U.S. History", "findings": {"DA-008": [310, 320, 323, 326], "DA-011": [309, 311, 313, 318, 319, 325, 328], "DA-012": [307, 312, 315, 321], "DA-013": [314, 316, 327, 329]}},
+        {"itemId": "d1ef0471365e400ebb540472b477871e", "title": "Some Places to Go in San Diego, California", "findings": {"DA-008": [340, 345, 357], "DA-009": [192], "DA-010": [228], "DA-011": [196, 344, 347, 348], "DA-012": [349, 350, 352], "DA-013": [200]}},
+        {"itemId": "d5b2c90d8a53466f9c3efb0f25d13325", "title": "Some Places to Eat in San Diego, California", "findings": {"DA-008": [378, 409, 414], "DA-009": [387], "DA-011": [411, 419], "DA-012": [371, 376, 377, 383, 385, 389, 405, 416, 417], "DA-013": [396, 422], "DA-015": [410]}},
+        {"itemId": "dcd5d01e2b0342fe90cf3b8ca9ab8302", "title": "ways to make your story map sing", "findings": {"DA-008": [425]}},
+        {"itemId": "62eef62250984b188b7512ec8f1caadb", "title": "Palm Springs Shortlist", "findings": {"DA-011": [363], "DA-012": [361, 362]}},
+        {"itemId": "36b4887370d141fcbb35392f996c82d9", "title": "The Bare Earth", "findings": {"DA-012": [248], "DA-016": [235]}},
+        {"itemId": "3c48121bd41945d68aacd1ded71841a4", "title": "Arizona's Birds and Water", "findings": {"DA-012": [253, 254]}},
+        {"itemId": "5cd671a4cf1844b7854220979574b927", "title": "How To Cascade: Sections", "findings": {"DA-012": [265, 266, 269]}},
+        {"itemId": "c4ed68ecb9d54d398dbf46dcde881471", "title": "How To Cascade: Media", "findings": {"DA-012": [274]}},
+        {"itemId": "7a0c165e7b404073b686f95ef98d6241", "title": "How To Cascade: Transitions", "findings": {"DA-012": [277, 278, 280, 281]}},
+        {"itemId": "a644a02894d246b59ecad16fae25b767", "title": "How To Cascade: Multi-View Map", "findings": {"DA-012": [282]}},
+        {"itemId": "954145df6cf84e2d8bbea996438c99fb", "title": "How To Cascade: Map Legends", "findings": {"DA-012": [288]}},
+        {"itemId": "97ab135daee04ee7bac9dac34f65277f", "title": "Devastation in Nepal: Katmandu Before and After the April 2015 Earthquake", "findings": {"DA-012": [368]}}
+      ]
+    },
+    "storyGroupedFindings": {
+      "findingIds": ["DA-008", "DA-009"],
+      "grouping": "Group references by appid or webmap item ID, deduplicating destination URLs within each story. Titles come from original deepStoryChecks, not inferred labels. Original findings and observations remain unchanged.",
+      "distinctStories": 6,
+      "distinctDestinationUrls": 16,
+      "storyDestinationPairs": 17,
+      "stories": [
+        {
+          "itemId": "0584dbad6ebf433a96f1111f4cc7e3bd",
+          "title": "San Diego Shortlist",
+          "destinationCounts": {"DA-008": 2, "DA-009": 1}
+        },
+        {
+          "itemId": "d1ef0471365e400ebb540472b477871e",
+          "title": "Some Places to Go in San Diego, California",
+          "destinationCounts": {"DA-008": 3, "DA-009": 1}
+        },
+        {
+          "itemId": "d5b2c90d8a53466f9c3efb0f25d13325",
+          "title": "Some Places to Eat in San Diego, California",
+          "destinationCounts": {"DA-008": 3, "DA-009": 1}
+        },
+        {
+          "itemId": "50aea84a9853491f994f775cb989ea92",
+          "title": "The Ten Most Damaging Hurricanes in U.S. History",
+          "destinationCounts": {"DA-008": 4, "DA-009": 0}
+        },
+        {
+          "itemId": "dc91db9f6409462b887ebb1695b9c201",
+          "title": "Explore a Tapestry of World Ecosystems",
+          "destinationCounts": {"DA-008": 1, "DA-009": 0},
+          "ownerWork": "Leave item unchanged while owner repairs sign-in and media links."
+        },
+        {
+          "itemId": "dcd5d01e2b0342fe90cf3b8ca9ab8302",
+          "title": "ways to make your story map sing",
+          "destinationCounts": {"DA-008": 1, "DA-009": 0}
+        }
+      ]
+    },
+    "travelBlogArchive": {
+      "verifiedAt": "2026-10-08 22:31:55+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "decision": "Owner selected https://web.archive.org/web/20171023101933/http://crossingtherubikhan.com/ for travel-blog links. Archive publishing and shared viewer policy cover crossingtherubikhan.com and the owner's crossingtherubicon.com spelling, including www, HTTP, HTTPS and protocol-relative URLs. All article paths, queries and fragments resolve to the exact archived homepage. Labels and targets remain, with opener protection for viewer rewrites.",
+      "verification": "Archive and runtime regressions failed before implementation and passed afterward, covering all ten DA-007 URLs. All 116 Node tests and 62 actual-publish checks passed. The Great In-Between rendered 80 matching journal-entry anchors across its DOM copies, all rewritten to the snapshot, with no anchors remaining on original hosts. A dynamically inserted alternate-spelling link was also rewritten. An independent fetch loaded the archived homepage.",
+      "limitations": "This is an archived-homepage fallback, not restoration of individual article deep links. The snapshot's own outbound links and media are not comprehensively verified. DA-007 awaits deployment and live verification. No original capture, remote item JSON, upstream source, commit, production deployment or domain setting changed. DA-008 and DA-009 links and the DA-004 owner-managed item remain untouched."
+    },
+    "findingClarifications": {
+      "recordedAt": "2026-10-08 22:31:55+00:00[UTC]",
+      "DA-008": "Original audit recorded fourteen URLs: eleven 404, one 410 and two 402 responses. HTTP/HTTPS aliases for Sunset Cliffs and La Jolla Shores account for two duplicate destinations. The global ecosystems reference belongs to the owner-managed DA-004 item and remains untouched. Access restriction does not prove deletion.",
+      "DA-009": "Corrected reviewed title: theheadquarters.com and www.na-pizza.com are two different domains, not Headquarters aliases. Both recorded browser final URLs point to their respective GoDaddy domain-sale paths; both landing pages showed Access Denied despite HTTP 200. No claim of venue closure or a fully rendered sale listing. Original observations remain unchanged."
+    },
+    "classicProductLinks": {
+      "verifiedAt": "2026-10-08 22:24:47+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "decision": "Owner selected https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/classic for storymaps-classic.arcgis.com links. Archive publishing and the shared viewer policy replace exact-host HTTP, HTTPS and protocol-relative links, plus the four audited storymaps.arcgis.com redirect aliases at /en/app-list/, /en/app-list/cascade/ and /en/gallery/. Old query strings and fragments are discarded; text and targets remain, with opener protection for viewer rewrites. My Stories links remain disabled.",
+      "verification": "Direct-host and alias regressions each failed before implementation and passed afterward. All 116 Node tests and 62 actual-publish checks passed. A browser check of How To Cascade: Sections confirmed the authored Cascade and other story map templates links use the approved destination. Dynamically inserted links were rewritten and My Stories remained unlinked. An independent fetch confirmed the approved destination renders Esri's Classic Story Maps retirement/product page.",
+      "scope": "DA-006 awaits deployment and live verification. Modern StoryMaps URLs, unrelated hosts, original captures, remote item JSON and original audit observations remain unchanged. No upstream runtime edits, commit, deployment or domain changes were performed in this step."
+    },
+    "cascadeTutorialImage": {
+      "status": "local-pending-deployment",
+      "decision": "Owner replaced the DA-005 Cascade tutorial step9.png locally. Preserve the replacement and original audit observations; deployment and live verification remain pending.",
+      "verification": "Independent file and macOS sips checks identify the local replacement as a 533 x 460 PNG, not HTML. No production deployment was performed.",
+      "relatedOwnerWork": "Owner is separately repairing the sign-in and media links for DA-004 item dc91db9f6409462b887ebb1695b9c201. Leave that item unchanged for now."
+    },
+    "retiredStoryRouting": {
+      "verifiedAt": "2026-10-08 20:56:48+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "decision": "Route the eight DA-003 authored links through the matching local Classic viewer using the original public item ID and JSON. The shared viewer policy rewrites only verified host/template/item combinations, including links inserted after load. Query strings, fragments, labels and existing targets are preserved; opener protection is applied. The viewer base comes from the loaded policy script, supporting project-prefix and root-domain hosting without hard-coded origins.",
+      "verification": "The routing regression failed before implementation and passed afterward for all eight destinations, URL-state preservation, repeated mutation handling and unrelated-link protection. All 115 Node tests and 61 actual-publish checks passed. All eight original items rendered and passed representative runtime interactions through the local viewers. Browser checks verified the rewrites in all four referring stories; normal clicks opened Transitions, the 2016 College Football Recruiting Class and 737 Novels with correct item IDs and no opener. An isolated root-domain browser fixture verified all eight routes.",
+      "limitations": "The Sections guide recorded a late canceled YouTube iframe request after its interaction check passed, as previously observed. This is not certification of every remote media resource or map layer. The National Mall and My Stories changes remain local too. No upstream source, remote item JSON, production deployment or domain configuration was changed."
+    },
+    "myStoriesAndRelativeExamples": {
+      "verifiedAt": "2026-10-08 20:50:35+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "decision": "Owner requested removal of all My Stories links and relative example URLs. Archive publishing unwraps My Stories anchors while preserving text and original captures. The existing viewer link policy also disables initial and dynamically inserted My Stories anchors, including the authored Make Your Story Map Sing link. The My Stories archive file itself remains preserved; its account interface is not repaired.",
+      "relativeExample": "Map Tour launcher now uses maptour/index.html?webmap=a5019e8c55d547eab69c0777dcd7509a. All generated HTML is checked for hard-coded custom-domain anchors. Relative URL resolution is tested for both project-prefix and root-domain hosting.",
+      "verification": "All three new regressions failed before their respective fixes and passed afterward. Full suite: 115 passed. Actual publish checks: 61 passed. Desktop 1440px and mobile 390px browser checks clicked through to A walking tour of the National Mall, verified preserved My Stories text without static links, confirmed the authored Cascade link is disabled, and proved dynamically inserted links cannot activate their click handlers. Local only; not committed or deployed.",
+      "scope": "DA-001 and DA-002 await live verification. The My Stories destination within DA-006 is also unlinked locally, but that group remains open for its other product links. Original crawl observations and destination assessments remain unchanged.",
+      "domainPlan": "Owner plans to enable the custom domain after cleanup is complete. No domain, DNS, Pages or workflow configuration changed in this step."
+    }
+  },
   "summary": {
     "destinations": 426,
     "firstPartyFetchedUrls": 88,
@@ -12,7 +121,8 @@
     "distinctSourceLabelUrlReferences": 1453,
     "browserAttempts": 400,
     "originalFlaggedDestinations": 116,
-    "openFindingGroups": 12,
+    "openFindingGroups": 6,
+    "pendingDeploymentFindingGroups": 6,
     "verificationFindingGroups": 3,
     "affectedDestinations": 106,
     "deepStories": 38,
@@ -24,7 +134,7 @@
   "findings": [
     {
       "id": "DA-001",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P1",
       "title": "My Stories remains on its loader",
       "destinations": [
@@ -33,7 +143,7 @@
     },
     {
       "id": "DA-002",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P1",
       "title": "Map Tour launcher example uses the inactive custom domain",
       "destinations": [
@@ -42,7 +152,7 @@
     },
     {
       "id": "DA-003",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P1",
       "title": "Retired hosted story cross-links return HTTP 200 unavailable or blank pages",
       "destinations": [
@@ -67,7 +177,7 @@
     },
     {
       "id": "DA-005",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P2",
       "title": "Cascade tutorial step-9 PNG contains HTML",
       "destinations": [
@@ -76,7 +186,7 @@
     },
     {
       "id": "DA-006",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P2",
       "title": "Authored Classic product links redirect to an unresolvable retired host",
       "destinations": [
@@ -89,7 +199,7 @@
     },
     {
       "id": "DA-007",
-      "status": "open",
+      "status": "pending-deployment",
       "priority": "P2",
       "title": "Travel-blog destinations fail DNS resolution",
       "destinations": [
@@ -131,7 +241,7 @@
       "id": "DA-009",
       "status": "open",
       "priority": "P2",
-      "title": "The Headquarters link redirects to a domain-for-sale destination",
+      "title": "Headquarters and NA-Pizza domains redirect to domain-sale destinations",
       "destinations": [
         192,
         387
