@@ -85,10 +85,32 @@ sanitize_wayback_html() {
   rm -f "$tmp_file_2"
 }
 
+normalize_example_links() {
+  local file_path="$1"
+  node "$SCRIPT_DIR/refresh-archive-examples.mjs" "$file_path"
+  perl -0pi -e '
+    s{<a\b([^>]*\bhref="([^"]*)"[^>]*)>(.*?)</a>}{
+      my ($attributes, $href, $body) = ($1, $2, $3);
+      my $label = $body;
+      $label =~ s/<[^>]*>//g;
+      $label =~ s/^\s+|\s+$//g;
+      if ($label =~ /^view (?:sample\b|a\b|this\b)/i || $href =~ m{/viewers/(?:maptour|swipe|mapjournal|mapseries|cascade|shortlist|crowdsource|basic)(?:[/?]|$)}) {
+        my ($existing_rel) = $attributes =~ /\brel="([^"]*)"/;
+        my %seen;
+        my $rel = join " ", grep { length && !$seen{$_}++ } (split(/\s+/, $existing_rel || ""), "noopener", "noreferrer");
+        $attributes =~ s/\s+(?:target|rel)="[^"]*"//g;
+        $attributes .= " target=\"_blank\" rel=\"$rel\"";
+      }
+      "<a$attributes>$body</a>";
+    }gse;
+  ' "$file_path"
+}
+
 sanitize_archive_html_file() {
   local file_path="$1"
 
   perl -0pi -e '
+    s{href="https?://(?:www\.)?classicstorymaps\.com/viewers/}{href="/viewers/}gi;
     s{(<nav\b[^>]*class="(?:site-nav|drawer-nav)\b[^>]*>)(.*?)(</nav>)}{
       my ($opening, $content, $closing) = ($1, $2, $3);
       $content =~ s{<(?:a|span)([^>]*\bdata-langlabel="nav_gallery"[^>]*)>.*?</(?:a|span)>}{
@@ -230,6 +252,7 @@ sanitize_archive_html_file() {
     s{src="/viewers/assets/images/custom\.jpg"}{src="/viewers/assets/images/custom.png"}g;
     s{((?:href|src)=")(/web/\d+[^" ]*)"}{$1https://web.archive.org$2"}g;
   ' "$file_path"
+  normalize_example_links "$file_path"
 }
 
 add_archive_banner_to_page() {
@@ -388,6 +411,16 @@ for compat_spec in "${compat_specs[@]}"; do
     write_compat_redirect_stub "$compat_out_dir/$launcher_file" "$compat_prefix"
   done
 done
+
+for root_page in "$ROOT_PAGE_OUT" "$ARCHIVE_ROOT_OUT"; do
+  if [[ -f "$root_page" ]]; then
+    normalize_example_links "$root_page"
+  fi
+done
+
+while IFS= read -r landing_page; do
+  normalize_example_links "$landing_page"
+done < <(find "$OUT_DIR" -maxdepth 1 -type f -name '*.html' | sort)
 
 node "$SCRIPT_DIR/apply-site-base-path.mjs" "$OUT_DIR" "$COMPAT_OUT_DIR_STORIES" "$COMPAT_OUT_DIR_STORYMAPS" "$ROOT_PAGE_OUT" "$(dirname "$ARCHIVE_PAGE_OUT")"
 

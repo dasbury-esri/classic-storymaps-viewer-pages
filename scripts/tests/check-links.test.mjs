@@ -230,6 +230,143 @@ test('archive app listings omit Gallery controls but retain other app actions', 
   }
 });
 
+test('all sample and overview story links open in an isolated new tab', () => {
+  const slugs = ['map-tour', 'map-journal', 'map-series', 'cascade', 'shortlist', 'swipe-spyglass', 'crowdsource', 'basic'];
+  const files = ['index.html', 'archive/index.html', 'viewers/archive-root.html', 'archive/2017-12-10-app-list.html', 'archive/2017-12-10-pages/en__app-list.html',
+    ...slugs.map(slug => 'archive/2017-12-10-pages/en__app-list__' + slug + '.html')];
+  let checked = 0;
+  for (const file of files) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    for (const match of html.matchAll(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g)) {
+      const label = match[3].replace(/<[^>]*>/g, '').trim();
+      if (!/^view (?:sample\b|a\b|this\b)/i.test(label) && !/\/viewers\/(?:maptour|swipe|mapjournal|mapseries|cascade|shortlist|crowdsource|basic)(?:[/?]|$)/.test(match[2])) continue;
+      assert.match(match[1], /\btarget="_blank"/, file + ': ' + match[2]);
+      const rel = match[1].match(/\brel="([^"]*)"/)?.[1].split(/\s+/) || [];
+      assert.ok(rel.includes('noopener') && rel.includes('noreferrer'), file + ': ' + match[2]);
+      checked += 1;
+    }
+  }
+  assert.ok(checked >= 48, 'Cover every example and repeated archive listing');
+});
+
+test('historical home links open the original Bare Earth Cascade in the current viewer', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  const examples = [...html.matchAll(/<a\b[^>]*href="([^"]*\/viewers\/cascade\/index\.html\?appid=36b4887370d141fcbb35392f996c82d9)"[^>]*>[\s\S]*?<\/a>/g)];
+  assert.equal(examples.length, 2, 'Cover both the image and text links');
+  assert.ok(examples.some(example => example[0].includes('The Bare Earth')));
+  for (const example of examples) {
+    assert.equal(example[1], base + '/viewers/cascade/index.html?appid=36b4887370d141fcbb35392f996c82d9');
+    assert.ok(example[0].includes('target="_blank"'));
+    assert.ok(example[0].includes('noopener noreferrer'));
+  }
+  assert.doesNotMatch(html, /href="[^"]*smotm_dec2017/);
+});
+
+test('Resources singing presentation opens its original Cascade in the current viewer', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__resources.html'), 'utf8');
+  const example = html.match(/<a\b[^>]*href="([^"]*\/viewers\/cascade\/index\.html\?appid=dcd5d01e2b0342fe90cf3b8ca9ab8302)"[^>]*>[\s\S]*?<\/a>/);
+  assert.ok(example, 'Preserve the original singing presentation');
+  assert.equal(example[1], base + '/viewers/cascade/index.html?appid=dcd5d01e2b0342fe90cf3b8ca9ab8302');
+  assert.ok(example[0].includes('Make Your Story Map Sing'));
+  assert.ok(example[0].includes('target="_blank"'));
+  assert.ok(example[0].includes('noopener noreferrer'));
+  assert.ok(!html.includes('make_your_story_map_sing'));
+});
+
+test('Resources introduction presentation opens its original Map Series in the current viewer', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__resources.html'), 'utf8');
+  const example = html.match(/<a\b[^>]*href="([^"]*\/viewers\/mapseries\/index\.html\?appid=4aaf9036c7324b0cb5c8ee3e609126e7)"[^>]*>[\s\S]*?<\/a>/);
+  assert.ok(example, 'Preserve the original introduction presentation');
+  assert.equal(example[1], base + '/viewers/mapseries/index.html?appid=4aaf9036c7324b0cb5c8ee3e609126e7');
+  assert.ok(example[0].includes('An Introduction to Story Maps'));
+  assert.ok(example[0].includes('target="_blank"'));
+  assert.ok(example[0].includes('noopener noreferrer'));
+  assert.ok(!html.includes('an_introduction_presentation'));
+});
+
+test('FAQ caption example opens the original Map Tour in the current viewer', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__faq.html'), 'utf8');
+  const example = html.match(/<a\b[^>]*href="([^"]*\/viewers\/maptour\/index\.html\?appid=d5b2c90d8a53466f9c3efb0f25d13325)"[^>]*>Map Tour<\/a>/);
+  assert.ok(example, 'Preserve the caption-formatting story and link label');
+  assert.equal(example[1], base + '/viewers/maptour/index.html?appid=d5b2c90d8a53466f9c3efb0f25d13325');
+  assert.ok(example[0].includes('target="_blank"'));
+  assert.ok(example[0].includes('noopener noreferrer'));
+  assert.ok(!html.includes('story_map_tour_html_formatting_in_caption_example'));
+});
+
+test('Audubon organization tile opens the owner-approved original Map Series', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  const tile = html.match(/<a\b[^>]*class="party-tile audubon"[^>]*>/);
+  assert.ok(tile, 'Preserve the Audubon organization tile');
+  assert.ok(tile[0].includes('href="' + base + '/viewers/mapseries/index.html?appid=3c48121bd41945d68aacd1ded71841a4"'));
+  assert.ok(tile[0].includes('target="_blank"'));
+  assert.ok(tile[0].includes('noopener noreferrer'));
+  assert.doesNotMatch(html, /href="[^"]*links\.esri\.com\/storymaps\/user\/audubon/);
+});
+
+test('NOAA organization tile uses the owner-selected Wayback capture', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  const tile = html.match(/<a\b[^>]*class="party-tile noaa"[^>]*>/);
+  assert.ok(tile, 'NOAA tile exists');
+  assert.ok(tile[0].includes('href="https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html"'));
+  assert.ok(tile[0].includes('target="_blank"'));
+  assert.ok(!html.includes('href="https://links.esri.com/storymaps/user/noaa"'));
+});
+
+test('first Playlist example uses the archived 20 Towns destination', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__playlist.html'), 'utf8');
+  const example = html.match(/<a\b[^>]*href="([^"]+)"[^>]*>\s*<img[^>]*playlist1\.jpg[^>]*>[\s\S]*?<\/a>/);
+  assert.ok(example, 'First Playlist example exists');
+  assert.equal(example[1], 'https://storymaps.esri.com/archives/stories/2013/20towns/');
+  assert.ok(example[0].includes('target="_blank"'));
+  assert.ok(example[0].includes('noopener noreferrer'));
+});
+
+test('Map Tour sample and fourth Overview example use the owner-selected stories', () => {
+  for (const file of ['index.html', 'archive/index.html', 'viewers/archive-root.html']) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    const tour = [...html.matchAll(/<div class="app-text">([\s\S]*?)<\/div>/g)]
+      .find(match => match[1].includes('Story Map Tour'))?.[1];
+    assert.ok(tour?.includes('/viewers/maptour/index.html?webmap=a5019e8c55d547eab69c0777dcd7509a'), file + ': Map Tour sample');
+  }
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__map-tour.html'), 'utf8');
+  const examples = [...html.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)]
+    .filter(match => match[1].includes('/viewers/maptour') && match[2].includes('<img'));
+  assert.equal(examples.length, 4);
+  assert.ok(examples[3][1].endsWith('/viewers/maptour/index.html?appid=016c31c6dcd54c7ca635cc63e4bc82a4'));
+  assert.ok(examples[3][2].includes('/images/examples/016c31c6dcd54c7ca635cc63e4bc82a4.jpg'));
+  assert.ok(examples[3][0].includes('target="_blank"'));
+});
+
+test('archive examples replace failed stories and match advertised sample layouts', () => {
+  const slugs = ['map-tour', 'map-journal', 'map-series', 'cascade', 'shortlist', 'swipe-spyglass', 'crowdsource', 'basic'];
+  const files = ['index.html', 'archive/index.html', 'viewers/archive-root.html',
+    ...slugs.map(slug => 'archive/2017-12-10-pages/en__app-list__' + slug + '.html')];
+  const retired = ['2c62acf3468c4cbbba6b82f1035bfe22', '5afdbed13fad458cb6288c46a0bad060', 'd6635d5602b04c05a445058f53da5cb5', 'ef703d9454bb4e4e8a9c1b086b5b66b5', 'c7ad1a55de0247a68454a76f251225a4', 'a0a12caf5025441497d49d35b01a07f8', '716b6277db404a5aaf2406f7bb444295', 'f2e8448fef064238ace4f324ffc16fde'];
+  for (const file of files) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    for (const match of html.matchAll(/<a\b[^>]*href="([^"]+)"/g)) {
+      assert.ok(!retired.some(id => match[1].includes(id)), file + ': stale example ' + match[1]);
+    }
+  }
+  for (const file of files.slice(0, 3)) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    const blocks = [...html.matchAll(/<div class="app-text">([\s\S]*?)<\/div>/g)].map(match => match[1]);
+    for (const [label, id] of [['Tabbed Layout', '6aab740eb5f146d0bbc073185aa726cb'], ['Side Accordion Layout', '77245a2c7bb540878fd3b24ebd048b20'], ['Story Map Spyglass', '97ae55e015774b7ea89fd0a52ca551c2']]) {
+      const block = blocks.find(content => content.includes(label));
+      assert.ok(block?.includes('appid=' + id), file + ': ' + label);
+    }
+  }
+});
+
+test('archive overview examples do not depend on the inactive custom domain', () => {
+  const slugs = ['map-tour', 'map-journal', 'map-series', 'cascade', 'shortlist', 'swipe-spyglass', 'crowdsource', 'basic'];
+  for (const slug of slugs) {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__' + slug + '.html'), 'utf8');
+    assert.doesNotMatch(html, /href="https?:\/\/(?:www\.)?classicstorymaps\.com\/viewers\//i, slug);
+  }
+});
+
 test('catalog has a return button pointing to the archive under the deployment prefix', () => {
   const html = readFileSync(path.join(publish, 'viewers/index.html'), 'utf8');
   const link = html.match(/<a\b[^>]*class="[^"]*\barchive-return\b[^>]*href="([^"]+)"[^>]*>\s*Back to Archive\s*<\/a>/);
