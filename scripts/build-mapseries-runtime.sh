@@ -43,4 +43,6 @@ test -f "$OUTPUT_PATH/index.html"
 test -f "$OUTPUT_PATH/app/viewer-min.js"
 test -f "$OUTPUT_PATH/app/main-config.js"
 
+node "$SCRIPT_DIR/../runtimes/mapseries/patches/embedded-base-path.mjs" "$OUTPUT_PATH"
+
 echo "Map Series build output copied to $OUTPUT_PATH"

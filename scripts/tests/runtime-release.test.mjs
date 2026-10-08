@@ -9,6 +9,39 @@ import vm from 'node:vm';
 
 const repo = fileURLToPath(new URL('../../', import.meta.url));
 
+test('Map Series staged embedded routes respect viewer and legacy deployment bases', () => {
+  const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-series-embedded-'));
+  const original = 'function getBasePath(){var marker="/templates/classic-storymaps",pathname=String(window.location.pathname||"").toLowerCase(),index=pathname.indexOf(marker);return index>=0?(window.location.pathname.substring(0,index)+marker).replace(/\\/+$/,""):marker}';
+  try {
+    mkdirSync(path.join(temporary, 'app'));
+    writeFileSync(path.join(temporary, 'BUILD_SOURCE'), 'grunt\n');
+    for (const filename of ['viewer-min.js', 'builder-min.js']) writeFileSync(path.join(temporary, 'app', filename), original);
+    const patch = () => spawnSync('node', [path.join(repo, 'runtimes/mapseries/patches/embedded-base-path.mjs'), temporary], { encoding: 'utf8' });
+    const result = patch();
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    for (const filename of ['viewer-min.js', 'builder-min.js']) {
+      const bundle = readFileSync(path.join(temporary, 'app', filename), 'utf8');
+      for (const [pathname, expected] of [
+        ['/classic-storymaps-viewer-pages/viewers/mapseries/index.html', '/classic-storymaps-viewer-pages/viewers'],
+        ['/viewers/mapseries/', '/viewers'],
+        ['/nested/site/viewers/mapseries/index.html', '/nested/site/viewers'],
+        ['/prefix/templates/classic-storymaps/mapseries/', '/prefix/templates/classic-storymaps'],
+        ['/templates/classic-storymaps/mapseries/', '/templates/classic-storymaps'],
+        ['/elsewhere/mapseries/', '/templates/classic-storymaps']
+      ]) {
+        assert.equal(vm.runInNewContext(bundle + ';getBasePath()', { window: { location: { pathname } } }), expected);
+      }
+    }
+    assert.notEqual(patch().status, 0, 'Repeated Grunt patch must fail closed');
+    writeFileSync(path.join(temporary, 'BUILD_SOURCE'), 'release:test\n');
+    writeFileSync(path.join(temporary, 'app/viewer-min.js'), 'official release without custom rewriter');
+    assert.equal(patch().status, 0, 'Official release has no custom legacy-base function to patch');
+    assert.equal(readFileSync(path.join(temporary, 'app/viewer-min.js'), 'utf8'), 'official release without custom rewriter');
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
 test('official release helper rejects a wrong checksum before staging files', () => {
   const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-release-checksum-'));
   try {
