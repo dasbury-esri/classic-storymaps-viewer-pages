@@ -29,13 +29,29 @@ For repository changes, run the required tests/builds before an approved push an
 verify the deployed links afterward. The checklist conversion itself did not
 authorize deployment; the owner subsequently approved the checkpoint below.
 
+## Shared Footer Follow-up
+
+The owner requested consistent internal-only footers. Existing historical footers
+now reuse the footer from the Apps page template during the build. Story Maps
+navigation contains Home plus the header's Apps, Viewers, Resources, Blog and FAQs
+destinations. Social icons, feedback controls and external Esri navigation are
+removed. Historical copyright and the Apps archive notice remain; pages without
+a footer are unchanged. Captured source pages are not edited.
+
+The shared-footer regression failed before the change and passed afterward. All
+90 Node tests passed, including footer identity, internal link resolution, header
+parity and copyright preservation. Local desktop 1440x900 and mobile 390x844
+screenshots confirmed matching Apps/homepage footers with readable, unclipped text.
+Normal footer clicks reached Apps and FAQs. These changes are local, not deployed;
+the original crawl observations below are not a fresh audit of the changed footer.
+
 ## Burn-down
 
 | Status | Tasks |
 | --- | ---: |
-| open | 44 |
-| needs-verification | 7 |
-| pending-deployment | 0 |
+| open | 31 |
+| needs-verification | 6 |
+| pending-deployment | 14 |
 | resolved | 16 |
 | accepted | 2 |
 | Total | 69 |
@@ -112,28 +128,95 @@ are not recertified.
 - [x] AL-044 `resolved`: Boston opens the owner-selected StoryMaps-filtered gallery; production desktop/mobile navigation and content checks passed. The inaccessible original group was not repaired.
 - [x] AL-047 `resolved`: NOAA opens the exact selected Wayback capture; production desktop/mobile tile and click checks passed, including missing archived CSS.
 
+### Unavailable Organization Examples
+
+Verified locally: 2026-10-08 03:59:04+00:00[UTC]. The owner approved marking Montana
+and NCC unavailable, with the same treatment for additional failing "Join the
+party" examples. These are disabled text entries, not substitute destinations.
+Unavailable describes the archived example, not the organization or all its content.
+
+Seven generated entries retain their names with "(Unavailable)" and
+`aria-disabled="true"`, without `href`, `target`, or `tabindex`. Disabled styling
+removes link decoration. Each regression failed before its fix and passed afterward.
+Standalone Chromium at desktop 1440x900 and mobile 390x844 confirmed no navigation
+or popup on any disabled entry, no text overflow, and Tab visiting only the five
+retained links in order. Screenshots were inspected; artifacts are in the session's
+temporary `classic-party-unavailable-h5O9m0` directory. All 83 Node tests and the
+local landing build passed. These changes are not pushed or deployed.
+
+Audubon, NOAA, Boston, NPCA and PA DCNR remain linked. NPCA and PA DCNR were
+rechecked: their shortlinks end at HTTP 200 mapping hubs with relevant content.
+Audubon's previously accepted missing-layer limitation is unchanged. Individual
+stories within the retained hubs were not recertified.
+
+- [ ] AL-043 `pending-deployment`: Blue Raster now supplies a consulting/marketing page rather than the archived example. Marked unavailable locally; its website is not down.
+- [ ] AL-045 `pending-deployment`: Owner-approved unavailable Montana entry; original item is inaccessible and organization gallery requires sign-in.
+- [ ] AL-046 `pending-deployment`: Owner-approved unavailable NCC entry; original gallery group returns 403 and organization gallery requires sign-in.
+- [ ] AL-049 `pending-deployment`: NPS original story URL still returns 404; unavailable locally.
+- [ ] AL-050 `pending-deployment`: Nature Conservancy's original field-notes URL still returns 404; unavailable locally.
+- [ ] AL-051 `pending-deployment`: Trust for Public Land still opens a blank retired-app page; unavailable locally.
+- [ ] AL-052 `pending-deployment`: USDA still opens a blank retired-app page; unavailable locally.
+
+Verify the unavailable states on production before closing these tasks. Their JSON
+`disposition` is `unavailable`; unlike replacements, they have no replacement URL.
+
+### Cascade Tutorial Guides
+
+Verified locally: 2026-10-08 16:47:28+00:00[UTC]. All five original guides remain
+public and match their tutorial topics. Their retired nation-hosted links now use
+the Cascade viewer with the original item IDs, labels and surrounding copy intact.
+All five regressions failed before the rewrite and passed afterward. The existing
+runtime, media and representative-scroll checks passed for all five with zero
+browser errors; artifacts are in temporary `classic-example-audit-NHW5bv`.
+
+Normal clicks from the local tutorial opened each correct guide in an isolated
+new tab. Selected instructional text was scrolled into view for each topic below.
+All 88 Node tests and the landing build passed. These changes are not pushed or
+deployed; verify the live tutorial links before closure. The checks do not certify
+every map layer, transition or embedded video within the guides.
+
+- [ ] AL-053 `pending-deployment`: Original Sections guide recovered; section-composition instructions rendered.
+- [ ] AL-054 `pending-deployment`: Original Transitions guide recovered; Swipe Vertical instructions rendered.
+- [ ] AL-055 `pending-deployment`: Original Map Legends guide recovered; contextual-graphics guidance rendered.
+- [ ] AL-056 `pending-deployment`: Original Multi-View Map guide recovered; Interaction Disabled guidance rendered.
+- [ ] AL-057 `pending-deployment`: Original Media guide recovered; Add Images to a Story instructions rendered.
+
 ### P1: Story and Organization Examples
 
-Montana FWP (AL-045) now needs an owner decision: its original item is inaccessible
-and its gallery requires sign-in. For retired endpoints,
+The organization decisions are recorded above. For the remaining retired endpoints,
 inspect the public item and try the matching supported viewer. Verify actual
 content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
 destination unavailable. Do not infer that an item was deleted from a blank host.
 
-- [ ] AL-013 `open`: Countdown Ports example returns 404; locate a preserved working example.
-- [ ] AL-014 `open`: Countdown Refugee Camps example returns 404; locate a preserved working example.
-- [ ] AL-045 `open`: Original Cascade item is inaccessible anonymously through both ArcGIS endpoints; the organization gallery redirects to sign-in. Owner decision needed: public replacement or unavailable state. See the follow-up below.
-- [ ] AL-046 `open`: NCC organization gallery is blank; find a preserved gallery or suitable destination.
-- [ ] AL-049 `open`: NPS organization example returns 404; test the referenced Journal item or find a preserved example.
-- [ ] AL-050 `open`: Nature Conservancy organization example returns 404; find a preserved Ogooue field-notes story.
-- [ ] AL-051 `open`: TPL organization example is blank; test its Journal item with the viewer.
-- [ ] AL-052 `open`: USDA organization example is blank; test its Cascade item with the viewer.
-- [ ] AL-053 `open`: Cascade tutorial guide, item `5cd671a4cf1844b7854220979574b927`; recover and check its specific tutorial context.
-- [ ] AL-054 `open`: Cascade tutorial guide, item `7a0c165e7b404073b686f95ef98d6241`; recover and check its specific tutorial context.
-- [ ] AL-055 `open`: Cascade tutorial guide, item `954145df6cf84e2d8bbea996438c99fb`; recover and check its specific tutorial context.
-- [ ] AL-056 `open`: Cascade tutorial guide, item `a644a02894d246b59ecad16fae25b767`; recover and check its specific tutorial context.
-- [ ] AL-057 `open`: Cascade tutorial guide, item `c4ed68ecb9d54d398dbf46dcde881471`; recover and check its specific tutorial context.
+- [ ] AL-013 `pending-deployment`: Owner selected the exact official Ports archive URL. Local link regression passed; the observed blank volume chart remains documented.
+- [ ] AL-014 `pending-deployment`: Owner selected the exact official Refugee Camps archive URL. Rewrite reinstated and local regression passed; the blocked HTTP map service and entry-selection error remain documented.
+
+The owner explicitly selected
+[Ports](https://storymaps.esri.com/archives/stories/2013/ports/) and
+[Refugee Camps](https://storymaps.esri.com/archives/stories/2013/refugee-camps/).
+Both generated links use these exact URLs and retain isolated new-tab behavior.
+The restored Refugee Camps regression failed before its rewrite and passed after;
+both Countdown checks, the neighboring Playlist check and the landing build passed.
+This supersedes the earlier decision gate, not the runtime observations below.
+No push or deployment was requested. Verify both live links after an approved
+deployment before closing these link tasks.
+
+Both official archive candidates preserve the original stories. Their temporary
+route regressions failed before the rewrites and passed afterward; local clicks
+opened the correct destinations with no opener. Ports was tested in standalone
+Chromium after both maps initialized: selecting Singapore displayed rank 2,
+2011 volume 29.94 million TEUs, and satellite imagery. Its chart area was blank in
+the inspected `classic-countdown-ports-hYJ39e/singapore.png` screenshot; external
+tracking-script errors were also observed. The owner subsequently selected this
+destination with those observations recorded.
+
+Refugee Camps requests World_Imagery over HTTP, blocked as mixed content. Selecting
+Dagahaley throws `Cannot read properties of undefined (reading 'hide')` in
+`postSelection`, reproduced in integrated and standalone Chromium. Its candidate
+rewrite was initially withdrawn, then restored with regression coverage following
+the owner's explicit URL selection. No remote source or new runtime was modified;
+these limitations are not claimed as repaired.
 
 ### P1: Placeholder Navigation
 
@@ -198,7 +281,6 @@ anonymously in a browser; record a content-matching decision for destination dri
 - [ ] AL-007 `needs-verification`: Newsletter signup timed out; determine whether signup still exists without submitting anything.
 - [ ] AL-034 `needs-verification`: ArcGIS Book chapter link now delivers a companion-resource PDF; decide whether it satisfies the label.
 - [ ] AL-036 `needs-verification`: Story Maps training link now opens generic catalog search; recover a relevant filter or revise the label.
-- [ ] AL-043 `needs-verification`: Blue Raster example now opens a marketing page; select a story example or approve/relabel the new purpose.
 - [ ] AL-061 `needs-verification`: EsriStoryMaps X profile is inconclusive under automation; confirm without assuming deletion.
 - [ ] RV-001 `needs-verification`: Contest-year links converge on a combined winners archive; decide whether year-specific navigation must be restored.
 
@@ -433,7 +515,7 @@ new tab with `window.opener === null`; "Gallery for BostonMaps" and the "Land Us
 Update" result were visible without signing in. Individual gallery stories were
 not recertified. AL-044 remains pending deployment and a production click check.
 
-## AL-045 Follow-up: Owner Decision Needed
+## AL-045 Follow-up: Owner-Approved Unavailable State
 
 The retired Montana FWP Cascade endpoint references item
 `0fa1de4222074cdeb7dbf0710ecb2ee0`. Anonymous metadata and data requests through
@@ -446,8 +528,21 @@ The candidate organization gallery at
 <https://mtfwp.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap>
 redirected to a page titled "Sign In", displaying "Sign in to Montana Fish,
 Wildlife & Parks". It is not an anonymous replacement. No sign-in was attempted
-and no destination rewrite was made. The owner must select a public replacement
-or approve an explicit unavailable state before this task can proceed.
+and no substitute destination was selected. The owner subsequently approved an
+explicit unavailable state, implemented and verified locally as recorded above.
+
+## AL-046 Follow-up: Owner-Approved Unavailable State
+
+The public app "ESRI Showcased NCC Apps (English)", item
+`bd073fd595154516987e927fae85baac`, is owned by `NCC_Geomatics`. Its saved
+`values.group` is `6b9031513b8244a6b21f8dba0931cddf`. Anonymous metadata and
+content requests for that group both return ArcGIS error 403, `GWM_0003`, despite
+HTTP 200. This does not prove deletion.
+
+The organization's StoryMaps-filtered gallery redirected to "Sign In", displaying
+"Sign in to National Capital Commission". No sign-in was attempted. The owner
+approved an unavailable entry, not a replacement with this sign-in-only gallery.
+The local implementation and verification are recorded above.
 
 ## NOAA Follow-up
 

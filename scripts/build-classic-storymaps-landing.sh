@@ -127,15 +127,6 @@ sanitize_archive_html_file() {
       }gse;
       "$opening$content$closing";
     }gse;
-    s{(<footer\b[^>]*>)(.*?)(</footer>)}{
-      my ($opening, $content, $closing) = ($1, $2, $3);
-      $content =~ s{(<section\b[^>]*class="footer-social-nav"[^>]*>)(.*?)(</section>)}{
-        my ($section_opening, $icons, $section_closing) = ($1, $2, $3);
-        $icons =~ s/\s+href="[^"]*"//g;
-        "$section_opening$icons$section_closing";
-      }gse;
-      "$opening$content$closing";
-    }gse;
     s{(<div class="app-text">)(.*?)(</div>)}{
       my ($opening, $content, $closing) = ($1, $2, $3);
       $content =~ s{<(a|span)\b[^>]*>\s*GALLERY\s*</\1>}{}gi;

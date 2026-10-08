@@ -148,7 +148,7 @@ test('site and archive pages omit Esri PNG logos but preserve historical copyrig
   }
 });
 
-test('archive headers and mobile drawers link to Viewers without changing historical footer navigation', () => {
+test('archive headers and mobile drawers link to Viewers', () => {
   const pages = [path.join(publish, 'index.html'), path.join(publish, 'viewers/archive-root.html'), ...htmlFiles(path.join(publish, 'archive'))];
   let checked = 0;
   for (const file of pages) {
@@ -165,8 +165,6 @@ test('archive headers and mobile drawers link to Viewers without changing histor
     }
   }
   assert.ok(checked > 30, 'Check the full archive navigation set');
-  const historicalHome = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
-  assert.match(historicalHome.match(/<footer\b[\s\S]*?<\/footer>/)[0], /data-langlabel="nav_gallery"[^>]*>Gallery<\/a>/);
 });
 
 test('archive headers and mobile drawers replace My Stories with FAQs', () => {
@@ -184,29 +182,41 @@ test('archive headers and mobile drawers replace My Stories with FAQs', () => {
     }
   }
   assert.ok(checked > 30, 'Check the full archive navigation set');
-  const historicalHome = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
-  assert.match(historicalHome.match(/<footer\b[\s\S]*?<\/footer>/)[0], /data-langlabel="nav_mystories"[^>]*>My Stories<\/a>/);
 });
 
-test('archive footers preserve social and email icons without href links', () => {
+test('archive pages share an internal-only footer matching header navigation', () => {
   const pages = [path.join(publish, 'index.html'), path.join(publish, 'viewers/archive-root.html'), ...htmlFiles(path.join(publish, 'archive'))];
+  const root = readFileSync(pages[0], 'utf8');
+  const footerPattern = /<footer class="footer sticky-footer">[\s\S]*?<\/footer>/;
+  const sharedFooter = root.match(footerPattern)?.[0];
+  assert.ok(sharedFooter);
+  const links = content => [...content.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)]
+    .map(match => [match[2], match[1]]);
+  const header = root.match(/<nav class="site-nav[^>]*>([\s\S]*?)<\/nav>/)[1];
+  assert.deepEqual(links(sharedFooter), [
+    ['Home', base + '/archive/2017-12-10-pages/en.html'],
+    ...links(header),
+  ]);
   let checked = 0;
   for (const file of pages) {
     const html = readFileSync(file, 'utf8');
-    for (const footer of html.matchAll(/<footer\b[\s\S]*?<\/footer>/g)) {
-      assert.doesNotMatch(footer[0], /<a\b[^>]*(?:icon-(?:twitter|facebook|github|email))[^>]*\bhref\s*=/i, file);
+    const footer = html.match(footerPattern)?.[0];
+    if (footer) {
+      assert.equal(footer, sharedFooter, file + ': shared footer markup');
       checked += 1;
+    }
+    for (const footer of html.matchAll(/<footer\b[\s\S]*?<\/footer>/g)) {
+      assert.doesNotMatch(footer[0], /footer-social-nav|icon-(?:twitter|facebook|github|email)|feedback-footer|nav_gallery|nav_mystories|My Stories/, file);
+      for (const [, href] of links(footer[0])) {
+        assert.ok(href.startsWith(base + '/'), file + ': internal footer destination');
+        assert.equal(new URL(href, 'https://local.example').origin, 'https://local.example');
+      }
     }
   }
   assert.ok(checked > 4, 'Check root, captured, and standalone archive footers');
   for (const filename of ['index.html', 'archive/index.html', 'viewers/archive-root.html', 'archive/2017-12-10-app-list.html', 'archive/2017-12-10-pages/en.html', 'archive/2017-12-10-pages/en__app-list.html']) {
     const html = readFileSync(path.join(publish, filename), 'utf8');
-    const social = html.match(/<section class="footer-social-nav">([\s\S]*?)<\/section>/);
-    assert.ok(social, filename + ': footer icon section remains');
-    assert.doesNotMatch(social[1], /\bhref\s*=/i);
-    for (const icon of ['twitter', 'facebook', 'github', 'email']) {
-      assert.match(social[1], new RegExp('<a class="icon-' + icon + '"[^>]*></a>'));
-    }
+    assert.equal(html.match(footerPattern)?.[0], sharedFooter, filename);
   }
 });
 
@@ -273,6 +283,25 @@ test('Resources singing presentation opens its original Cascade in the current v
   assert.ok(!html.includes('make_your_story_map_sing'));
 });
 
+for (const [itemId, topic, label] of [
+  ['5cd671a4cf1844b7854220979574b927', 'Sections', "'How To Cascade' guide"],
+  ['7a0c165e7b404073b686f95ef98d6241', 'Transitions', "'How To Cascade' guide"],
+  ['954145df6cf84e2d8bbea996438c99fb', 'Map Legends', 'guide'],
+  ['a644a02894d246b59ecad16fae25b767', 'Multi-View Map', "'How To Cascade' guide"],
+  ['c4ed68ecb9d54d398dbf46dcde881471', 'Media', "'How to Cascade' guide"],
+]) {
+  test(`Cascade tutorial ${topic} guide retains its original item in the current viewer`, () => {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__cascade__tutorial.html'), 'utf8');
+    const links = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+      .filter(link => link[1].includes(itemId));
+    assert.equal(links.length, 1);
+    assert.equal(links[0][1], base + '/viewers/cascade/index.html?appid=' + itemId);
+    assert.equal(links[0][2].trim(), label);
+    assert.ok(links[0][0].includes('target="_blank"'));
+    assert.ok(links[0][0].includes('noopener noreferrer'));
+  });
+}
+
 test('Resources introduction presentation opens its original Map Series in the current viewer', () => {
   const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__resources.html'), 'utf8');
   const example = html.match(/<a\b[^>]*href="([^"]*\/viewers\/mapseries\/index\.html\?appid=4aaf9036c7324b0cb5c8ee3e609126e7)"[^>]*>[\s\S]*?<\/a>/);
@@ -312,6 +341,27 @@ test('organization tiles retain local styling and accessible NOAA content', () =
   assert.ok(tile?.[1].includes('NOAA'), 'NOAA has visible, accessible link content');
 });
 
+for (const [organization, label, shortlink] of [
+  ['montana', 'Montana FWP', 'montana_fwp'],
+  ['ncc', 'NCC', 'ncc'],
+  ['usda', 'USDA', 'usda'],
+  ['natparksrvc', 'National Park Service', 'nps'],
+  ['nature', 'The Nature Conservancy', 'tnc'],
+  ['trust', 'Trust for Public Land', 'tpl'],
+  ['raster', 'Blue Raster', 'blueraster'],
+]) {
+  test(`${label} organization example is explicitly unavailable and not a link`, () => {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+    const tile = html.match(new RegExp(`<span\\b[^>]*class="party-tile ${organization}"[^>]*>[^<]*<\\/span>`));
+    assert.ok(tile, 'Keep the organization name and explicit unavailable state');
+    assert.ok(tile[0].includes(`${label} (Unavailable)`));
+    assert.ok(tile[0].includes('aria-disabled="true"'));
+    assert.doesNotMatch(tile[0], /\b(?:href|target|tabindex)=/);
+    assert.ok(!html.includes(`<a class="party-tile ${organization}"`));
+    assert.ok(!html.includes(`href="https://links.esri.com/storymaps/user/${shortlink}"`));
+  });
+}
+
 test('Boston organization tile opens the owner-selected filtered gallery', () => {
   const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
   const tile = html.match(/<a\b[^>]*class="party-tile boston"[^>]*>City of Boston<\/a>/);
@@ -331,6 +381,19 @@ test('NOAA organization tile uses the owner-selected Wayback capture', () => {
   assert.ok(tile[0].includes('target="_blank"'));
   assert.ok(!html.includes('href="https://links.esri.com/storymaps/user/noaa"'));
 });
+
+for (const story of ['ports', 'refugee-camps']) {
+  test(`Countdown ${story} example uses its owner-selected archived destination`, () => {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__countdown.html'), 'utf8');
+    const examples = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>[\s\S]*?<\/a>/g)]
+      .filter(example => example[1].includes('/2013/' + story + '/'));
+    assert.equal(examples.length, 1);
+    assert.equal(examples[0][1], 'https://storymaps.esri.com/archives/stories/2013/' + story + '/');
+    assert.match(examples[0][0], /View this story map/i);
+    assert.ok(examples[0][0].includes('target="_blank"'));
+    assert.ok(examples[0][0].includes('noopener noreferrer'));
+  });
+}
 
 test('first Playlist example uses the archived 20 Towns destination', () => {
   const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__playlist.html'), 'utf8');

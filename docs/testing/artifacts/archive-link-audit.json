@@ -1,6 +1,36 @@
 {
   "recorded": "2026-10-08T01:45:51.187Z",
   "triage": {
+    "countdownArchiveFollowup": {
+      "status": "local-pending-deployment",
+      "ownerDecision": "Use https://storymaps.esri.com/archives/stories/2013/ports/ and https://storymaps.esri.com/archives/stories/2013/refugee-camps/ as the respective example destinations. Retain both links despite the documented limitations; no unavailable state or remote runtime repair requested.",
+      "taskIds": ["AL-013", "AL-014"],
+      "verification": "Official archived copies preserve both original titles and narratives. Both route regressions failed before their candidate rewrites and passed afterward; normal clicks from the generated local Countdown page opened both archive URLs with no opener. Standalone Chromium confirmed Ports can select Singapore and show its rank, 2011 volume, overview map and loaded satellite imagery. Its volume-chart area was blank in the inspected screenshot, and external tracking scripts reported errors. Refugee Camps requests an HTTP World_Imagery service blocked as mixed content; selecting Dagahaley raises Cannot read properties of undefined (reading 'hide') in postSelection. That failure reproduced in integrated and standalone Chromium.",
+      "portsScreenshot": "classic-countdown-ports-hYJ39e/singapore.png",
+      "localChanges": "Both exact owner-selected archive rewrites are present. Refugee Camps was reinstated after the owner's selection; its regression failed before restoration and passed afterward. Both generated links preserve their labels and target=_blank with noopener noreferrer. The landing build and focused Countdown/Playlist regressions passed. No local Countdown runtime or remote-source repair was attempted.",
+      "nextAction": "After an approved deployment, verify both exact live hrefs and isolated new-tab navigation before closing the link tasks. The documented archived-story limitations remain; this URL selection does not authorize a push or claim runtime repair."
+    },
+    "cascadeTutorialFollowup": {
+      "verifiedAt": "2026-10-08 16:47:28+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "taskIds": ["AL-053", "AL-054", "AL-055", "AL-056", "AL-057"],
+      "originalItems": "All five original How To Cascade guides remain public Web Mapping Applications owned by j_nelson, with titles matching Sections, Transitions, Map Legends, Multi-View Map and Media.",
+      "verification": "All five new link regressions failed on their old nation.maps.arcgis.com URLs before the fix and passed afterward. The five original items passed the existing anonymous Cascade runtime, media and representative-scroll validator with zero browser errors. Normal clicks from the generated local tutorial opened each correct original-item viewer URL with window.opener === null. Scrolling to selected instructional text confirmed its visibility for every guide. All 88 Node tests and the landing build passed.",
+      "tutorialContext": {"AL-053": "Any Cascade story you build", "AL-054": "Swipe Vertical", "AL-055": "Use contextual graphics to de-code your map", "AL-056": "Interaction Disabled", "AL-057": "Add Images to a Story"},
+      "runtimeArtifacts": "classic-example-audit-NHW5bv",
+      "limits": "Original items, link labels and surrounding tutorial copy are retained. This does not certify every map layer, transition or embedded video in the guides. No push or deployment for this follow-up; verify the live tutorial links before closure."
+    },
+    "organizationUnavailableFollowup": {
+      "verifiedAt": "2026-10-08 03:59:04+00:00[UTC]",
+      "status": "local-pending-deployment",
+      "ownerDecision": "Mark Montana and NCC unavailable, and apply the same treatment to additional failing Join the party examples. Retain working links and the previously accepted Audubon limitation.",
+      "taskIds": ["AL-043", "AL-045", "AL-046", "AL-049", "AL-050", "AL-051", "AL-052"],
+      "preservedOrganizations": ["Audubon", "NOAA", "City of Boston", "NPCA", "PA DCNR"],
+      "verification": "Seven generated entries are readable spans labeled with (Unavailable), aria-disabled=true, no href, target or tabindex, and no link decoration. All seven regressions failed before their corresponding fixes and passed afterward. Standalone Chromium at 1440x900 and 390x844 verified all seven normal clicks caused no navigation or popup, all text fit, and Tab visited only the five retained links in order. Desktop/mobile screenshots inspected. All 83 Node tests and the local landing build passed; no full deployment build or push for this follow-up.",
+      "retainedLinkChecks": "NPCA's current redirect ends at maps.npca.org with HTTP 200 and a functioning mapping-resource hub. PA DCNR ends at maps.dcnr.pa.gov/storymaps/ with HTTP 200 and A Gallery of DCNR Story Maps. Audubon, NOAA and Boston retain their previously verified routes and owner decisions.",
+      "screenshots": "classic-party-unavailable-h5O9m0",
+      "limits": "Unavailable describes the archived example, not the organization or the existence of all its content. Blue Raster's site works but no longer supplies the intended example. Original HTTP and browser observations remain historical. Verify the seven unavailable states live after deployment before closure."
+    },
     "organizationDeployment": {
       "verifiedAt": "2026-10-08 03:45:58+00:00[UTC]",
       "commit": "ccd48ea50ac8c574c00e098348b1699d66323931",
@@ -2129,7 +2159,7 @@
     },
     {
       "url": "http://storymaps.esri.com/stories/2013/ports/",
-      "triage": {"id": "AL-013", "status": "open"},
+      "triage": {"id": "AL-013", "status": "pending-deployment", "replacementUrl": "https://storymaps.esri.com/archives/stories/2013/ports/", "verification": "Owner explicitly selected this exact archive URL. Generated href and isolated new-tab attributes pass regression checks. Original title, narrative, Singapore selection and satellite imagery were verified; the blank volume chart and tracking-script errors remain documented. See triage.countdownArchiveFollowup; verify live navigation after approved deployment."},
       "final": "https://storymaps.esri.com/stories/2013/ports/",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -2156,7 +2186,7 @@
     },
     {
       "url": "http://storymaps.esri.com/stories/2013/refugee-camps/",
-      "triage": {"id": "AL-014", "status": "open"},
+      "triage": {"id": "AL-014", "status": "pending-deployment", "replacementUrl": "https://storymaps.esri.com/archives/stories/2013/refugee-camps/", "verification": "Owner explicitly selected this exact archive URL; rewrite reinstated and its failing-first regression now passes. Original title and narrative exist, but blocked mixed-content World_Imagery requests and the Dagahaley postSelection error remain documented, not repaired. See triage.countdownArchiveFollowup; verify live navigation after approved deployment."},
       "final": "https://storymaps.esri.com/stories/2013/refugee-camps/",
       "status": 404,
       "title": "404 - File or directory not found.",
@@ -9759,7 +9789,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/blueraster",
-      "triage": {"id": "AL-043", "status": "needs-verification"},
+      "triage": {"id": "AL-043", "status": "pending-deployment", "disposition": "unavailable", "verification": "Fresh browser follow-up reaches the Blue Raster ArcGIS Configurable Apps consulting page, headed Low-Code & No-Code GIS Applications with Contact Us / Request A Demo, not the archived story example. Owner approved marking additional failed or mismatched party examples unavailable. Local unavailable-state checks are recorded in triage.organizationUnavailableFollowup; this is not a claim that Blue Raster's site is down."},
       "final": "https://blueraster.com/capabilities/arcgis-applications-and-solutions-for-gis-mapping/",
       "status": 200,
       "title": "ArcGIS Configurable Apps - Blue Raster | GIS Consulting, Mapping and Applications",
@@ -9835,7 +9865,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/montana_fwp",
-      "triage": {"id": "AL-045", "status": "open", "itemId": "0fa1de4222074cdeb7dbf0710ecb2ee0", "verification": "The retired Montana FWP Cascade endpoint references this item. Anonymous metadata and data requests through both www.arcgis.com and mtfwp.maps.arcgis.com return ArcGIS error 400, CONT_0001, Item does not exist or is inaccessible, despite HTTP 200. This does not distinguish deletion from restricted access. The organization's StoryMaps-filtered gallery redirects to Sign In and displays Sign in to Montana Fish, Wildlife & Parks. No sign-in was attempted; no viewer replacement was made.", "rejectedCandidateUrl": "https://mtfwp.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap", "nextAction": "Owner decision required: provide an approved public replacement or mark the organization example unavailable. Do not use the sign-in-only gallery as a public replacement."},
+      "triage": {"id": "AL-045", "status": "pending-deployment", "disposition": "unavailable", "itemId": "0fa1de4222074cdeb7dbf0710ecb2ee0", "verification": "The retired Montana FWP Cascade endpoint references this item. Anonymous metadata and data requests through both www.arcgis.com and mtfwp.maps.arcgis.com return ArcGIS error 400, CONT_0001, Item does not exist or is inaccessible, despite HTTP 200. This does not distinguish deletion from restricted access. The organization's StoryMaps-filtered gallery redirects to Sign In and displays Sign in to Montana Fish, Wildlife & Parks. No sign-in was attempted; no viewer replacement was made.", "rejectedCandidateUrl": "https://mtfwp.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap", "ownerDecision": "Mark Montana unavailable without substituting another story or sign-in-only gallery.", "nextAction": "Deploy and verify the unavailable state. Local checks are recorded in triage.organizationUnavailableFollowup; the original story is not repaired."},
       "final": "https://mtfwp.maps.arcgis.com/apps/Cascade/index.html?appid=0fa1de4222074cdeb7dbf0710ecb2ee0",
       "status": 200,
       "title": "Item Replacement",
@@ -9868,7 +9898,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/ncc",
-      "triage": {"id": "AL-046", "status": "open"},
+      "triage": {"id": "AL-046", "status": "pending-deployment", "disposition": "unavailable", "itemId": "bd073fd595154516987e927fae85baac", "groupId": "6b9031513b8244a6b21f8dba0931cddf", "verification": "The original ESRI Showcased NCC Apps (English) app remains public, owned by NCC_Geomatics, but its saved group metadata and content both return ArcGIS error 403, GWM_0003, anonymously. The organization's StoryMaps-filtered gallery redirects to Sign In with the heading Sign in to National Capital Commission. No sign-in attempted; deletion is not established. Owner explicitly approved unavailable status. Local checks are recorded in triage.organizationUnavailableFollowup."},
       "final": "https://ncc-ccn.maps.arcgis.com/apps/MinimalGallery/index.html?appid=bd073fd595154516987e927fae85baac",
       "status": 200,
       "title": "Item Replacement",
@@ -9982,7 +10012,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/nps",
-      "triage": {"id": "AL-049", "status": "open"},
+      "triage": {"id": "AL-049", "status": "pending-deployment", "disposition": "unavailable", "verification": "Fresh request through the NPS shortlink still ends at the original Map Journal endpoint with HTTP 404. Owner approved disabling additional failed party examples. Local unavailable-state checks are recorded in triage.organizationUnavailableFollowup."},
       "final": "https://www.nps.gov/gis/storymaps/mapjournal/v2/index.html?appid=5c65518366224abd8d8643380b64d498",
       "status": 404,
       "title": "Requested Page Not Found (404)",
@@ -10040,7 +10070,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/tnc",
-      "triage": {"id": "AL-050", "status": "open"},
+      "triage": {"id": "AL-050", "status": "pending-deployment", "disposition": "unavailable", "verification": "Fresh request through the Nature Conservancy shortlink still ends at the original Ogooue field-notes URL with HTTP 404. Owner approved disabling additional failed party examples. Local unavailable-state checks are recorded in triage.organizationUnavailableFollowup."},
       "final": "https://www.nature.org/ourinitiatives/regions/africa/wherewework/ogooue-field-notes-from-gabons-great-river.xml",
       "status": 404,
       "title": "404 Error Page",
@@ -10072,7 +10102,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/tpl",
-      "triage": {"id": "AL-051", "status": "open"},
+      "triage": {"id": "AL-051", "status": "pending-deployment", "disposition": "unavailable", "verification": "Fresh browser navigation through the Trust for Public Land shortlink still opens a blank Item Replacement page at the retired Map Journal endpoint. Owner approved disabling additional failed party examples. No substitute or item recovery was attempted; local unavailable-state checks are recorded in triage.organizationUnavailableFollowup."},
       "final": "http://tpl.maps.arcgis.com/apps/MapJournal/index.html?appid=203d6527c9664917974931952449d8c1",
       "status": 200,
       "title": "Item Replacement",
@@ -10105,7 +10135,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/usda",
-      "triage": {"id": "AL-052", "status": "open"},
+      "triage": {"id": "AL-052", "status": "pending-deployment", "disposition": "unavailable", "verification": "Fresh browser navigation through the USDA shortlink still opens a blank Item Replacement page at the retired Cascade endpoint. Owner approved disabling additional failed party examples. No substitute or item recovery was attempted; local unavailable-state checks are recorded in triage.organizationUnavailableFollowup."},
       "final": "http://nrcs.maps.arcgis.com/apps/Cascade/index.html?appid=be14b7344c7d486088c588c354dd68f8",
       "status": 200,
       "title": "Item Replacement",
@@ -10250,7 +10280,7 @@
     },
     {
       "url": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=5cd671a4cf1844b7854220979574b927",
-      "triage": {"id": "AL-053", "status": "open"},
+      "triage": {"id": "AL-053", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=5cd671a4cf1844b7854220979574b927", "verification": "Original public Sections guide recovered. Local route, isolated popup, runtime and topic checks passed; see triage.cascadeTutorialFollowup. Verify live tutorial navigation after deployment."},
       "final": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=5cd671a4cf1844b7854220979574b927",
       "status": 200,
       "title": "Item Replacement",
@@ -10277,7 +10307,7 @@
     },
     {
       "url": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=7a0c165e7b404073b686f95ef98d6241",
-      "triage": {"id": "AL-054", "status": "open"},
+      "triage": {"id": "AL-054", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=7a0c165e7b404073b686f95ef98d6241", "verification": "Original public Transitions guide recovered. Local route, isolated popup, runtime and topic checks passed; see triage.cascadeTutorialFollowup. Verify live tutorial navigation after deployment."},
       "final": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=7a0c165e7b404073b686f95ef98d6241",
       "status": 200,
       "title": "Item Replacement",
@@ -10304,7 +10334,7 @@
     },
     {
       "url": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=954145df6cf84e2d8bbea996438c99fb",
-      "triage": {"id": "AL-055", "status": "open"},
+      "triage": {"id": "AL-055", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=954145df6cf84e2d8bbea996438c99fb", "verification": "Original public Map Legends guide recovered. Local route, isolated popup, runtime and topic checks passed; see triage.cascadeTutorialFollowup. Verify live tutorial navigation after deployment."},
       "final": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=954145df6cf84e2d8bbea996438c99fb",
       "status": 200,
       "title": "Item Replacement",
@@ -10331,7 +10361,7 @@
     },
     {
       "url": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=a644a02894d246b59ecad16fae25b767",
-      "triage": {"id": "AL-056", "status": "open"},
+      "triage": {"id": "AL-056", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=a644a02894d246b59ecad16fae25b767", "verification": "Original public Multi-View Map guide recovered. Local route, isolated popup, runtime and topic checks passed; see triage.cascadeTutorialFollowup. Verify live tutorial navigation after deployment."},
       "final": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=a644a02894d246b59ecad16fae25b767",
       "status": 200,
       "title": "Item Replacement",
@@ -10358,7 +10388,7 @@
     },
     {
       "url": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=c4ed68ecb9d54d398dbf46dcde881471",
-      "triage": {"id": "AL-057", "status": "open"},
+      "triage": {"id": "AL-057", "status": "pending-deployment", "replacementUrl": "/viewers/cascade/index.html?appid=c4ed68ecb9d54d398dbf46dcde881471", "verification": "Original public Media guide recovered. Local route, isolated popup, runtime and topic checks passed; see triage.cascadeTutorialFollowup. Verify live tutorial navigation after deployment."},
       "final": "https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=c4ed68ecb9d54d398dbf46dcde881471",
       "status": 200,
       "title": "Item Replacement",

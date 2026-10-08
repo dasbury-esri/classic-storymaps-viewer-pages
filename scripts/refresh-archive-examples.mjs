@@ -24,6 +24,18 @@ const replacements = [
 
 const viewerUrl = (runtime, id, parameter = 'appid') => `/viewers/${runtime}/index.html?${parameter}=${id}`;
 
+const archiveFooter = readFileSync(new URL('../apps/classic-storymaps-site/archive-root.html', import.meta.url), 'utf8')
+  .match(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/)[0]
+  .replaceAll('__SITE_BASE_PATH__', '');
+
+const cascadeTutorialIds = new Set([
+  '5cd671a4cf1844b7854220979574b927',
+  '7a0c165e7b404073b686f95ef98d6241',
+  '954145df6cf84e2d8bbea996438c99fb',
+  'a644a02894d246b59ecad16fae25b767',
+  'c4ed68ecb9d54d398dbf46dcde881471',
+]);
+
 const organizationLabels = {
   audubon: 'Audubon',
   noaa: 'NOAA',
@@ -39,10 +51,19 @@ const organizationLabels = {
   padcnr: 'PA DCNR',
 };
 
+const unavailableOrganizations = new Set([
+  'montana', 'ncc', 'usda', 'natparksrvc', 'nature', 'trust', 'raster',
+]);
+
 for (const file of process.argv.slice(2)) {
   let html = readFileSync(file, 'utf8');
+  html = html.replace(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/g, archiveFooter);
   html = html.replace(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g, (anchor, attributes, href, body) => {
     const url = new URL(href.replaceAll('&amp;', '&'), 'https://example.invalid');
+    if (url.hostname === 'nation.maps.arcgis.com' && url.pathname === '/apps/Cascade/index.html'
+      && cascadeTutorialIds.has(url.searchParams.get('appid'))) {
+      return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('cascade', url.searchParams.get('appid'))}"`);
+    }
     if (url.hostname === 'links.esri.com' && url.pathname === '/storymaps/user/audubon') {
       return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('mapseries', '3c48121bd41945d68aacd1ded71841a4')}"`);
     }
@@ -63,8 +84,12 @@ for (const file of process.argv.slice(2)) {
     if (url.hostname === 'links.esri.com' && url.pathname === '/storymaps/story_map_tour_html_formatting_in_caption_example') {
       return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('maptour', 'd5b2c90d8a53466f9c3efb0f25d13325')}"`);
     }
-    if (url.hostname === 'storymaps.esri.com' && url.pathname === '/stories/2013/20towns/') {
-      return anchor.replace(/\bhref="[^"]*"/, 'href="https://storymaps.esri.com/archives/stories/2013/20towns/"');
+    if (url.hostname === 'storymaps.esri.com' && [
+      '/stories/2013/20towns/',
+      '/stories/2013/ports/',
+      '/stories/2013/refugee-camps/',
+    ].includes(url.pathname)) {
+      return anchor.replace(/\bhref="[^"]*"/, `href="https://storymaps.esri.com/archives${url.pathname}"`);
     }
     if (url.href === 'https://links.esri.com/storymaps/user/noaa') {
       return anchor.replace(/\bhref="[^"]*"/, 'href="https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html"');
@@ -88,6 +113,10 @@ for (const file of process.argv.slice(2)) {
     return opening + content.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>\s*View Sample\s*<\/a>)/gi, `$1${sample}$2`) + closing;
   });
   if (html.includes('class="party-tile ')) {
+    html = html.replace(/<a\b[^>]*class="party-tile ([^"]+)"[^>]*>[\s\S]*?<\/a>/g,
+      (anchor, organization) => unavailableOrganizations.has(organization)
+        ? `<span class="party-tile ${organization}" aria-disabled="true">${organizationLabels[organization]} (Unavailable)</span>`
+        : anchor);
     html = html.replace(/(<a\b[^>]*class="party-tile ([^"]+)"[^>]*>)\s*(<\/a>)/g,
       (anchor, opening, organization, closing) => organizationLabels[organization]
         ? opening + organizationLabels[organization] + closing : anchor);
