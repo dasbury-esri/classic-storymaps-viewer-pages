@@ -5,8 +5,9 @@ Recorded: 2026-10-08 01:45:51+00:00[UTC].
 This is the working burn-down list for the original read-only crawl and its
 follow-up fixes. Original observations remain below and in the JSON evidence;
 they are not current failure counts. The owner-approved checkpoint is deployed:
-twelve link tasks are newly resolved. NOAA's subsequent local rendering repair
-and the owner-selected Boston replacement await deployment. The owner's remote Story Locator and Epic Flight repairs were verified
+twelve link tasks were resolved at that checkpoint. NOAA's subsequent rendering
+repair and the owner-selected Boston replacement are also deployed and verified.
+The owner's remote Story Locator and Epic Flight repairs were verified
 independently of this site deployment.
 
 ## Triage Rules
@@ -34,12 +35,12 @@ authorize deployment; the owner subsequently approved the checkpoint below.
 | --- | ---: |
 | open | 44 |
 | needs-verification | 7 |
-| pending-deployment | 2 |
-| resolved | 14 |
+| pending-deployment | 0 |
+| resolved | 16 |
 | accepted | 2 |
 | Total | 69 |
 
-**53 outstanding; 16 closed (14 repaired, 2 accepted).** These are task counts,
+**51 outstanding; 18 closed (16 repaired, 2 accepted).** These are task counts,
 not failed-link counts: 62 destination tasks, four groups covering 55 placeholder
 occurrences, and three follow-ups. ENV-001 is a local-tooling issue, not a
 production defect. URL aliases retain separate IDs so none disappear from the
@@ -94,10 +95,26 @@ follow-ups and per-task JSON verification paragraphs.
 - [x] AL-060 `resolved`: San Diego Shortlist trailing-slash alias verified together with AL-059.
 - [x] AL-062 `resolved`: Footpaths replaced by Paris Cafes in Map Series; live checks passed.
 
+### Organization Follow-up Deployment
+
+Verified: 2026-10-08 03:45:58+00:00[UTC]. Commit
+`ccd48ea50ac8c574c00e098348b1699d66323931` deployed successfully in
+[Pages run 37724050105](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37724050105).
+Preflight passed 76 Node tests, all ten build scripts and 27 complete-publish checks.
+The live organization stylesheet matched the committed source. All twelve controls
+had usable dimensions without text overflow. Desktop 1440x900 and mobile 390x844
+normal clicks opened both exact owner-selected destinations with no opener. NOAA's
+title and Boston's gallery heading and Land Use Update result rendered anonymously.
+Mobile also passed with the remote homepage stylesheet blocked. This supersedes
+the earlier pending/local statements for these tasks; individual external stories
+are not recertified.
+
+- [x] AL-044 `resolved`: Boston opens the owner-selected StoryMaps-filtered gallery; production desktop/mobile navigation and content checks passed. The inaccessible original group was not repaired.
+- [x] AL-047 `resolved`: NOAA opens the exact selected Wayback capture; production desktop/mobile tile and click checks passed, including missing archived CSS.
+
 ### P1: Story and Organization Examples
 
-Next bounded check: Montana FWP (AL-045). The owner-selected Boston replacement
-and NOAA's local rendering repair await deployment. For retired endpoints,
+Next bounded check: Montana FWP (AL-045). For retired endpoints,
 inspect the public item and try the matching supported viewer. Verify actual
 content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
@@ -105,10 +122,8 @@ destination unavailable. Do not infer that an item was deleted from a blank host
 
 - [ ] AL-013 `open`: Countdown Ports example returns 404; locate a preserved working example.
 - [ ] AL-014 `open`: Countdown Refugee Camps example returns 404; locate a preserved working example.
-- [ ] AL-044 `pending-deployment`: Owner-selected BostonMaps gallery filtered to StoryMaps replaces the retired gallery. Exact URL, readable tile, isolated new tab and visible gallery result verified locally; deploy and repeat the production click before closure.
 - [ ] AL-045 `open`: Montana FWP organization example is blank; test its Cascade item with the viewer.
 - [ ] AL-046 `open`: NCC organization gallery is blank; find a preserved gallery or suitable destination.
-- [ ] AL-047 `pending-deployment`: Correct Wayback href is already deployed. Local styles and readable organization labels fix the zero-size tile; desktop/mobile normal clicks passed with the archived stylesheet blocked. Deploy and repeat the production click before closure.
 - [ ] AL-049 `open`: NPS organization example returns 404; test the referenced Journal item or find a preserved example.
 - [ ] AL-050 `open`: Nature Conservancy organization example returns 404; find a preserved Ogooue field-notes story.
 - [ ] AL-051 `open`: TPL organization example is blank; test its Journal item with the viewer.
