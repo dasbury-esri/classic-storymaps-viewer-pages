@@ -48,18 +48,90 @@ Normal footer clicks reached Apps and FAQs. These local checks preceded the arch
 follow-up deployment below; the original crawl observations are not a fresh audit
 of the changed footer.
 
+## Five Principles Capture
+
+Verified locally: 2026-10-08 17:53:55+00:00[UTC]. The owner requested a local copy of
+[the December 4 Wayback page](https://web.archive.org/web/20171204024910/http://storymaps.arcgis.com/en/five-principles/).
+The original HTML is saved in
+[the raw capture](../../classic-apps/2017-12-10/app-list/raw/en__five-principles.raw.html),
+with [a normalized page](../../classic-apps/2017-12-10/app-list/pages/en__five-principles.html)
+published as `/archive/2017-12-10-pages/en__five-principles.html`.
+Home, Resources and FAQs now link there in the local build.
+
+Six illustrations/backgrounds and the page stylesheet are saved locally. Wayback
+served the images from February 28, 2018 snapshots and the CSS from January 16,
+2018; these are not claimed to be December 4 asset captures. Exact URLs and hashes
+are in `triage.fivePrinciplesCapture.assetSnapshots` in the JSON ledger. Shared
+local CSS, fonts, jQuery and navigation code are reused. Existing archive rules
+remove tracking, remote fonts, sign-in and back-to-top behavior and apply the
+shared internal-only footer. The original paragraph text is preserved.
+
+To repeat only the page capture without refreshing the full archive:
+
+```sh
+TIMESTAMP=20171204024910id_ bash scripts/capture-archive-2017-12-10.sh \
+  http://storymaps.arcgis.com/en/five-principles/
+```
+
+The positional URLs bypass the Apps-only seed crawl. For asset recapture, download
+each recorded snapshot URL to its corresponding `file` and verify its SHA-256;
+the normal site build does not fetch assets from Wayback.
+
+All 91 Node tests passed. A fresh browser context blocked every external request:
+at desktop 1440x900 and mobile 390x844 the page made no external requests, all six
+images/backgrounds decoded, all five paragraphs matched the raw HTML, and no
+browser errors, HTTP failures or horizontal overflow occurred. Screenshots in
+temporary `classic-five-principles-dvsMVd` were inspected; all three incoming links
+were clicked successfully. The focused regression also checks real image file
+signatures and local asset references. This is local only, not deployed. The
+original links were not numbered failures, so burn-down totals remain unchanged.
+
+## Shared Page Padding
+
+Verified locally: 2026-10-08 18:02:11+00:00[UTC]. At the owner's request, both
+`.page.sticky-footer` rules in the shared archive stylesheet now use
+`padding-bottom: 0px`. The paired `.footer.sticky-footer` top margin is also
+zero instead of -262px, so existing footers follow content without overlapping
+it. Viewer runtime styles and raw captures are unchanged.
+
+The regression failed on the original padding and passed after the CSS change.
+All 92 Node tests passed. Chromium checked all 33 generated pages using this
+wrapper at 1440px and 390px widths: computed bottom padding was zero throughout,
+and pages with a shared footer had zero top margin and no detected heading,
+paragraph or image overlap into it. Resources has no shared footer in its saved
+markup; its before-content gap is removed. Resources screenshots and visible
+Apps/Five Principles footers were checked. Temporary screenshots are in
+`classic-footer-spacing-bHOHSM` and `/tmp/classic-footer-bottom-{390,1440}.png`.
+This change is local only, not committed or deployed; numbered audit totals are
+unchanged.
+
+## Copyright Footer Removal
+
+Verified locally: 2026-10-08 18:10:32+00:00[UTC]. At the owner's request, the
+shared footer no longer displays the 2017 Environmental Systems Research
+Institute copyright line or its Privacy and Legal text. This supersedes the
+earlier published-footer copyright-preservation decision. Original archive
+captures and viewer runtime attribution are unchanged; the six internal footer
+links and archive disclaimer remain.
+
+Updated regressions failed before removal and passed afterward across generated
+site pages. All 92 Node tests passed. Chromium checked Apps, Home and Five
+Principles at 1440px and 390px widths: the line was absent and all six navigation
+links remained visible in the shared footer. Local only, not committed or
+deployed; numbered audit totals are unchanged.
+
 ## Burn-down
 
 | Status | Tasks |
 | --- | ---: |
-| open | 31 |
-| needs-verification | 6 |
-| pending-deployment | 0 |
-| resolved | 30 |
-| accepted | 2 |
+| open | 0 |
+| needs-verification | 0 |
+| pending-deployment | 33 |
+| resolved | 31 |
+| accepted | 5 |
 | Total | 69 |
 
-**37 outstanding; 32 closed (30 resolved, 2 accepted).** These are task counts,
+**33 outstanding; 36 closed (31 resolved, 5 accepted).** These are task counts,
 not failed-link counts: 62 destination tasks, four groups covering 55 placeholder
 occurrences, and three follow-ups. ENV-001 is a local-tooling issue, not a
 production defect. URL aliases retain separate IDs so none disappear from the
@@ -264,10 +336,71 @@ four disjoint groups cover all 55 references. Choose the intended target for eac
 context, or show an explicit unavailable state; verify every affected generated
 anchor and representative browser clicks. Leave legitimate Top/menu controls alone.
 
-- [ ] PH-001 `open`: 37 gallery references: 24 Gallery tabs, 10 app-specific calls to action, one home call to action, and two Story Maps Gallery references.
-- [ ] PH-002 `open`: 11 Developers' Corner references; restore appropriate preserved resources.
-- [ ] PH-003 `open`: Three Learn ArcGIS lesson references; restore the actual lesson rather than a generic catalog.
-- [ ] PH-004 `open`: Four FAQ references labelled "this link", "linked", or "embedded"; recover targets from their surrounding questions.
+- [ ] PH-001 `pending-deployment`: Original inventory: 37 gallery references. Current recount: 34 placeholders before the Home removal. Owner accepts 20 app Gallery tabs, 10 app-specific calls to action and one How-to Gallery reference unchanged. The Home call to action and empty mini-gallery are removed locally; the two named FAQ Gallery references are now plain text locally. All choices are settled; verify these removals after deployment. The old FAQ gallery URL remains separately tracked by AL-011.
+- [ ] PH-002 `pending-deployment`: Owner selected plain text for all 11 Developers' Corner links. Anchor wrappers removed locally; wording/headings and Map Tour's already unlinked heading remain. Verify after deployment.
+- [ ] PH-003 `pending-deployment`: Owner selected `https://learn.arcgis.com` for all three lesson links, superseding the specific-lesson requirement. Exact URL and new-tab behavior verified locally; verify after deployment.
+- [ ] PH-004 `pending-deployment`: Owner approved unlinking all four FAQ references: "this link" in question6, "linked" and "embedded" in question9, and "this link" in question19. Implemented locally with all answer text preserved; verify after deployment. The separate "here" link in question19 remains tracked by AL-011 and unchanged.
+
+Owner decision and local verification: 2026-10-08 18:25:11+00:00[UTC]. The Home
+build removes only the empty `#mini-gallery` and the enclosing block for "View
+more story maps in our gallery". Original captures are retained. The focused
+regression failed before removal and passed afterward, preserving the featured
+story and all 30 accepted app links. Desktop/mobile browser checks confirm both
+blocks are absent and "The Bare Earth" remains visible. These changes are not
+committed or deployed. PH-001 stays open; task totals are unchanged.
+
+FAQ follow-up: 2026-10-08 18:28:00+00:00[UTC]. At the owner's request, only the
+two anchors labelled "Story Maps Gallery" were unwrapped in the generated FAQ;
+their wording and all other FAQ links remain. The focused regression failed
+before removal and passed afterward; a browser check confirmed plain text.
+The live How-to page has a visible blue, non-underlined "Gallery" link under
+"Get ideas and get inspired!", in the sentence "Go to the Story Maps Gallery...".
+Verified at desktop and mobile widths; its `href="#"` remains unchanged pending
+owner decision. No raw captures were modified. This follow-up is local only.
+
+The owner subsequently accepted the How-to reference unchanged. PH-001 therefore
+moves from open to pending deployment: 31 accepted links remain, the three
+requested placeholder removals are verified locally, and no choices remain
+undecided within this task. All 94 Node tests passed. Original captures and
+How-to page code are unchanged. The task remains unchecked until the Home and
+FAQ changes are verified live; AL-011 is still open.
+
+Developers' Corner and Learn ArcGIS follow-up: 2026-10-08 18:35:10+00:00[UTC].
+The build unwraps all 11 Developers' Corner anchors, retaining 12 text occurrences
+including Map Tour's existing plain heading. The three lesson anchors now use the
+owner-selected `https://learn.arcgis.com` with new-tab opener protection; the
+already unlinked Map Tour lesson heading is unchanged. This is an intentional
+general destination, not a claim that the original specific lessons were restored.
+The focused regression failed before the change and passed afterward, including
+exact preservation of all four PH-004 anchors. All 95 Node tests passed.
+Desktop/mobile browser checks passed on Cascade, Journal, Resources and FAQs.
+A normal Resources lesson click settled at `https://learn.arcgis.com/en/gallery/`
+with title "Tutorial Gallery | Documentation" and no opener. Original captures
+are unchanged; these fixes are local only, not committed or deployed.
+
+PH-004 first decision: 2026-10-08 18:40:19+00:00[UTC]. Only the "this link"
+anchor in "Do I need to download something to make a story map?" is removed in
+the generated FAQ. Its sentence remains unchanged. The focused regression
+failed before the change and passed afterward, comparing the entire answer
+against the original with just that anchor unwrapped. The three other anchors
+match the capture exactly; a browser check confirmed their labels and question
+locations. Original capture unchanged; local only, not committed or deployed.
+PH-004 remains open and task totals are unchanged.
+
+PH-004 question9 decision: 2026-10-08 18:42:28+00:00[UTC]. The owner approved
+unlinking both "linked" and "embedded". Only their anchor wrappers are removed;
+the entire answer text is preserved. The focused regression failed before the
+change and passed afterward. Browser verification confirms both words are plain
+text and the last "this link" in question19 remains linked. Original captures
+are unchanged. Local only, not committed or deployed; PH-004 remains open.
+
+PH-004 final decision: 2026-10-08 18:46:09+00:00[UTC]. The owner approved
+unlinking the final "this link" in "What are custom designs?". All four
+references are now plain text locally. The focused regression verifies the full
+answers against the original capture with only those anchors removed, and all
+96 Node tests passed. Browser verification confirms zero PH-004 anchors remain
+and the separate AL-011 "here" link is unchanged. PH-004 moves to pending
+deployment; original captures remain unchanged. Not committed or deployed.
 
 ### P2: Downloads
 
@@ -277,19 +410,54 @@ For mislabeled source ZIPs, either select and validate an actual ready-to-deploy
 release or relabel it as a developer/source download with its build requirements.
 Do not call a branch ZIP ready to deploy solely because it downloads successfully.
 
-- [ ] AL-001 `open`: Playlist shortened download URL; coordinate with AL-026.
-- [ ] AL-002 `open`: Countdown shortened download URL; coordinate with AL-023 and AL-024.
-- [ ] AL-023 `open`: Countdown GitHub repository returns 404.
-- [ ] AL-024 `open`: Countdown GitHub ZIP returns 404.
-- [ ] AL-026 `open`: Playlist GitHub repository returns 404.
-- [ ] AL-025 `open`: Map Tour "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-027 `open`: Basic "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-028 `open`: Cascade "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-029 `open`: Crowdsource "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-030 `open`: Journal "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-031 `open`: Series "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-032 `open`: Shortlist "ready-to-deploy" download is a branch source ZIP.
-- [ ] AL-033 `open`: Swipe "ready-to-deploy" download is a branch source ZIP.
+- [ ] AL-001 `pending-deployment`: Owner-selected removal of Playlist download shortlinks; both anchors unwrapped locally, text retained.
+- [ ] AL-002 `pending-deployment`: Owner-selected removal of Countdown download shortlink; anchor unwrapped locally, heading retained.
+- [ ] AL-023 `pending-deployment`: Countdown source-download GitHub link unwrapped locally; heading retained. Repository not restored.
+- [ ] AL-024 `pending-deployment`: Both Countdown ZIP download links unwrapped locally; text retained. Download not restored.
+- [ ] AL-026 `pending-deployment`: Playlist source-download GitHub link unwrapped locally; heading retained. Repository not restored.
+- [ ] AL-025 `pending-deployment`: Map Tour uses the verified canonical current-source ZIP with an accurate source label.
+- [ ] AL-027 `pending-deployment`: Basic verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [ ] AL-028 `pending-deployment`: Cascade verified current-source ZIP is labelled as source; GitHub link uses canonical HTTPS.
+- [ ] AL-029 `pending-deployment`: Crowdsource verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [ ] AL-030 `pending-deployment`: Journal verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [ ] AL-031 `pending-deployment`: Series verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [ ] AL-032 `pending-deployment`: Shortlist verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [ ] AL-033 `pending-deployment`: Swipe verified current-source ZIP is labelled as source, not ready-to-deploy.
+
+Download and AL-011 follow-up: 2026-10-08 18:50:26+00:00[UTC]. At the owner's
+request, seven Playlist/Countdown download anchors (shortlinks, ZIP links and
+source-download repository links) are unwrapped on their Overview/Tutorial pages.
+Their text and headings are retained. The AL-011 "here" anchor in FAQ question19
+is also unwrapped, superseding earlier notes that it remained unchanged.
+Only these destinations on the specified pages are affected; original captures,
+examples and other apps' downloads remain unchanged. Focused regressions failed
+before the edits and passed afterward. Eight desktop/mobile app-page checks and
+the FAQ browser check passed; all 97 Node tests passed. Six task entries move to
+pending deployment. Not committed or deployed.
+
+Current-source downloads: 2026-10-08 18:58:35+00:00[UTC]. The owner selected
+current source ZIPs, with GitHub instructions as fallback only if ZIPs are
+unavailable. GitHub's API confirms all eight official repositories are archived
+and use `master` as their default branch. All eight canonical
+`https://github.com/Esri/<repository>/archive/refs/heads/master.zip` URLs returned
+HTTP 200 ZIPs that passed signature and integrity checks, matched the current
+branch commit in their archive comments, and included root READMEs with
+instructions. No fallback-only destination is needed. Verified commits and
+SHA-256 hashes are recorded in `triage.currentSourceDownloads` in the JSON ledger;
+the downloaded verification artifacts are in temporary `classic-current-source-l3Ifku`.
+
+The eight buttons now read "Download current source (ZIP)". Their GitHub links
+use canonical HTTPS repository URLs, where the README is available. Both links
+use new-tab opener protection. These branch links track the latest available
+source, not a pinned release or a certified deployment bundle. The repositories
+are archived; current does not imply active maintenance. Playlist and Countdown
+download removals remain unchanged.
+
+The focused regression failed before the changes and passed afterward; all 98
+Node tests passed. Sixteen desktop/mobile layout checks passed, and a normal
+Map Tour button click downloaded a valid `storymap-tour-master.zip`. Original
+captures and upstream runtime files are unchanged. Eight tasks move to pending
+deployment. Not committed or deployed.
 
 ### P2: Resources and Navigation
 
@@ -297,42 +465,185 @@ Find a preserved or current destination that matches the original label and
 context. If it cannot be recovered, explicitly mark it unavailable. TLS repairs
 must work under normal browser certificate validation, without bypasses.
 
-- [ ] AL-004 `open`: Story Maps blog-listing shortlink returns 404; restore the intended listing.
-- [ ] AL-005 `open`: Custom Crowdsource panel article has a DNS failure; locate the specific article.
-- [ ] AL-006 `open`: HTML in Map Tour captions article has a DNS failure; locate the specific article.
-- [ ] AL-008 `open`: Premium-content article shortlink returns 404; locate the specific article.
-- [ ] AL-010 `open`: ArcGIS Marketplace goes to Find a Partner; restore matching apps/data content or revise the label.
-- [ ] AL-011 `open`: Old gallery endpoint fails DNS; coordinate with PH-001 without conflating URL and placeholder coverage.
-- [ ] AL-016 `open`: Developer Summit navigation returns 404; choose a preserved event page or correctly labelled successor.
-- [ ] AL-019 `open`: Shortlists collection has an expired certificate; recover a normally accessible collection.
-- [ ] AL-021 `open`: Main-stage-action buttons article has a DNS failure; locate the specific article.
-- [ ] AL-022 `open`: GeoNet thread 150596 returns 404; find the corresponding community thread or archived answer.
-- [ ] AL-039 `open`: Instructional collection has an expired certificate; recover matching content.
-- [ ] AL-040 `open`: Oceans collection has an expired certificate; recover matching content.
-- [ ] AL-041 `open`: All Story Map Collections shortlink ends at a DNS failure; recover a suitable collections index.
+- [ ] AL-004 `pending-deployment`: Blog-listing link uses the owner-selected internal blog notice.
+- [ ] AL-005 `pending-deployment`: Crowdsource panel article link uses the owner-selected internal blog notice.
+- [ ] AL-006 `pending-deployment`: Map Tour captions article link uses the owner-selected internal blog notice.
+- [ ] AL-008 `pending-deployment`: Premium-content article link uses the owner-selected internal blog notice.
+- [ ] AL-010 `pending-deployment`: Direct and archived Marketplace links use the owner-selected retirement article, retaining labels.
+- [ ] AL-011 `pending-deployment`: Owner-selected unlinking of "here" in FAQ question19; plain text locally, answer retained. Old gallery endpoint not repaired.
+- [ ] AL-016 `pending-deployment`: Legacy Summit links are already absent from the local shared footer; owner-approved current event URL recorded. Verify live absence before closure.
+- [ ] AL-019 `pending-deployment`: Both Shortlists collection references are unlinked locally, retaining text per owner decision.
+- [ ] AL-021 `pending-deployment`: Main-stage-action buttons article link uses the owner-selected internal blog notice.
+- [ ] AL-022 `pending-deployment`: FAQ question39 links to the owner-selected migrated Community answer, with wording preserved.
+- [ ] AL-039 `pending-deployment`: Instructional collection reference is unlinked locally, retaining text per owner decision.
+- [ ] AL-040 `pending-deployment`: Oceans collection reference is unlinked locally, retaining text per owner decision.
+- [ ] AL-041 `pending-deployment`: All Story Map Collections reference is unlinked locally, retaining text per owner decision.
+
+Newsletter, book, and social decisions: 2026-10-08 19:38:32+00:00[UTC]. The
+owner selected the [ArcGIS StoryMaps newsletter signup page](https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup)
+for all three signup links. Destination content confirms the newsletter and form;
+no form was submitted. Link labels remain unchanged. AL-034 is accepted as-is:
+its ArcGIS Book link and companion-resource PDF redirect remain unchanged.
+
+The owner requested no social-media links across the site. Four archive Twitter
+profile anchors are unwrapped, preserving account and author names. All eight
+viewer entry points load a shared policy that disables social-host anchors and
+suppresses Facebook/Twitter sharing controls, including dynamically added links
+and controls. Ordinary links, share-by-link controls, and embedded media remain.
+The policy does not rewrite third-party embedded documents or upstream bundles.
+
+All three new regressions failed before the changes and passed afterward. All
+105 Node tests and 56 complete-publish checks passed. Chromium fixtures covered
+initial/dynamic links, href changes, blocked social click handlers, and preserved
+ordinary content. A runtime display-change check failed before a stylesheet
+repair and passed afterward. Basic, Shortlist, and Crowdsource desktop/mobile
+smoke checks found no social links or visible social controls. Shortlist
+screenshots were inspected; an initial mobile loading screenshot was followed
+by a settled with/without-policy comparison showing normal rendering without
+JavaScript errors. The local landing and runtime-publish builds passed using
+existing runtime build outputs. Original captures and upstream code are unchanged.
+AL-007 and AL-061 await deployment; AL-034 is accepted. Not committed or deployed.
+
+GeoNet replacement: 2026-10-08 19:28:02+00:00[UTC]. The owner supplied
+[comment 499570](https://community.esri.com/en/discussion/comment/499570#Comment_499570)
+in "Can you increase the number of bullets in a story map series?" The clean
+permalink omits the tracking suffix that followed the supplied fragment, keeping
+the comment anchor intact. The question39 answer and "this GeoNet question"
+label are preserved; only the destination changes.
+
+The official discussion and Chromium with normal certificate validation confirm
+the answer's `MAX_NB_ENTRIES` guidance. HTTP 200 and the visible comment were
+verified in the All Replies panel; the external page duplicates its comment ID
+in Accepted Answers. The regression failed before the rewrite and passed after,
+comparing the full FAQ answer with only the href changed. All 102 Node tests and
+the local landing build passed. Captures and historical audit evidence remain
+unchanged. AL-022 is pending deployment; not committed or deployed.
+
+Collections decision: 2026-10-08 19:23:22+00:00[UTC]. The owner requested
+removal of all Story Map Collections links, including Shortlists. Seven anchors
+are unwrapped on Resources and the Shortlist overview: Shortlists (twice), Oceans,
+Capital Improvement Projects, Instructional Story Maps, Vision Zero, and the
+collections index. Original text and headings remain; individual story examples
+stay linked. Build-time normalization preserves original captures.
+
+The regression failed before the change and passed afterward, verifying all
+seven retained anchor contents and absence of collection links throughout the
+generated HTML. All 101 Node tests and the local landing build passed. Four
+findings move to pending deployment; Capital Improvement Projects and Vision Zero
+are included in the same owner decision without creating new failure IDs. No
+certificate or endpoint repair is claimed. Not committed or deployed.
+
+Developer Summit decision: 2026-10-08 19:18:28+00:00[UTC]. The owner selected
+[Esri Developer & Technology Summit](https://www.esri.com/en-us/about/events/devtech/overview),
+whose official page confirms the event name. The shared-footer replacement
+already removed these links: a focused check found three preserved source
+references and zero Summit labels or legacy event paths across 98 generated HTML
+files. No code rewrite or restoration of the old footer is needed. The approved
+URL is recorded for any future restored reference. AL-016 is pending deployment
+verification; confirm live absence before closure. No commit or deployment made.
+
+Marketplace decision: 2026-10-08 19:15:50+00:00[UTC]. The owner selected
+[ArcGIS Marketplace Retirement](https://support.esri.com/en-us/knowledge-base/arcgis-marketplace-retirement-000041842).
+The official article title and ID 000041842 were confirmed. Build-time
+normalization covers direct and Wayback-wrapped Marketplace homepage links,
+preserving labels and attributes. The regression failed before the rewrite and
+passed afterward. All 100 Node tests and the local landing build passed. Original
+captures and crawl evidence remain unchanged. AL-010 is pending deployment;
+not committed or deployed.
+
+Blog-link decision: 2026-10-08 19:08:39+00:00[UTC]. The owner selected the
+internal Blog notice for all blog links, including individual articles, tips,
+Medium posts, Developers' Corner articles, and blog listings. Build-time
+normalization preserves link labels and uses the configured site base path.
+Previously unlinked Developers' Corner headings remain plain text. Non-blog
+lessons, forums, examples, and downloads remain unchanged, including the
+Shortlist data-template ZIP under a blog asset directory. This supersedes
+article-recovery actions for AL-004, AL-005, AL-006, AL-008, and AL-021.
+
+The audit-based regression failed before the rule and passed afterward. All 99
+Node tests and the local landing build passed. Standalone Chromium confirmed
+that clicking the Resources listing link opens the internal notice in a new
+tab with its not-mirrored message visible. Embedded-browser navigation checks
+timed out; the standalone check verified the actual behavior. Original captures
+and historical crawl evidence are unchanged. Five tasks are pending deployment;
+not committed or deployed.
 
 ### P3: Verification and Decisions
 
 Do not treat timeouts or automation restrictions as proof of removal. Recheck
 anonymously in a browser; record a content-matching decision for destination drift.
 
-- [ ] AL-003 `needs-verification`: Norway atlas timed out; recheck availability and actual example content.
-- [ ] AL-007 `needs-verification`: Newsletter signup timed out; determine whether signup still exists without submitting anything.
-- [ ] AL-034 `needs-verification`: ArcGIS Book chapter link now delivers a companion-resource PDF; decide whether it satisfies the label.
-- [ ] AL-036 `needs-verification`: Story Maps training link now opens generic catalog search; recover a relevant filter or revise the label.
-- [ ] AL-061 `needs-verification`: EsriStoryMaps X profile is inconclusive under automation; confirm without assuming deletion.
-- [ ] RV-001 `needs-verification`: Contest-year links converge on a combined winners archive; decide whether year-specific navigation must be restored.
+All P3 decisions are recorded. Remaining unchecked entries await deployment.
+
+- [ ] AL-003 `pending-deployment`: Norway image retained; link and view-story caption removed locally per owner decision.
+- [ ] AL-007 `pending-deployment`: Three signup links use the owner-selected ArcGIS StoryMaps newsletter page; no form submitted.
+- [ ] AL-061 `pending-deployment`: Social profile anchors removed and runtime social controls suppressed under the owner's site-wide decision.
+
+Norway and training decisions: 2026-10-08 19:53:06+00:00[UTC]. The owner
+requested retaining the Norway image without its link. The anchor and its
+"View this story map" caption are removed during publishing, while the image,
+original capture, and neighboring Story Locator link remain intact. The regression
+failed before the change and passed afterward. All 106 Node tests and the local
+landing build passed. Chromium at 1440px and 390px confirmed the image loads,
+is unlinked, and fits the viewport; both screenshots were inspected.
+
+The owner confirms that the existing training-resources shortlink correctly
+redirects to `https://www.esri.com/en-us/training/catalog/all-training` with a
+Story Maps filter. AL-036 is accepted as-is; preserve the shortlink and label.
+The filter behavior is owner-confirmed, not independently reverified in this
+follow-up. AL-003 awaits deployment; no remote-atlas availability claim is made.
+Not committed or deployed.
 
 ### Local Tooling
 
-- [ ] ENV-001 `open`: Temporary HTTPS preview returns 404 for slashless runtime directories. Fix its directory redirect, then verify the Lincoln URL; production already redirects correctly. Keep separate from archive-content failures.
+- [x] ENV-001 `resolved`: Local preview now redirects slashless directories with query strings intact; Lincoln renders on desktop/mobile. Production was already correct and is unchanged.
+
+Preview repair: 2026-10-08 19:59:19+00:00[UTC]. The temporary server tried to
+read slashless directories as files. Its replacement,
+[preview-server.mjs](../../scripts/preview-server.mjs), detects directories and
+returns a 308 redirect before serving their index. Deployment-root requests,
+encoded directory names, and query strings are supported. The browser-release
+validator now shares this handler instead of maintaining a separate implementation.
+
+The local 404 was reproduced, and two redirect regressions failed before repair.
+All five preview tests and all 112 Node tests now pass. The running preview was
+replaced on port 61326. The original slashless Lincoln URL retains
+`appid=c50be5615f024cc482ccb88222a8719d`, redirects to `/viewers/maptour/`, and
+returns 200. Desktop/mobile Chromium checks rendered the correct Lincoln story
+without failed local resources; both screenshots were inspected. ENV-001 is a
+local-tooling resolution and does not await production deployment.
+
+For later sessions, start the preview from the repository root:
+
+```sh
+PORT=61326 SITE_BASE_PATH=/classic-storymaps-viewer-pages node scripts/preview-server.mjs
+```
+
+Requires Node and OpenSSL. Serves the repository's `publish/` directory by
+default; `PUBLISH_CHECK_ROOT` can select another output directory. The server
+binds only to `127.0.0.1`, creates a temporary one-day self-signed certificate,
+and removes it on normal shutdown. No system trust settings are changed. Use
+another `PORT` if one is already occupied.
+
+Idaho example decision: 2026-10-08 19:59:19+00:00[UTC]. The owner requested
+keeping the Playlist Idaho image without the wildlife-management link. The
+HTTP/HTTPS destination is unwrapped during publishing and its view-story caption
+removed. The image and neighboring Story Locator link remain. The regression
+failed before the change and passed afterward; desktop/mobile checks confirmed
+the image loads, is unlinked, and fits the viewport. Both screenshots were
+inspected. No new failure ID was created, and historical observations and source
+captures remain unchanged. This site change is local and pending deployment.
+Nothing committed or deployed.
 
 ### Closed
 
 - [x] AL-015 `resolved`: Story Locator's owner repaired the JavaScript string and made the Web Map public. Fresh anonymous startup without overrides passed; title/list render, loading clears, and no sign-in prompt appears. Individual story destinations are not recertified.
 - [x] RT-001 `resolved`: Epic Flight's owner changed both layer URLs to HTTPS. Fresh unmocked load and second-entry navigation passed without browser errors. The archive replacement link is also resolved under AL-018.
 - [x] AL-020 `accepted`: Developer `/en/` redirect to the root is valid; no fix required.
+- [x] AL-034 `accepted`: Owner accepts the ArcGIS Book companion-resource PDF redirect as-is; existing link and label retained.
+- [x] AL-036 `accepted`: Owner confirms the training redirect applies a Story Maps filter; existing shortlink and label retained.
 - [x] AL-048 `accepted`: NPCA redirect to its mapping resource hub is valid; no fix required.
+- [x] RV-001 `accepted`: Owner accepts each contest-year link converging on the combined winners archive. Existing links and labels retained; no code change. Decision recorded 2026-10-08 19:43:07+00:00[UTC].
 
 ## Scope
 

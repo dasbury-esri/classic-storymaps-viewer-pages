@@ -94,6 +94,138 @@ test('published HTML links stay under the base path and resolve on disk', () => 
   assert.equal(failures.length, 0, failures.length + ' link failures:\n' + failures.slice(0, 30).join('\n'));
 });
 
+test('Home omits the empty mini-gallery and gallery call to action without changing app gallery links', () => {
+  const home = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en.html'), 'utf8');
+  assert.doesNotMatch(home, /id="mini-gallery"|View more story maps in our gallery/);
+  assert.match(home, /Engage and Inspire Your Audience/);
+  assert.match(home, /The Bare Earth/);
+  const appPages = htmlFiles(path.join(publish, 'archive/2017-12-10-pages'))
+    .filter(file => path.basename(file).startsWith('en__app-list__'));
+  const galleryLinks = appPages.flatMap(file => [...readFileSync(file, 'utf8').matchAll(/<a\b[^>]*href="#"[^>]*>([\s\S]*?)<\/a>/g)])
+    .map(match => match[1].replace(/<[^>]*>/g, '').trim());
+  assert.equal(galleryLinks.filter(label => label === 'Gallery').length, 20);
+  assert.equal(galleryLinks.filter(label => /^(Explore|Browse).*gallery$/.test(label)).length, 10);
+});
+
+test('FAQ gallery references are plain text while the How-to gallery reference remains unchanged', () => {
+  const faq = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__faq.html'), 'utf8');
+  assert.doesNotMatch(faq, /<a\b[^>]*>\s*Story Maps Gallery\s*<\/a>/);
+  assert.ok(faq.includes('Then, to see more, go to the Story Maps Gallery.'));
+  assert.ok(faq.includes('We recommend visiting the Story Maps Gallery for ideas and inspiration'));
+  assert.doesNotMatch(faq, /<a\b[^>]*href="http:\/\/storymaps\.arcgis\.com\/en\/gallery\/[^\"]*"[^>]*>here<\/a>/);
+  assert.ok(faq.includes('Story Maps Gallery here.'));
+  const howTo = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__how-to.html'), 'utf8');
+  assert.ok(howTo.includes('Go to the Story Maps <a href="#">Gallery</a>'));
+});
+
+test('developer references are plain text and lesson links use the owner-selected Learn ArcGIS homepage', () => {
+  let developerReferences = 0;
+  let lessonLinks = 0;
+  for (const file of htmlFiles(path.join(publish, 'archive/2017-12-10-pages'))) {
+    const html = readFileSync(file, 'utf8');
+    developerReferences += (html.match(/Story Maps Developers' Corner/g) || []).length;
+    for (const anchor of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+      const label = anchor[2].replace(/<[^>]*>/g, '').trim();
+      assert.notEqual(label, "Story Maps Developers' Corner", file);
+      if (label.includes('Learn ArcGIS') && label.includes('lesson')) {
+        assert.match(anchor[1], /href="https:\/\/learn\.arcgis\.com"/);
+        assert.match(anchor[1], /target="_blank"/);
+        assert.match(anchor[1], /rel="noopener noreferrer"/);
+        lessonLinks += 1;
+      }
+    }
+  }
+  assert.equal(developerReferences, 12);
+  assert.equal(lessonLinks, 3);
+});
+
+test('FAQ approved placeholders are unlinked while all answer text remains intact', () => {
+  const faqPath = 'archive/2017-12-10-pages/en__faq.html';
+  const faq = readFileSync(path.join(publish, faqPath), 'utf8');
+  const source = readFileSync(path.join(repo, 'classic-apps/2017-12-10/app-list/pages/en__faq.html'), 'utf8')
+    .replace(/(<a\b[^>]*href=")[^"]*("[^>]*>this blog post<\/a>)/g,
+      '$1' + base + '/archive/2017-12-10-pages/en__archive-blog.html$2');
+  const placeholders = html => [...html.matchAll(/<a\b[^>]*href="#"[^>]*>(?:this link|linked|embedded)<\/a>/g)].map(match => match[0]);
+  assert.equal(placeholders(source).length, 4);
+  assert.equal(placeholders(faq).length, 0);
+  const answer = html => html.match(/<header class="question" id="question6">([\s\S]*?)<div><a class="faq-to-top"/)[1];
+  assert.equal(answer(faq), answer(source).replace('<a href="#" target="_blank">this link</a>', 'this link'));
+  const audienceAnswer = html => html.match(/<header class="question" id="question9">([\s\S]*?)<div><a class="faq-to-top"/)[1];
+  assert.equal(audienceAnswer(faq), audienceAnswer(source).replace(/<a href="#" target="_blank">(linked|embedded)<\/a>/g, '$1'));
+  const customAnswer = html => html.match(/<header class="question" id="question19">([\s\S]*?)<div><a class="faq-to-top"/)[1];
+  assert.equal(customAnswer(faq), customAnswer(source)
+    .replace('<a href="#" target="_blank">this link</a>', 'this link')
+    .replace(/<a href="http:\/\/storymaps\.arcgis\.com\/en\/gallery\/[^\"]*" target="_blank">here<\/a>/, 'here'));
+});
+
+test('Playlist and Countdown download references retain text without download anchors', () => {
+  let removed = 0;
+  for (const name of ['playlist', 'countdown']) {
+    for (const suffix of ['', '__tutorial']) {
+      const filename = 'en__app-list__' + name + suffix + '.html';
+      const source = readFileSync(path.join(repo, 'classic-apps/2017-12-10/app-list/pages', filename), 'utf8');
+      const output = readFileSync(path.join(publish, 'archive/2017-12-10-pages', filename), 'utf8');
+      const downloads = [...source.matchAll(/<a\b[^>]*href="(http:\/\/bit\.ly\/(?:1cImr14|1eML1U4)|https:\/\/github\.com\/Esri\/(?:playlist|countdown)-storytelling-template-js(?:\/archive\/master\.zip)?)"[^>]*>([\s\S]*?)<\/a>/g)];
+      for (const [, href, body] of downloads) {
+        assert.ok(!output.includes('href="' + href + '"'), filename + ': ' + href);
+        assert.ok(output.includes(body), filename + ': retained label');
+        removed += 1;
+      }
+    }
+  }
+  assert.equal(removed, 7);
+});
+
+test('remaining app downloads offer current source ZIPs and canonical GitHub repositories', () => {
+  const repositories = {
+    'map-tour': 'storymap-tour', basic: 'storymap-basic', cascade: 'storymap-cascade',
+    crowdsource: 'storymap-crowdsource', 'map-journal': 'storymap-journal',
+    'map-series': 'storymap-series', shortlist: 'storymap-shortlist', 'swipe-spyglass': 'storymap-swipe',
+  };
+  for (const [app, repository] of Object.entries(repositories)) {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__' + app + '.html'), 'utf8');
+    const anchors = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)];
+    const download = anchors.find(anchor => anchor[2].includes('Download current source (ZIP)'));
+    assert.ok(download, app + ': source download label');
+    assert.ok(download[1].includes('href="https://github.com/Esri/' + repository + '/archive/refs/heads/master.zip"'), app);
+    const github = anchors.find(anchor => anchor[2].includes('Get the source code on GitHub'));
+    assert.ok(github[1].includes('href="https://github.com/Esri/' + repository + '"'), app);
+    for (const anchor of [download, github]) {
+      assert.match(anchor[1], /target="_blank"/);
+      assert.match(anchor[1], /rel="noopener noreferrer"/);
+    }
+    assert.doesNotMatch(html, /Download the ready-to-deploy app/);
+  }
+});
+
+test('Five Principles is captured locally with local resources and referring links', () => {
+  const destination = '/archive/2017-12-10-pages/en__five-principles.html';
+  assert.ok(existsSync(path.join(publish, destination)), 'Publish the saved Five Principles page');
+  const html = readFileSync(path.join(publish, destination), 'utf8');
+  for (const heading of ['Connect with your audience', 'Lure people in', 'Choose the best user experience', 'Make easy-to-read maps', 'Strive for simplicity']) {
+    assert.ok(html.includes(heading), heading);
+  }
+  assert.doesNotMatch(html, /web\.archive\.org|wombat|bundle-playback|googletagmanager|adobedtm/);
+  for (const resource of html.matchAll(/<(?:img|script|link)\b[^>]*(?:src|href)="([^"]+)"/g)) {
+    assert.ok(resource[1].startsWith(base + '/viewers/assets/'), resource[1]);
+  }
+  for (const image of ['boat.jpg', 'people.png', 'people_dim.jpg', 'collage.png', 'tapestry2.jpg', 'simple.png']) {
+    const resource = '/viewers/assets/images/archive/five-principles/' + image;
+    assert.ok(html.includes(base + resource), image);
+    const bytes = readFileSync(path.join(publish, resource));
+    assert.equal(bytes.subarray(0, image.endsWith('.png') ? 8 : 3).toString('hex'),
+      image.endsWith('.png') ? '89504e470d0a1a0a' : 'ffd8ff', image + ': actual image, not an error page');
+  }
+  const stylesheet = readFileSync(path.join(publish, 'viewers/assets/css/archive/newfeature.css'), 'utf8');
+  assert.match(stylesheet, /\.large-background/);
+  assert.doesNotMatch(stylesheet, /@import|url\(/);
+  for (const filename of ['en.html', 'en__resources.html', 'en__faq.html']) {
+    const source = readFileSync(path.join(publish, 'archive/2017-12-10-pages', filename), 'utf8');
+    assert.ok(source.includes('href="' + base + destination + '"'), filename);
+    assert.doesNotMatch(source, /href="[^"]*web\.archive\.org[^\"]*five-principles/);
+  }
+});
+
 test('published release-capable runtimes retain valid build-source markers', () => {
   for (const runtime of ['cascade', 'shortlist', 'mapseries', 'crowdsource']) {
     const source = readFileSync(path.join(publish, 'viewers', runtime, 'BUILD_SOURCE'), 'utf8').trim();
@@ -108,13 +240,24 @@ test('published runtime entry points contain no uncompiled template tags', () =>
   }
 });
 
-test('archive root repeats the archive disclaimer below the historical copyright', () => {
+test('archive sticky-footer layout has no reserved bottom padding or negative footer offset', () => {
+  const stylesheet = readFileSync(path.join(publish, 'viewers/assets/css/archive/screen.css'), 'utf8');
+  const pageRules = [...stylesheet.matchAll(/\.page\.sticky-footer\s*\{([^}]+)\}/g)];
+  assert.ok(pageRules.length > 0);
+  for (const rule of pageRules) assert.match(rule[1], /padding-bottom:\s*0(?:px)?\s*;/);
+  const footerRules = [...stylesheet.matchAll(/\.footer\.sticky-footer\s*\{([^}]+)\}/g)];
+  assert.ok(footerRules.length > 0);
+  for (const rule of footerRules) assert.match(rule[1], /margin-top:\s*0(?:px)?\s*;/);
+});
+
+test('archive root repeats the archive disclaimer below the shared navigation', () => {
   for (const filename of ['index.html', 'archive/index.html']) {
     const html = readFileSync(path.join(publish, filename), 'utf8');
     const banner = html.match(/<div class="archive-banner"[^>]*>\s*<div class="container">([^<]+)<\/div>/);
     const footer = html.match(/<footer id="archive-footer"[^>]*>([\s\S]*?)<\/footer>/);
     assert.ok(footer, filename + ': archive disclaimer footer is present');
-    assert.ok(html.indexOf('Copyright 2017') < footer.index, 'Footer follows the historical copyright');
+    const navigationFooter = html.match(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/);
+    assert.ok(navigationFooter && navigationFooter.index + navigationFooter[0].length <= footer.index, 'Disclaimer follows the shared navigation footer');
     const disclaimer = 'This is a historical archive of the Classic Story Maps website from 2017-12-10.';
     assert.equal(banner[1], disclaimer);
     assert.match(footer[0], /class="archive-banner"/);
@@ -124,7 +267,7 @@ test('archive root repeats the archive disclaimer below the historical copyright
   }
 });
 
-test('site and archive pages omit Esri PNG logos but preserve historical copyright', () => {
+test('site and archive pages omit Esri PNG logos and the historical copyright footer', () => {
   const sitePages = htmlFiles(publish).filter(file => {
     const relative = path.relative(publish, file).split(path.sep).join('/');
     return !runtimes.some(runtime => relative.startsWith('viewers/' + runtime + '/'));
@@ -132,20 +275,10 @@ test('site and archive pages omit Esri PNG logos but preserve historical copyrig
   for (const file of sitePages) {
     const html = readFileSync(file, 'utf8');
     assert.doesNotMatch(html, /class="[^"]*\besri-logo(?:-footer)?\b|(?:src|background)="[^"]*logo-esri[^"/]*\.png/i, file);
+    assert.doesNotMatch(html, /Copyright\s+2017\s+Environmental Systems Research Institute, Inc\.|footer-legal/i, file);
   }
   const stylesheet = readFileSync(path.join(publish, 'viewers/assets/css/archive/screen.css'), 'utf8');
   assert.doesNotMatch(stylesheet, /url\([^)]*logo-esri[^)]*\.png/i);
-  for (const filename of ['index.html', 'archive/index.html']) {
-    const html = readFileSync(path.join(publish, filename), 'utf8');
-    assert.match(html, /<footer\b[\s\S]*Copyright 2017 Environmental Systems Research Institute, Inc\./);
-  }
-  const archiveSources = path.join(repo, 'classic-apps/2017-12-10/app-list/pages');
-  for (const sourceFile of htmlFiles(archiveSources)) {
-    const source = readFileSync(sourceFile, 'utf8');
-    const output = readFileSync(path.join(publish, 'archive/2017-12-10-pages', path.relative(archiveSources, sourceFile)), 'utf8');
-    const notices = source.match(/Copyright[^<\r\n]+/gi) || [];
-    for (const notice of notices) assert.ok(output.includes(notice), sourceFile + ': copyright text must survive');
-  }
 });
 
 test('archive headers and mobile drawers link to Viewers', () => {
@@ -206,7 +339,7 @@ test('archive pages share an internal-only footer matching header navigation', (
       checked += 1;
     }
     for (const footer of html.matchAll(/<footer\b[\s\S]*?<\/footer>/g)) {
-      assert.doesNotMatch(footer[0], /footer-social-nav|icon-(?:twitter|facebook|github|email)|feedback-footer|nav_gallery|nav_mystories|My Stories/, file);
+      assert.doesNotMatch(footer[0], /footer-social-nav|icon-(?:twitter|facebook|github|email)|feedback-footer|nav_gallery|nav_mystories|My Stories|Copyright 2017|Privacy|Legal/, file);
       for (const [, href] of links(footer[0])) {
         assert.ok(href.startsWith(base + '/'), file + ': internal footer destination');
         assert.equal(new URL(href, 'https://local.example').origin, 'https://local.example');
@@ -257,6 +390,146 @@ test('all sample and overview story links open in an isolated new tab', () => {
     }
   }
   assert.ok(checked >= 48, 'Cover every example and repeated archive listing');
+});
+
+for (const [name, image, oldDestination] of [
+  ['Norway', 'playlist4.jpg', 'geoportal.tversu.ru/Atlas/norway12'],
+  ['Idaho', 'playlist2.jpg', 'fishandgame.idaho.gov/ifwis/maps/wma'],
+]) test(`${name} example keeps its image without a link or view-story caption`, () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__playlist.html'), 'utf8');
+  const block = [...html.matchAll(/<div class="feature-block">([\s\S]*?)<\/div>/g)]
+    .find(match => match[1].includes(image));
+  assert.ok(block, 'Keep the ' + name + ' example image block');
+  assert.ok(block[1].includes('src="' + base + '/viewers/assets/images/archive/app-list/' + image + '"'));
+  assert.doesNotMatch(block[1], /<a\b|View this story map/);
+  assert.ok(!html.includes(oldDestination));
+  assert.ok(existsSync(path.join(publish, 'viewers/assets/images/archive/app-list', image)));
+  assert.match(html, /href="http:\/\/storymaps\.esri\.com\/stories\/2013\/storylocator\/"/);
+});
+
+test('newsletter links use the owner-selected ArcGIS StoryMaps signup page', () => {
+  let checked = 0;
+  const expectedLabels = { 'en.html': ['Sign up today.', 'Sign up'], 'en__resources.html': ['Sign up!'] };
+  for (const [filename, labels] of Object.entries(expectedLabels)) {
+    const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages', filename), 'utf8');
+    const links = [...html.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)];
+    for (const label of labels) {
+      const link = links.find(match => match[2].replace(/<[^>]*>/g, '').trim() === label);
+      assert.ok(link, filename + ': ' + label);
+      assert.equal(link[1], 'https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup');
+      checked += 1;
+    }
+    assert.ok(!html.includes('links.esri.com/storymaps/newsletter_signup'));
+  }
+  assert.equal(checked, 3);
+});
+
+test('all viewer runtimes load the shared social-link removal policy', () => {
+  const script = base + '/viewers/assets/js/social-link-policy.js';
+  for (const runtime of runtimes) {
+    const html = readFileSync(path.join(publish, 'viewers', runtime, 'index.html'), 'utf8');
+    assert.ok(html.includes('src="' + script + '"'), runtime);
+  }
+  assert.ok(existsSync(path.join(publish, 'viewers/assets/js/social-link-policy.js')));
+});
+
+test('published pages omit social profile links while retaining author names', () => {
+  for (const file of htmlFiles(publish)) {
+    for (const link of readFileSync(file, 'utf8').matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>/g)) {
+      const url = new URL(link[1], 'https://local.example');
+      const socialHosts = ['twitter.com', 'x.com', 'facebook.com', 'instagram.com', 'linkedin.com', 'pinterest.com', 'tiktok.com', 'threads.net', 'bsky.app', 'youtube.com', 'youtu.be', 'flickr.com'];
+      assert.ok(!socialHosts.some(host => url.hostname === host || url.hostname.endsWith('.' + host)), file + ': ' + link[1]);
+    }
+  }
+  const resources = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__resources.html'), 'utf8');
+  for (const label of ['@EsriStoryMaps', 'Allen Carroll', 'John Nelson']) assert.ok(resources.includes(label), label);
+});
+
+test('Map Series entry-limit FAQ links to the migrated Community answer', () => {
+  const faq = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__faq.html'), 'utf8');
+  const source = readFileSync(path.join(repo, 'classic-apps/2017-12-10/app-list/pages/en__faq.html'), 'utf8');
+  const answer = html => html.match(/<header class="question" id="question39">([\s\S]*?)<div><a class="faq-to-top"/)[1];
+  const destination = 'https://community.esri.com/en/discussion/comment/499570#Comment_499570';
+  assert.ok(answer(source).includes('href="https://geonet.esri.com/thread/150596"'));
+  assert.equal(answer(faq), answer(source).replace('https://geonet.esri.com/thread/150596', destination));
+  assert.ok(!faq.includes('geonet.esri.com/thread/150596'));
+});
+
+test('Story Map Collections references retain their text without collection links', () => {
+  const destinations = new Set([
+    'https://collections.storymaps.esri.com/shortlists/',
+    'https://links.esri.com/storymaps/story_map_collection_oceans',
+    'https://links.esri.com/storymaps/story_map_collection_cip',
+    'https://links.esri.com/storymaps/story_map_collection_instructional',
+    'https://links.esri.com/storymaps/story_map_collection_vision_zero',
+    'https://links.esri.com/storymaps/story_map_collections',
+  ]);
+  let removed = 0;
+  for (const filename of ['en__resources.html', 'en__app-list__shortlist.html']) {
+    const source = readFileSync(path.join(repo, 'classic-apps/2017-12-10/app-list/pages', filename), 'utf8');
+    const output = readFileSync(path.join(publish, 'archive/2017-12-10-pages', filename), 'utf8');
+    for (const link of source.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)) {
+      if (!destinations.has(link[1])) continue;
+      assert.ok(output.includes(link[2]), filename + ': preserve collection text and headings');
+      assert.ok(!output.includes('href="' + link[1] + '"'), filename + ': unlink ' + link[1]);
+      removed += 1;
+    }
+  }
+  assert.equal(removed, 7);
+  for (const file of htmlFiles(publish)) {
+    const html = readFileSync(file, 'utf8');
+    assert.ok(!/href="[^"]*(?:collections\.storymaps\.esri\.com|links\.esri\.com\/storymaps\/story_map_collections?(?:_|\/|"))/.test(html), file);
+  }
+});
+
+test('ArcGIS Marketplace links use the owner-selected retirement article', () => {
+  let checked = 0;
+  for (const file of htmlFiles(publish)) {
+    const html = readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, /href="https?:\/\/marketplace\.arcgis\.com(?:\/|\")/, file);
+    for (const link of html.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)) {
+      if (!link[2].replace(/<[^>]*>/g, '').trim().startsWith('ArcGIS Marketplace')) continue;
+      assert.equal(link[1], 'https://support.esri.com/en-us/knowledge-base/arcgis-marketplace-retirement-000041842', file);
+      checked += 1;
+    }
+  }
+  assert.ok(checked >= 3, 'Preserve Marketplace links across the captured pages');
+});
+
+test('blog listings and articles link to the internal archive notice', () => {
+  const audit = JSON.parse(readFileSync(path.join(repo, 'docs/testing/artifacts/archive-link-audit.json'), 'utf8'));
+  const destinations = audit.destinations.filter(entry => {
+    const url = new URL(entry.final || entry.url);
+    return url.hostname === 'blogs.esri.com'
+      || url.hostname === 'developerscorner.storymaps.arcgis.com'
+      || /(^|\.)medium\.com$/.test(url.hostname)
+      || url.pathname.includes('/arcgis-blog/')
+      || entry.url === 'http://links.esri.com/storymaps/blog_all'
+      || entry.url.includes('/http://blogs.esri.com/');
+  });
+  assert.ok(destinations.length >= 20, 'Cover historical destinations, not just links labelled Blog');
+  let checked = 0;
+  for (const destination of destinations) {
+    for (const reference of destination.references) {
+      const html = readFileSync(path.join(publish, reference.page), 'utf8');
+      for (const label of reference.labels) {
+        if (label === 'Insiders Blog') {
+          assert.ok(!html.includes('Insiders Blog'), 'Keep the replaced legacy footer removed');
+          continue;
+        }
+        const links = [...html.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)]
+          .filter(match => match[2].replace(/<[^>]*>/g, '').trim() === label);
+        assert.ok(links.length, `${reference.page}: preserve ${label}`);
+        for (const link of links) {
+          assert.equal(link[1], base + '/archive/2017-12-10-pages/en__archive-blog.html', `${reference.page}: ${label}`);
+          checked += 1;
+        }
+      }
+    }
+  }
+  assert.ok(checked >= 40);
+  const faq = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__faq.html'), 'utf8');
+  assert.ok(faq.includes('href="http://links.esri.com/storymaps/shortlist_layer_template"'));
 });
 
 test('historical home links open the original Bare Earth Cascade in the current viewer', () => {

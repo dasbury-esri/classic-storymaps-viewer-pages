@@ -48,6 +48,7 @@ should_strip_brand_chrome() {
   [[ "$source_url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/ ]] || return 1
   [[ "$source_url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/app-list/?$ ]] && return 1
   [[ "$source_url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/app-list$ ]] && return 1
+  [[ "$source_url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/five-principles/?$ ]] && return 1
 
   return 0
 }
@@ -58,6 +59,7 @@ should_capture_link() {
   [[ "$url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/app-list/[^/]+/?$ ]] && return 0
   [[ "$url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/app-list/[^/]+/(gallery[^/]*|tutorial)/?$ ]] && return 0
   [[ "$url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/(faq|gallery|how-to|my-stories|resources)/?$ ]] && return 0
+  [[ "$url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/five-principles/?$ ]] && return 0
   [[ "$url" =~ ^https?://storymaps\.(arcgis|esri)\.com/en/?$ ]] && return 0
 
   return 1
@@ -105,6 +107,10 @@ sanitize_file() {
     "$tmp_file3" > "$out_file"
 
   rm -f "$tmp_file" "$tmp_file2" "$tmp_file3"
+
+  if [[ "$source_url" =~ /en/five-principles/?$ ]]; then
+    perl -0pi -e 's{((?:href|src)="|url\(\x27)/((?!/)[^"\x27]*)}{$1/http://storymaps.arcgis.com/$2}g; s{((?:href|src)=")//}{$1https://}g' "$out_file"
+  fi
 
   if should_strip_brand_chrome "$source_url"; then
     local tmp_file4
@@ -165,6 +171,13 @@ save_page() {
 
   sanitize_file "$raw_file" "$clean_file" "$url"
 }
+
+if [[ "$#" -gt 0 ]]; then
+  for source_url in "$@"; do
+    save_page "$source_url"
+  done
+  exit 0
+fi
 
 SEED_URL="${ORIGIN}${SEED_PATH}"
 SEED_RAW="$RAW_DIR/index.raw.html"

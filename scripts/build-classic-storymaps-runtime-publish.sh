@@ -67,6 +67,7 @@ sanitize_runtime_publish() {
       {
         print
         if (inserted == 0 && $0 ~ /<head[^>]*>/) {
+          print "\t<script src=\"/viewers/assets/js/social-link-policy.js\"></script>"
           print "\t<script type=\"text/javascript\">"
           print "\t// classicstorymaps-builder-guard"
           print "\t(function () {"
@@ -99,6 +100,8 @@ sanitize_runtime_publish() {
 }
 
 mkdir -p "$PUBLISH_ROOT"
+mkdir -p "$PUBLISH_ROOT/assets/js"
+cp "$SCRIPT_DIR/../apps/classic-storymaps-site/assets/js/social-link-policy.js" "$PUBLISH_ROOT/assets/js/social-link-policy.js"
 
 for runtime_name in "${runtime_names[@]}"; do
   require_runtime_build "$runtime_name"

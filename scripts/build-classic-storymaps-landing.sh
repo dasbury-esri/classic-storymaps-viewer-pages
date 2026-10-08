@@ -169,6 +169,8 @@ sanitize_archive_html_file() {
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/applist\.css[^"]*"}{href="/viewers/assets/css/archive/applist.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/create-story\.css[^"]*"}{href="/viewers/assets/css/archive/create-story.css"}g;
     s{href="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/css/steps\.css[^"]*"}{href="/viewers/assets/css/archive/steps.css"}g;
+    s{href="/?https?://storymaps\.arcgis\.com/assets/css/newfeature\.css[^"]*"}{href="/viewers/assets/css/archive/newfeature.css"}g;
+    s{/?https?://storymaps\.arcgis\.com/assets/images/images/(boat\.jpg|people\.png|people_dim\.jpg|collage\.png|tapestry2\.jpg|simple\.png)}{/viewers/assets/images/archive/five-principles/$1}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/libs/jquery-1\.9\.1\.min\.js[^"]*"}{src="/viewers/assets/js/archive/jquery-1.9.1.min.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/assets/js/tailcoat/tailcoat\.js[^"]*"}{src="/viewers/assets/js/archive/tailcoat.js"}g;
     s{src="/(?:web/\d+(?:im_|js_|cs_)?/)?https?://storymaps\.arcgis\.com/en/app-list/img/([^"?]+)(?:\?[^"]*)?"}{src="/viewers/assets/images/$1"}g;

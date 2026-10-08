@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { createReadStream } from 'node:fs';
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createPreviewHandler } from './preview-server.mjs';
 
 const publish = path.resolve(process.env.PUBLISH_CHECK_ROOT || 'publish');
 const basePath = process.env.SITE_BASE_PATH || '/classic-storymaps-viewer-pages';
@@ -15,21 +15,7 @@ const { chromium } = modulePath
   ? await import(pathToFileURL(path.join(modulePath, 'playwright/index.mjs')).href)
   : await import('playwright');
 execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-keyout', path.join(temporary, 'key.pem'), '-out', path.join(temporary, 'cert.pem'), '-days', '1', '-subj', '/CN=localhost'], { stdio: 'ignore' });
-const mimeTypes = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.gif': 'image/gif', '.woff': 'font/woff', '.woff2': 'font/woff2' };
-const server = https.createServer({ key: await readFile(path.join(temporary, 'key.pem')), cert: await readFile(path.join(temporary, 'cert.pem')) }, async (request, response) => {
-  try {
-    const pathname = decodeURIComponent(new URL(request.url, 'https://localhost').pathname);
-    if (!pathname.startsWith(basePath + '/')) throw new Error('Outside base path');
-    let filename = path.resolve(publish, '.' + pathname.slice(basePath.length));
-    if (!filename.startsWith(publish + path.sep)) throw new Error('Outside publish root');
-    if ((await stat(filename)).isDirectory()) filename = path.join(filename, 'index.html');
-    await stat(filename);
-    response.setHeader('Content-Type', mimeTypes[path.extname(filename)] || 'application/octet-stream');
-    createReadStream(filename).pipe(response);
-  } catch {
-    response.writeHead(404).end();
-  }
-});
+const server = https.createServer({ key: await readFile(path.join(temporary, 'key.pem')), cert: await readFile(path.join(temporary, 'cert.pem')) }, createPreviewHandler({ root: publish, basePath }));
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = 'https://127.0.0.1:' + server.address().port;
 const browser = await chromium.launch({ headless: true });

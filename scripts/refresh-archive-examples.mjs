@@ -24,6 +24,17 @@ const replacements = [
 
 const viewerUrl = (runtime, id, parameter = 'appid') => `/viewers/${runtime}/index.html?${parameter}=${id}`;
 
+const sourceRepositories = {
+  'map-tour': 'storymap-tour',
+  basic: 'storymap-basic',
+  cascade: 'storymap-cascade',
+  crowdsource: 'storymap-crowdsource',
+  'map-journal': 'storymap-journal',
+  'map-series': 'storymap-series',
+  shortlist: 'storymap-shortlist',
+  'swipe-spyglass': 'storymap-swipe',
+};
+
 const archiveFooter = readFileSync(new URL('../apps/classic-storymaps-site/archive-root.html', import.meta.url), 'utf8')
   .match(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/)[0]
   .replaceAll('__SITE_BASE_PATH__', '');
@@ -57,9 +68,78 @@ const unavailableOrganizations = new Set([
 
 for (const file of process.argv.slice(2)) {
   let html = readFileSync(file, 'utf8');
+  const sourceRepository = sourceRepositories[file.match(/(?:^|\/)en__app-list__([^/]+)\.html$/)?.[1]];
+  if (/(?:^|\/)en\.html$/.test(file)) {
+    html = html.replace(/<div id="mini-gallery"[^>]*>\s*<\/div>\s*/g, '')
+      .replace(/<div class="column-24 center-text trailer-3">\s*<a href="#"><h4>View more story maps in our gallery<\/h4><\/a>\s*<\/div>/g, '');
+  }
+  if (/(?:^|\/)en__faq\.html$/.test(file)) {
+    html = html.replace(/<a\b[^>]*href="#"[^>]*>(Story Maps Gallery)<\/a>/g, '$1');
+    html = html.replace(/<header class="question" id="question(?:6|19)">[\s\S]*?<div><a class="faq-to-top"/g, section =>
+      section.replace(/<a\b[^>]*href="#"[^>]*>this link<\/a>/, 'this link'));
+    html = html.replace(/<header class="question" id="question9">[\s\S]*?<div><a class="faq-to-top"/, section =>
+      section.replace(/<a\b[^>]*href="#"[^>]*>(linked|embedded)<\/a>/g, '$1'));
+  }
   html = html.replace(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/g, archiveFooter);
   html = html.replace(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g, (anchor, attributes, href, body) => {
+    const label = body.replace(/<[^>]*>/g, '').trim();
+    if (sourceRepository && ['Download the ready-to-deploy app', 'Download current source (ZIP)', 'Get the source code on GitHub'].includes(label)) {
+      const repositoryUrl = `https://github.com/Esri/${sourceRepository}`;
+      const destination = label === 'Get the source code on GitHub' ? repositoryUrl : `${repositoryUrl}/archive/refs/heads/master.zip`;
+      attributes = attributes.replace(/\bhref="[^"]*"/, `href="${destination}"`)
+        .replace(/\s+(?:target|rel)="[^"]*"/g, '');
+      return `<a${attributes} target="_blank" rel="noopener noreferrer">${body.replace('Download the ready-to-deploy app', 'Download current source (ZIP)')}</a>`;
+    }
+    if (label === "Story Maps Developers' Corner") return body;
+    if (/(?:^|\/)en__app-list__(?:playlist|countdown)(?:__tutorial)?\.html$/.test(file)
+      && /^(?:http:\/\/bit\.ly\/(?:1cImr14|1eML1U4)|https:\/\/github\.com\/Esri\/(?:playlist|countdown)-storytelling-template-js(?:\/archive\/master\.zip)?)$/.test(href)) {
+      return body;
+    }
+    if (href === '#' && /^(?:Learn ArcGIS online lesson|'Get Started with Story Maps' Learn ArcGIS lesson)$/.test(label)) {
+      attributes = attributes.replace(/\bhref="[^"]*"/, 'href="https://learn.arcgis.com"')
+        .replace(/\s+(?:target|rel)="[^"]*"/g, '');
+      return `<a${attributes} target="_blank" rel="noopener noreferrer">${body}</a>`;
+    }
     const url = new URL(href.replaceAll('&amp;', '&'), 'https://example.invalid');
+    if ((url.hostname === 'geoportal.tversu.ru' && url.pathname === '/Atlas/norway12/index.html')
+      || (url.hostname === 'fishandgame.idaho.gov' && url.pathname === '/ifwis/maps/wma/')) {
+      return body.replace(/\s*<h6>View this story map<\/h6>/, '');
+    }
+    if (url.hostname === 'geonet.esri.com' && url.pathname === '/thread/150596') {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://community.esri.com/en/discussion/comment/499570#Comment_499570"');
+    }
+    if (/(?:^|\/)en__faq\.html$/.test(file) && label === 'here'
+      && url.hostname === 'storymaps.arcgis.com' && url.pathname === '/en/gallery/') {
+      return body;
+    }
+    const originalHref = href.replace(/^(?:https?:\/\/web\.archive\.org)?\/web\/\d+(?:id_)?\//, '');
+    const blogUrl = new URL(originalHref, 'https://example.invalid');
+    if (blogUrl.hostname === 'links.esri.com' && blogUrl.pathname === '/storymaps/newsletter_signup') {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup"');
+    }
+    if (/(^|\.)(?:(?:twitter|x|facebook|instagram|linkedin|pinterest|tiktok|youtube|flickr)\.com|threads\.net|bsky\.app|youtu\.be)$/.test(blogUrl.hostname)) {
+      return body;
+    }
+    if (blogUrl.hostname === 'collections.storymaps.esri.com'
+      || (blogUrl.hostname === 'links.esri.com'
+        && /^\/storymaps\/story_map_collections?(?:_|\/|$)/.test(blogUrl.pathname))) {
+      return body;
+    }
+    if (blogUrl.hostname === 'marketplace.arcgis.com' && blogUrl.pathname === '/') {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://support.esri.com/en-us/knowledge-base/arcgis-marketplace-retirement-000041842"');
+    }
+    if (blogUrl.hostname === 'blogs.esri.com'
+      || blogUrl.hostname === 'developerscorner.storymaps.arcgis.com'
+      || /(^|\.)medium\.com$/.test(blogUrl.hostname)
+      || (/(^|\.)esri\.com$/.test(blogUrl.hostname) && blogUrl.pathname.startsWith('/arcgis-blog/'))
+      || (blogUrl.hostname === 'links.esri.com'
+        && /^\/storymaps\/(?:blogs?_|tips_(?:general|cascade|crowdsource)(?:\/|$))/.test(blogUrl.pathname))
+      || /\bblog(?:s|\s+posts?)?\b/i.test(label)) {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="/archive/2017-12-10-pages/en__archive-blog.html"');
+    }
+    if (/^https?:\/\/storymaps\.(?:arcgis|esri)\.com\/en\/five-principles\/?$/.test(originalHref)) {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="/archive/2017-12-10-pages/en__five-principles.html"');
+    }
     if (url.hostname === 'nation.maps.arcgis.com' && url.pathname === '/apps/Cascade/index.html'
       && cascadeTutorialIds.has(url.searchParams.get('appid'))) {
       return anchor.replace(/\bhref="[^"]*"/, `href="${viewerUrl('cascade', url.searchParams.get('appid'))}"`);

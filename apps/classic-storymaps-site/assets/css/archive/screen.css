@@ -3341,7 +3341,7 @@ table .align-top {
 }
 .footer.sticky-footer {
   clear: both;
-  margin-top: -262px;
+  margin-top: 0px;
   min-height: 262px;
 }
 .footer {
@@ -3408,7 +3408,7 @@ body {
   padding-bottom: 72px;
 }
 .page.sticky-footer {
-  padding-bottom: 334px;
+  padding-bottom: 0px;
 }
 .header {
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
@@ -5076,7 +5076,7 @@ html.ie9 .drawer.active-right .drawer-right {
   margin-top: 8.75em;
 }
 .page.sticky-footer {
-  padding-bottom: 262px;
+  padding-bottom: 0px;
 }
 .no-scroll {
   overflow: hidden;
