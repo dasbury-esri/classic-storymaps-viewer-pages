@@ -31,6 +31,30 @@ For repository changes, run the required tests/builds before an approved push an
 verify the deployed links afterward. The checklist conversion itself did not
 authorize deployment; the owner subsequently approved the checkpoint below.
 
+## Cleanup Deployment
+
+Verified: 2026-10-08 20:26:28+00:00[UTC]. Commit
+`b3ba1d7c22dbbbb1cf2240fe4b9d0e6656eb4bee` deployed successfully in
+[Pages run 37836630862](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37836630862).
+Preflight passed 112 Node tests, all ten workflow builds and 58 complete-publish
+checks. Both workflow jobs succeeded with Node 24. Production remains at the
+GitHub Pages project URL, with no custom domain enabled.
+
+The live archive HTML matches the tested build, including all pending task
+references. Playlist, Five Principles, social-policy JavaScript and archive CSS
+hashes match. Desktop/mobile browser checks confirmed the Norway and Idaho images
+load without links or view-story captions, FAQ Gallery anchors are removed, and
+normal visible Blog clicks reach the internal notice. A hidden drawer-link test
+selector was corrected before recording the successful click checks.
+
+All 33 original pending tasks are now resolved. This completes the original
+69-task burn-down: 64 resolved and 5 accepted. This checkpoint supersedes earlier
+local-only/pending descriptions below and in per-task verification notes, without
+rewriting the historical observations. The
+[fresh deployed-site audit](deployed-link-audit-2026-10-08.md) records new findings
+separately, including links inside authored story content. Closure of
+these specific repairs does not certify every remote map layer, video or story entry.
+
 ## Shared Footer Follow-up
 
 The owner requested consistent internal-only footers. Existing historical footers
@@ -126,12 +150,12 @@ deployed; numbered audit totals are unchanged.
 | --- | ---: |
 | open | 0 |
 | needs-verification | 0 |
-| pending-deployment | 33 |
-| resolved | 31 |
+| pending-deployment | 0 |
+| resolved | 64 |
 | accepted | 5 |
 | Total | 69 |
 
-**33 outstanding; 36 closed (31 resolved, 5 accepted).** These are task counts,
+**0 outstanding; 69 closed (64 resolved, 5 accepted).** These are task counts,
 not failed-link counts: 62 destination tasks, four groups covering 55 placeholder
 occurrences, and three follow-ups. ENV-001 is a local-tooling issue, not a
 production defect. URL aliases retain separate IDs so none disappear from the
@@ -336,10 +360,10 @@ four disjoint groups cover all 55 references. Choose the intended target for eac
 context, or show an explicit unavailable state; verify every affected generated
 anchor and representative browser clicks. Leave legitimate Top/menu controls alone.
 
-- [ ] PH-001 `pending-deployment`: Original inventory: 37 gallery references. Current recount: 34 placeholders before the Home removal. Owner accepts 20 app Gallery tabs, 10 app-specific calls to action and one How-to Gallery reference unchanged. The Home call to action and empty mini-gallery are removed locally; the two named FAQ Gallery references are now plain text locally. All choices are settled; verify these removals after deployment. The old FAQ gallery URL remains separately tracked by AL-011.
-- [ ] PH-002 `pending-deployment`: Owner selected plain text for all 11 Developers' Corner links. Anchor wrappers removed locally; wording/headings and Map Tour's already unlinked heading remain. Verify after deployment.
-- [ ] PH-003 `pending-deployment`: Owner selected `https://learn.arcgis.com` for all three lesson links, superseding the specific-lesson requirement. Exact URL and new-tab behavior verified locally; verify after deployment.
-- [ ] PH-004 `pending-deployment`: Owner approved unlinking all four FAQ references: "this link" in question6, "linked" and "embedded" in question9, and "this link" in question19. Implemented locally with all answer text preserved; verify after deployment. The separate "here" link in question19 remains tracked by AL-011 and unchanged.
+- [x] PH-001 `resolved`: Original inventory: 37 gallery references. Current recount: 34 placeholders before the Home removal. Owner accepts 20 app Gallery tabs, 10 app-specific calls to action and one How-to Gallery reference unchanged. The Home call to action and empty mini-gallery are removed locally; the two named FAQ Gallery references are now plain text locally. All choices are settled; verify these removals after deployment. The old FAQ gallery URL remains separately tracked by AL-011.
+- [x] PH-002 `resolved`: Owner selected plain text for all 11 Developers' Corner links. Anchor wrappers removed locally; wording/headings and Map Tour's already unlinked heading remain. Verify after deployment.
+- [x] PH-003 `resolved`: Owner selected `https://learn.arcgis.com` for all three lesson links, superseding the specific-lesson requirement. Exact URL and new-tab behavior verified locally; verify after deployment.
+- [x] PH-004 `resolved`: Owner approved unlinking all four FAQ references: "this link" in question6, "linked" and "embedded" in question9, and "this link" in question19. Implemented locally with all answer text preserved; verify after deployment. The separate "here" link in question19 remains tracked by AL-011 and unchanged.
 
 Owner decision and local verification: 2026-10-08 18:25:11+00:00[UTC]. The Home
 build removes only the empty `#mini-gallery` and the enclosing block for "View
@@ -410,19 +434,19 @@ For mislabeled source ZIPs, either select and validate an actual ready-to-deploy
 release or relabel it as a developer/source download with its build requirements.
 Do not call a branch ZIP ready to deploy solely because it downloads successfully.
 
-- [ ] AL-001 `pending-deployment`: Owner-selected removal of Playlist download shortlinks; both anchors unwrapped locally, text retained.
-- [ ] AL-002 `pending-deployment`: Owner-selected removal of Countdown download shortlink; anchor unwrapped locally, heading retained.
-- [ ] AL-023 `pending-deployment`: Countdown source-download GitHub link unwrapped locally; heading retained. Repository not restored.
-- [ ] AL-024 `pending-deployment`: Both Countdown ZIP download links unwrapped locally; text retained. Download not restored.
-- [ ] AL-026 `pending-deployment`: Playlist source-download GitHub link unwrapped locally; heading retained. Repository not restored.
-- [ ] AL-025 `pending-deployment`: Map Tour uses the verified canonical current-source ZIP with an accurate source label.
-- [ ] AL-027 `pending-deployment`: Basic verified current-source ZIP is labelled as source, not ready-to-deploy.
-- [ ] AL-028 `pending-deployment`: Cascade verified current-source ZIP is labelled as source; GitHub link uses canonical HTTPS.
-- [ ] AL-029 `pending-deployment`: Crowdsource verified current-source ZIP is labelled as source, not ready-to-deploy.
-- [ ] AL-030 `pending-deployment`: Journal verified current-source ZIP is labelled as source, not ready-to-deploy.
-- [ ] AL-031 `pending-deployment`: Series verified current-source ZIP is labelled as source, not ready-to-deploy.
-- [ ] AL-032 `pending-deployment`: Shortlist verified current-source ZIP is labelled as source, not ready-to-deploy.
-- [ ] AL-033 `pending-deployment`: Swipe verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-001 `resolved`: Owner-selected removal of Playlist download shortlinks; both anchors unwrapped locally, text retained.
+- [x] AL-002 `resolved`: Owner-selected removal of Countdown download shortlink; anchor unwrapped locally, heading retained.
+- [x] AL-023 `resolved`: Countdown source-download GitHub link unwrapped locally; heading retained. Repository not restored.
+- [x] AL-024 `resolved`: Both Countdown ZIP download links unwrapped locally; text retained. Download not restored.
+- [x] AL-026 `resolved`: Playlist source-download GitHub link unwrapped locally; heading retained. Repository not restored.
+- [x] AL-025 `resolved`: Map Tour uses the verified canonical current-source ZIP with an accurate source label.
+- [x] AL-027 `resolved`: Basic verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-028 `resolved`: Cascade verified current-source ZIP is labelled as source; GitHub link uses canonical HTTPS.
+- [x] AL-029 `resolved`: Crowdsource verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-030 `resolved`: Journal verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-031 `resolved`: Series verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-032 `resolved`: Shortlist verified current-source ZIP is labelled as source, not ready-to-deploy.
+- [x] AL-033 `resolved`: Swipe verified current-source ZIP is labelled as source, not ready-to-deploy.
 
 Download and AL-011 follow-up: 2026-10-08 18:50:26+00:00[UTC]. At the owner's
 request, seven Playlist/Countdown download anchors (shortlinks, ZIP links and
@@ -465,19 +489,19 @@ Find a preserved or current destination that matches the original label and
 context. If it cannot be recovered, explicitly mark it unavailable. TLS repairs
 must work under normal browser certificate validation, without bypasses.
 
-- [ ] AL-004 `pending-deployment`: Blog-listing link uses the owner-selected internal blog notice.
-- [ ] AL-005 `pending-deployment`: Crowdsource panel article link uses the owner-selected internal blog notice.
-- [ ] AL-006 `pending-deployment`: Map Tour captions article link uses the owner-selected internal blog notice.
-- [ ] AL-008 `pending-deployment`: Premium-content article link uses the owner-selected internal blog notice.
-- [ ] AL-010 `pending-deployment`: Direct and archived Marketplace links use the owner-selected retirement article, retaining labels.
-- [ ] AL-011 `pending-deployment`: Owner-selected unlinking of "here" in FAQ question19; plain text locally, answer retained. Old gallery endpoint not repaired.
-- [ ] AL-016 `pending-deployment`: Legacy Summit links are already absent from the local shared footer; owner-approved current event URL recorded. Verify live absence before closure.
-- [ ] AL-019 `pending-deployment`: Both Shortlists collection references are unlinked locally, retaining text per owner decision.
-- [ ] AL-021 `pending-deployment`: Main-stage-action buttons article link uses the owner-selected internal blog notice.
-- [ ] AL-022 `pending-deployment`: FAQ question39 links to the owner-selected migrated Community answer, with wording preserved.
-- [ ] AL-039 `pending-deployment`: Instructional collection reference is unlinked locally, retaining text per owner decision.
-- [ ] AL-040 `pending-deployment`: Oceans collection reference is unlinked locally, retaining text per owner decision.
-- [ ] AL-041 `pending-deployment`: All Story Map Collections reference is unlinked locally, retaining text per owner decision.
+- [x] AL-004 `resolved`: Blog-listing link uses the owner-selected internal blog notice.
+- [x] AL-005 `resolved`: Crowdsource panel article link uses the owner-selected internal blog notice.
+- [x] AL-006 `resolved`: Map Tour captions article link uses the owner-selected internal blog notice.
+- [x] AL-008 `resolved`: Premium-content article link uses the owner-selected internal blog notice.
+- [x] AL-010 `resolved`: Direct and archived Marketplace links use the owner-selected retirement article, retaining labels.
+- [x] AL-011 `resolved`: Owner-selected unlinking of "here" in FAQ question19; plain text locally, answer retained. Old gallery endpoint not repaired.
+- [x] AL-016 `resolved`: Legacy Summit links are already absent from the local shared footer; owner-approved current event URL recorded. Verify live absence before closure.
+- [x] AL-019 `resolved`: Both Shortlists collection references are unlinked locally, retaining text per owner decision.
+- [x] AL-021 `resolved`: Main-stage-action buttons article link uses the owner-selected internal blog notice.
+- [x] AL-022 `resolved`: FAQ question39 links to the owner-selected migrated Community answer, with wording preserved.
+- [x] AL-039 `resolved`: Instructional collection reference is unlinked locally, retaining text per owner decision.
+- [x] AL-040 `resolved`: Oceans collection reference is unlinked locally, retaining text per owner decision.
+- [x] AL-041 `resolved`: All Story Map Collections reference is unlinked locally, retaining text per owner decision.
 
 Newsletter, book, and social decisions: 2026-10-08 19:38:32+00:00[UTC]. The
 owner selected the [ArcGIS StoryMaps newsletter signup page](https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup)
@@ -575,9 +599,9 @@ anonymously in a browser; record a content-matching decision for destination dri
 
 All P3 decisions are recorded. Remaining unchecked entries await deployment.
 
-- [ ] AL-003 `pending-deployment`: Norway image retained; link and view-story caption removed locally per owner decision.
-- [ ] AL-007 `pending-deployment`: Three signup links use the owner-selected ArcGIS StoryMaps newsletter page; no form submitted.
-- [ ] AL-061 `pending-deployment`: Social profile anchors removed and runtime social controls suppressed under the owner's site-wide decision.
+- [x] AL-003 `resolved`: Norway image retained; link and view-story caption removed locally per owner decision.
+- [x] AL-007 `resolved`: Three signup links use the owner-selected ArcGIS StoryMaps newsletter page; no form submitted.
+- [x] AL-061 `resolved`: Social profile anchors removed and runtime social controls suppressed under the owner's site-wide decision.
 
 Norway and training decisions: 2026-10-08 19:53:06+00:00[UTC]. The owner
 requested retaining the Norway image without its link. The anchor and its

@@ -1,9 +1,17 @@
 {
   "recorded": "2026-10-08T01:45:51.187Z",
   "triage": {
+    "cleanupDeployment": {
+      "verifiedAt": "2026-10-08 20:26:28+00:00[UTC]",
+      "commit": "b3ba1d7c22dbbbb1cf2240fe4b9d0e6656eb4bee",
+      "run": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37836630862",
+      "status": "deployed-verified",
+      "verification": "112 Node tests, all ten workflow builds, and 58 complete-publish checks passed locally; both GitHub Actions jobs succeeded with Node 24. Production archive HTML matches the tested build, including all pending task references. Live Playlist, Five Principles, social policy and archive CSS hashes match. Desktop/mobile browser checks confirmed Norway and Idaho images remain loaded and unlinked, FAQ Gallery anchors are removed, and normal visible Blog clicks reach the internal notice. Pages API confirms the project URL with no custom domain.",
+      "scope": "Closes the 33 original pending-deployment tasks and supersedes earlier local-only status descriptions. The original burn-down is complete: 64 resolved, 5 accepted. A separate fresh audit records newly discovered authored-story links and runtime limitations; this release verification is not exhaustive certification of remote media or every story entry. Original crawl observations remain unchanged."
+    },
     "idahoImageOnly": {
       "verifiedAt": "2026-10-08 19:59:19+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "decision": "Owner requested keeping the Playlist Idaho wildlife-management image while removing its link. Build-time normalization covers HTTP and HTTPS versions of fishandgame.idaho.gov/ifwis/maps/wma/, retaining playlist2.jpg and removing the View this story map caption. The neighboring Story Locator link remains unchanged. This destination had no failure ID; do not create one for the owner-selected change.",
       "verification": "Idaho regression failed before the rewrite and passed afterward; the Norway regression also passes. All 112 Node tests and the local landing build passed. Chromium at 1440px and 390px confirmed the Idaho image loads, is unlinked, has no view-story caption, and fits the viewport; both screenshots inspected. Original capture and historical destination observations unchanged. Not committed or deployed."
     },
@@ -16,20 +24,20 @@
     },
     "collectionLinkRemoval": {
       "verifiedAt": "2026-10-08 19:23:22+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "decision": "Owner requested removal of all Story Map Collections links, including Shortlists. Unwrap the seven anchors on Resources and the Shortlist overview, retaining their text and headings. Covers Shortlists (two references), Oceans, Capital Improvement Projects, Instructional Story Maps, Vision Zero and All Story Map Collections. Individual story examples remain linked.",
       "verification": "The seven-reference preservation regression failed before the change and passed afterward, also checking all generated HTML for remaining collection links. All 101 Node tests and the local landing build passed. Build-time normalization handles collection-host URLs and Story Map collection shortlinks without editing original captures. No endpoint repair is claimed. Not committed or deployed."
     },
     "blogNoticePolicy": {
       "verifiedAt": "2026-10-08 19:08:39+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "destination": "/archive/2017-12-10-pages/en__archive-blog.html",
       "decision": "Owner selected the internal notice for all blog links, including listings and individual articles. Supersedes article-recovery actions for AL-004, AL-005, AL-006, AL-008 and AL-021. Existing unlinked Developers' Corner headings stay unlinked; non-blog lessons, forums, examples and downloads are preserved.",
       "verification": "Audit-based regression failed before normalization and passed afterward. All 99 Node tests passed, including exact FAQ-answer preservation with approved href changes. Local landing build passed. A standalone Chromium Resources listing-link click opened Archived Story Maps Blog Notice in a new tab with the not-mirrored notice visible. Embedded-browser navigation checks timed out; no production change was made. Original crawl observations and source captures remain unchanged."
     },
     "currentSourceDownloads": {
       "verifiedAt": "2026-10-08 18:58:35+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "policy": "Owner prefers current source ZIPs, with GitHub instructions as fallback if a ZIP is unavailable. All eight official Esri repositories currently have valid master-branch ZIPs; no fallback-only destination is needed. Links use canonical repository archive/refs/heads/master.zip URLs and the label Download current source (ZIP). Existing source links use canonical HTTPS repository URLs with READMEs. Both links open a new tab with noopener noreferrer. Playlist and Countdown downloads remain removed.",
       "repositoryState": "GitHub API confirmed all eight canonical repositories are archived and master is their default branch. Current means the latest available default-branch source, not an actively maintained or ready-to-deploy release. Branch URLs remain dynamic; hashes below document only the verified snapshots.",
       "verification": "All eight URLs returned HTTP 200 application/zip through codeload.github.com. ZIP signatures and unzip integrity checks passed; each ZIP comment matched its current GitHub master commit and every archive contained a root README with instructions. All 98 Node tests passed. Sixteen desktop/mobile layout checks passed. A normal Map Tour button click downloaded storymap-tour-master.zip and its integrity check passed. No upstream source changes or deployment build certification is implied.",
@@ -47,7 +55,7 @@
     },
     "fivePrinciplesCapture": {
       "verifiedAt": "2026-10-08 17:53:55+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "sourceUrl": "https://web.archive.org/web/20171204024910/http://storymaps.arcgis.com/en/five-principles/",
       "rawUrl": "https://web.archive.org/web/20171204024910id_/http://storymaps.arcgis.com/en/five-principles/",
       "rawFile": "classic-apps/2017-12-10/app-list/raw/en__five-principles.raw.html",
@@ -86,7 +94,7 @@
       "observationPolicy": "This deployment supersedes earlier local/pending and no-deployment statements for these fourteen tasks and the shared footer. Historical per-task investigation notes and original crawl evidence remain intact."
     },
     "countdownArchiveFollowup": {
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "ownerDecision": "Use https://storymaps.esri.com/archives/stories/2013/ports/ and https://storymaps.esri.com/archives/stories/2013/refugee-camps/ as the respective example destinations. Retain both links despite the documented limitations; no unavailable state or remote runtime repair requested.",
       "taskIds": ["AL-013", "AL-014"],
       "verification": "Official archived copies preserve both original titles and narratives. Both route regressions failed before their candidate rewrites and passed afterward; normal clicks from the generated local Countdown page opened both archive URLs with no opener. Standalone Chromium confirmed Ports can select Singapore and show its rank, 2011 volume, overview map and loaded satellite imagery. Its volume-chart area was blank in the inspected screenshot, and external tracking scripts reported errors. Refugee Camps requests an HTTP World_Imagery service blocked as mixed content; selecting Dagahaley raises Cannot read properties of undefined (reading 'hide') in postSelection. That failure reproduced in integrated and standalone Chromium.",
@@ -96,7 +104,7 @@
     },
     "cascadeTutorialFollowup": {
       "verifiedAt": "2026-10-08 16:47:28+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "taskIds": ["AL-053", "AL-054", "AL-055", "AL-056", "AL-057"],
       "originalItems": "All five original How To Cascade guides remain public Web Mapping Applications owned by j_nelson, with titles matching Sections, Transitions, Map Legends, Multi-View Map and Media.",
       "verification": "All five new link regressions failed on their old nation.maps.arcgis.com URLs before the fix and passed afterward. The five original items passed the existing anonymous Cascade runtime, media and representative-scroll validator with zero browser errors. Normal clicks from the generated local tutorial opened each correct original-item viewer URL with window.opener === null. Scrolling to selected instructional text confirmed its visibility for every guide. All 88 Node tests and the landing build passed.",
@@ -106,7 +114,7 @@
     },
     "organizationUnavailableFollowup": {
       "verifiedAt": "2026-10-08 03:59:04+00:00[UTC]",
-      "status": "local-pending-deployment",
+      "status": "deployed",
       "ownerDecision": "Mark Montana and NCC unavailable, and apply the same treatment to additional failing Join the party examples. Retain working links and the previously accepted Audubon limitation.",
       "taskIds": ["AL-043", "AL-045", "AL-046", "AL-049", "AL-050", "AL-051", "AL-052"],
       "preservedOrganizations": ["Audubon", "NOAA", "City of Boston", "NPCA", "PA DCNR"],
@@ -150,10 +158,10 @@
       "accepted": "Investigated and no fix needed. Not a repaired failure."
     },
     "supplementalTasks": [
-      {"id": "PH-001", "status": "pending-deployment", "source": "sourcePlaceholders", "labelPattern": "gallery", "occurrences": 37, "action": "Leave the 20 app Overview/Tutorial Gallery tabs, 10 app-specific Explore/Browse gallery links and one How-to Gallery reference unchanged per owner instruction. Remove the Home mini-gallery and its call-to-action wrapper. Unlink the two FAQ references labelled Story Maps Gallery, preserving their text. Verify the Home and FAQ changes after deployment; the separate old FAQ gallery URL remains tracked by AL-011. Retain legitimate menu and Top controls.", "verifiedAt": "2026-10-08 18:28:00+00:00[UTC]", "currentBuild": {"galleryPlaceholdersBeforeHomeRemoval": 34, "acceptedUnchanged": 31, "homeCallToAction": "removed-locally-pending-deployment", "faqReferences": "two-unlinked-locally-pending-deployment", "howToReference": "owner-accepted-unchanged", "remainingUndecided": 0}, "verification": "Focused generated-page regression and desktop/mobile browser checks confirm both Home blocks are absent and The Bare Earth remains. Regression confirms all 20 app tabs and 10 app gallery calls to action remain unchanged. FAQ regression and browser check confirm both named references are plain text; other FAQ links remain unchanged. Live How-to Gallery link is visible at 1440px and 390px beneath Get ideas and get inspired!, blue without underline, href=#, and the owner accepts it unchanged. All 94 Node tests passed. Original occurrence count retained as crawl evidence; PH-001 awaits deployment verification only."},
-      {"id": "PH-002", "status": "pending-deployment", "source": "sourcePlaceholders", "labelPattern": "Developers' Corner", "occurrences": 11, "action": "Owner selected plain text for all Story Maps Developers' Corner references. Unwrap the 11 anchors while preserving their heading markup and wording; leave Map Tour's existing unlinked heading unchanged. Verify after deployment.", "verifiedAt": "2026-10-08 18:35:10+00:00[UTC]", "verification": "Regression verifies all 12 text occurrences remain and no matching anchors remain. Desktop/mobile browser checks on Cascade, Journal, Resources and FAQs passed. All 95 Node tests passed. Original captures unchanged; not committed or deployed."},
-      {"id": "PH-003", "status": "pending-deployment", "source": "sourcePlaceholders", "labelPattern": "Learn ArcGIS", "occurrences": 3, "action": "Owner selected https://learn.arcgis.com for the three lesson links; this explicitly replaces the earlier requirement to recover specific lessons. Preserve labels and new-tab behavior with noopener noreferrer. Leave Map Tour's already unlinked heading unchanged. Verify after deployment.", "verifiedAt": "2026-10-08 18:35:10+00:00[UTC]", "verification": "Regression verifies three exact destinations and new-tab attributes. Desktop/mobile checks passed; normal Resources link click settled at https://learn.arcgis.com/en/gallery/ with title Tutorial Gallery | Documentation and null window.opener. Earlier checks raced external redirects; settled check succeeded. All 95 Node tests passed. Not committed or deployed."},
-      {"id": "PH-004", "status": "pending-deployment", "source": "sourcePlaceholders", "labelPattern": "^(this link|linked|embedded)$", "occurrences": 4, "action": "Owner approved each reference: unlink this link in question6, linked and embedded in question9, and this link in question19, preserving all answer text. Verify all four removals after deployment. The separate here link in question19 remains tracked by AL-011 and is unchanged.", "verifiedAt": "2026-10-08 18:46:09+00:00[UTC]", "currentBuild": {"question6ThisLink": "unlinked-locally-pending-deployment", "question9Linked": "unlinked-locally-pending-deployment", "question9Embedded": "unlinked-locally-pending-deployment", "question19ThisLink": "unlinked-locally-pending-deployment", "remainingUndecided": 0}, "verification": "Focused regressions failed before the changes and passed afterward, comparing full question6, question9 and question19 answers against the capture with only approved anchors removed. Browser confirms zero PH-004 anchors remain and the AL-011 here link is unchanged. All 96 Node tests passed. Raw capture unchanged; not committed or deployed."},
+      {"id": "PH-001", "status": "resolved", "source": "sourcePlaceholders", "labelPattern": "gallery", "occurrences": 37, "action": "Leave the 20 app Overview/Tutorial Gallery tabs, 10 app-specific Explore/Browse gallery links and one How-to Gallery reference unchanged per owner instruction. Remove the Home mini-gallery and its call-to-action wrapper. Unlink the two FAQ references labelled Story Maps Gallery, preserving their text. Verify the Home and FAQ changes after deployment; the separate old FAQ gallery URL remains tracked by AL-011. Retain legitimate menu and Top controls.", "verifiedAt": "2026-10-08 18:28:00+00:00[UTC]", "currentBuild": {"galleryPlaceholdersBeforeHomeRemoval": 34, "acceptedUnchanged": 31, "homeCallToAction": "removed-locally-pending-deployment", "faqReferences": "two-unlinked-locally-pending-deployment", "howToReference": "owner-accepted-unchanged", "remainingUndecided": 0}, "verification": "Focused generated-page regression and desktop/mobile browser checks confirm both Home blocks are absent and The Bare Earth remains. Regression confirms all 20 app tabs and 10 app gallery calls to action remain unchanged. FAQ regression and browser check confirm both named references are plain text; other FAQ links remain unchanged. Live How-to Gallery link is visible at 1440px and 390px beneath Get ideas and get inspired!, blue without underline, href=#, and the owner accepts it unchanged. All 94 Node tests passed. Original occurrence count retained as crawl evidence; PH-001 awaits deployment verification only."},
+      {"id": "PH-002", "status": "resolved", "source": "sourcePlaceholders", "labelPattern": "Developers' Corner", "occurrences": 11, "action": "Owner selected plain text for all Story Maps Developers' Corner references. Unwrap the 11 anchors while preserving their heading markup and wording; leave Map Tour's existing unlinked heading unchanged. Verify after deployment.", "verifiedAt": "2026-10-08 18:35:10+00:00[UTC]", "verification": "Regression verifies all 12 text occurrences remain and no matching anchors remain. Desktop/mobile browser checks on Cascade, Journal, Resources and FAQs passed. All 95 Node tests passed. Original captures unchanged; not committed or deployed."},
+      {"id": "PH-003", "status": "resolved", "source": "sourcePlaceholders", "labelPattern": "Learn ArcGIS", "occurrences": 3, "action": "Owner selected https://learn.arcgis.com for the three lesson links; this explicitly replaces the earlier requirement to recover specific lessons. Preserve labels and new-tab behavior with noopener noreferrer. Leave Map Tour's already unlinked heading unchanged. Verify after deployment.", "verifiedAt": "2026-10-08 18:35:10+00:00[UTC]", "verification": "Regression verifies three exact destinations and new-tab attributes. Desktop/mobile checks passed; normal Resources link click settled at https://learn.arcgis.com/en/gallery/ with title Tutorial Gallery | Documentation and null window.opener. Earlier checks raced external redirects; settled check succeeded. All 95 Node tests passed. Not committed or deployed."},
+      {"id": "PH-004", "status": "resolved", "source": "sourcePlaceholders", "labelPattern": "^(this link|linked|embedded)$", "occurrences": 4, "action": "Owner approved each reference: unlink this link in question6, linked and embedded in question9, and this link in question19, preserving all answer text. Verify all four removals after deployment. The separate here link in question19 remains tracked by AL-011 and is unchanged.", "verifiedAt": "2026-10-08 18:46:09+00:00[UTC]", "currentBuild": {"question6ThisLink": "unlinked-locally-pending-deployment", "question9Linked": "unlinked-locally-pending-deployment", "question9Embedded": "unlinked-locally-pending-deployment", "question19ThisLink": "unlinked-locally-pending-deployment", "remainingUndecided": 0}, "verification": "Focused regressions failed before the changes and passed afterward, comparing full question6, question9 and question19 answers against the capture with only approved anchors removed. Browser confirms zero PH-004 anchors remain and the AL-011 here link is unchanged. All 96 Node tests passed. Raw capture unchanged; not committed or deployed."},
       {"id": "RT-001", "status": "resolved", "source": "archive-examples-audit.md", "title": "Epic Flight mixed content", "itemId": "016c31c6dcd54c7ca635cc63e4bc82a4", "verification": "Owner changed both Web Map layer URLs to HTTPS. Fresh unmocked runtime and second-entry check passed with no browser errors. Selecting this example in the archive still awaits site deployment under AL-018."},
       {"id": "RV-001", "status": "accepted", "source": "archive-link-audit.md", "title": "Contest-year links converge on a combined winners archive", "acceptedAt": "2026-10-08 19:43:07+00:00[UTC]", "action": "Owner accepts each contest-year link converging on the combined winners archive. Preserve existing destinations and labels; no code change required."},
       {"id": "ENV-001", "status": "resolved", "source": "archive-link-audit.md", "title": "Temporary preview slashless runtime directories return 404", "verifiedAt": "2026-10-08 19:59:19+00:00[UTC]", "action": "Replaced the temporary inline preview with scripts/preview-server.mjs on the same loopback port 61326. Directory requests now receive 308 trailing-slash redirects preserving encoded paths and query strings. The browser-release validator shares the tested handler. Production was already correct and was not changed.", "verification": "Live local failure reproduced as HTTP 404 before the fix. Two redirect regressions failed before repair; all five preview tests now pass, including directory/root redirects, encoded paths, ordinary files, missing/outside-prefix paths and HEAD. All 112 Node tests passed. The original slashless Lincoln URL with appid=c50be5615f024cc482ccb88222a8719d redirects to /viewers/maptour/ with appid intact, returns 200, and renders The Assassination of Abraham Lincoln at desktop/mobile sizes with no failed local resources. Both screenshots inspected. Temporary self-signed localhost certificate; no system trust changes. Code remains uncommitted; local-tooling resolution does not depend on production deployment."}
@@ -398,7 +406,7 @@
     },
     {
       "url": "http://bit.ly/1cImr14",
-      "triage": {"id": "AL-001", "status": "pending-deployment", "action": "Owner requested removal of Playlist download links. Both shortlink anchors are unwrapped; text retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile Overview/Tutorial checks passed. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-001", "status": "resolved", "action": "Owner requested removal of Playlist download links. Both shortlink anchors are unwrapped; text retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile Overview/Tutorial checks passed. All 97 Node tests passed; not deployed."},
       "final": "https://github.com/Esri/playlist-storytelling-template-js/blob/master/Playlist.zip?raw=true",
       "status": 404,
       "title": "Page not found · GitHub · GitHub",
@@ -435,7 +443,7 @@
     },
     {
       "url": "http://bit.ly/1eML1U4",
-      "triage": {"id": "AL-002", "status": "pending-deployment", "action": "Owner requested removal of Countdown download links. Shortlink anchor is unwrapped; heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-002", "status": "resolved", "action": "Owner requested removal of Countdown download links. Shortlink anchor is unwrapped; heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
       "final": "https://github.com/Esri/countdown-storytelling-template-js/archive/master.zip",
       "status": 404,
       "title": "",
@@ -760,7 +768,7 @@
     },
     {
       "url": "http://geoportal.tversu.ru/Atlas/norway12/index.html",
-      "triage": {"id": "AL-003", "status": "pending-deployment", "verifiedAt": "2026-10-08 19:53:06+00:00[UTC]", "action": "Owner requested keeping the Norway image but removing its link. Build-time normalization unwraps the Norway anchor and removes its View this story map caption; the image and neighboring Story Locator link remain unchanged.", "verification": "Regression failed before the change and passed afterward. All 106 Node tests and the local landing build passed. Chromium at 1440px and 390px confirmed the image loads, has no anchor/caption, and fits the viewport; both screenshots inspected. Original capture preserved. No claim about remote atlas availability. Not committed or deployed."},
+      "triage": {"id": "AL-003", "status": "resolved", "verifiedAt": "2026-10-08 19:53:06+00:00[UTC]", "action": "Owner requested keeping the Norway image but removing its link. Build-time normalization unwraps the Norway anchor and removes its View this story map caption; the image and neighboring Story Locator link remain unchanged.", "verification": "Regression failed before the change and passed afterward. All 106 Node tests and the local landing build passed. Chromium at 1440px and 390px confirmed the image loads, has no anchor/caption, and fits the viewport; both screenshots inspected. Original capture preserved. No claim about remote atlas availability. Not committed or deployed."},
       "final": "http://geoportal.tversu.ru/Atlas/norway12/index.html",
       "title": "",
       "error": "UND_ERR_CONNECT_TIMEOUT",
@@ -997,7 +1005,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/blog_all",
-      "triage": {"id": "AL-004", "status": "pending-deployment", "action": "Owner-selected internal blog notice replaces the broken listing link; see triage.blogNoticePolicy."},
+      "triage": {"id": "AL-004", "status": "resolved", "action": "Owner-selected internal blog notice replaces the broken listing link; see triage.blogNoticePolicy."},
       "final": "https://community.esri.com/en/community/gis/web-gis/storymaps/content?filterID=contentstatus%5Bpublished%5D%7Eobjecttype%7Eobjecttype%5Bblogpost%5D&sortKey=contentstatus%5Bpublished%5D%7EcreationDateDesc&sortOrder=0",
       "status": 404,
       "title": "Esri Community",
@@ -1116,7 +1124,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/blog_custom_crowdsource_panel",
-      "triage": {"id": "AL-005", "status": "pending-deployment", "action": "Owner-selected internal blog notice replaces the Crowdsource panel article link; see triage.blogNoticePolicy."},
+      "triage": {"id": "AL-005", "status": "resolved", "action": "Owner-selected internal blog notice replaces the Crowdsource panel article link; see triage.blogNoticePolicy."},
       "final": "https://developerscorner.storymaps.arcgis.com/how-to-personalize-your-crowdsource-story-even-more-a9ccfef11af3",
       "title": "",
       "error": "ENOTFOUND",
@@ -1215,7 +1223,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/blog_html_in_map_tour_captions",
-      "triage": {"id": "AL-006", "status": "pending-deployment", "action": "Owner-selected internal blog notice replaces the Map Tour captions article link; see triage.blogNoticePolicy."},
+      "triage": {"id": "AL-006", "status": "resolved", "action": "Owner-selected internal blog notice replaces the Map Tour captions article link; see triage.blogNoticePolicy."},
       "final": "https://developerscorner.storymaps.arcgis.com/styling-map-tour-text-with-html-and-css-7b0c57c1b7ad",
       "title": "",
       "error": "ENOTFOUND",
@@ -1586,7 +1594,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/newsletter_signup",
-      "triage": {"id": "AL-007", "status": "pending-deployment", "destination": "https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup", "action": "Use the owner-selected newsletter signup destination for all three links; see triage.newsletterAndSocialDecisions."},
+      "triage": {"id": "AL-007", "status": "resolved", "destination": "https://www.esri.com/en-us/arcgis/products/arcgis-storymaps/newsletter-signup", "action": "Use the owner-selected newsletter signup destination for all three links; see triage.newsletterAndSocialDecisions."},
       "final": "http://go.esri.com/planet-story-maps",
       "title": "",
       "error": "The operation was aborted due to timeout",
@@ -1634,7 +1642,7 @@
     },
     {
       "url": "http://links.esri.com/storymaps/premium_content",
-      "triage": {"id": "AL-008", "status": "pending-deployment", "action": "Owner-selected internal blog notice replaces the premium-content article link; see triage.blogNoticePolicy."},
+      "triage": {"id": "AL-008", "status": "resolved", "action": "Owner-selected internal blog notice replaces the premium-content article link; see triage.blogNoticePolicy."},
       "final": "https://www.esri.com/arcgis-blog/products/arcgis-enterprise/uncategorized/using-living-atlas-subscriber-content-in-public-maps-and-apps",
       "status": 404,
       "title": "Sites 404",
@@ -2007,7 +2015,7 @@
     },
     {
       "url": "http://marketplace.arcgis.com/",
-      "triage": {"id": "AL-010", "status": "pending-deployment", "destination": "https://support.esri.com/en-us/knowledge-base/arcgis-marketplace-retirement-000041842", "verifiedAt": "2026-10-08 19:15:50+00:00[UTC]", "action": "Owner selected the ArcGIS Marketplace Retirement support article. Rewrite direct and Wayback-wrapped Marketplace homepage links, retaining existing labels and attributes.", "verification": "Official destination content confirms ArcGIS Marketplace Retirement, article 000041842. Regression failed before the rewrite and passed afterward, covering all published HTML. All 100 Node tests and the local landing build passed. Captures and historical crawl observations unchanged. Not committed or deployed."},
+      "triage": {"id": "AL-010", "status": "resolved", "destination": "https://support.esri.com/en-us/knowledge-base/arcgis-marketplace-retirement-000041842", "verifiedAt": "2026-10-08 19:15:50+00:00[UTC]", "action": "Owner selected the ArcGIS Marketplace Retirement support article. Rewrite direct and Wayback-wrapped Marketplace homepage links, retaining existing labels and attributes.", "verification": "Official destination content confirms ArcGIS Marketplace Retirement, article 000041842. Regression failed before the rewrite and passed afterward, covering all published HTML. All 100 Node tests and the local landing build passed. Captures and historical crawl observations unchanged. Not committed or deployed."},
       "final": "https://www.esri.com/en-us/about/partners/find-partner?rsource=https%3A%2F%2Fwww.esri.com%2Fen-us%2Farcgis-marketplace%2Foverview",
       "status": 200,
       "title": "Find a Partner | Search All Esri Partners",
@@ -2148,7 +2156,7 @@
     },
     {
       "url": "http://storymaps.arcgis.com/en/gallery/",
-      "triage": {"id": "AL-011", "status": "pending-deployment", "action": "Owner requested unlinking here in FAQ question19. Anchor removed; text and other links retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Regression compares the full answer against the original with approved anchors unwrapped. Browser confirms here is plain text. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-011", "status": "resolved", "action": "Owner requested unlinking here in FAQ question19. Anchor removed; text and other links retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Regression compares the full answer against the original with approved anchors unwrapped. Browser confirms here is plain text. All 97 Node tests passed; not deployed."},
       "final": "https://storymaps-classic.arcgis.com/en/gallery",
       "title": "",
       "error": "ENOTFOUND",
@@ -2638,7 +2646,7 @@
     },
     {
       "url": "http://www.esri.com/events/devsummit/index.html",
-      "triage": {"id": "AL-016", "status": "pending-deployment", "approvedDestination": "https://www.esri.com/en-us/about/events/devtech/overview", "verifiedAt": "2026-10-08 19:18:28+00:00[UTC]", "action": "Owner selected the official Esri Developer & Technology Summit overview. No destination rewrite is currently needed: the shared-footer replacement already removes the legacy Summit links. Retain the approved URL for any future restored reference without reintroducing the old footer.", "verification": "Official destination content confirms Esri Developer & Technology Summit. Three legacy references remain preserved in source captures; zero Summit labels or legacy event paths were found across 98 generated HTML files. No code or capture changes made for this decision. Verify absence on the live site at the next deployment before closing the task."},
+      "triage": {"id": "AL-016", "status": "resolved", "approvedDestination": "https://www.esri.com/en-us/about/events/devtech/overview", "verifiedAt": "2026-10-08 19:18:28+00:00[UTC]", "action": "Owner selected the official Esri Developer & Technology Summit overview. No destination rewrite is currently needed: the shared-footer replacement already removes the legacy Summit links. Retain the approved URL for any future restored reference without reintroducing the old footer.", "verification": "Official destination content confirms Esri Developer & Technology Summit. Three legacy references remain preserved in source captures; zero Summit labels or legacy event paths were found across 98 generated HTML files. No code or capture changes made for this decision. Verify absence on the live site at the next deployment before closing the task."},
       "final": "https://www.esri.com/events/devsummit/index.html",
       "status": 404,
       "title": "Sites 404",
@@ -3030,7 +3038,7 @@
     },
     {
       "url": "https://collections.storymaps.esri.com/shortlists/",
-      "triage": {"id": "AL-019", "status": "pending-deployment", "action": "Owner-selected unlinking of both Shortlists collection references, retaining text; see triage.collectionLinkRemoval."},
+      "triage": {"id": "AL-019", "status": "resolved", "action": "Owner-selected unlinking of both Shortlists collection references, retaining text; see triage.collectionLinkRemoval."},
       "final": "https://collections.storymaps.esri.com/shortlists/",
       "title": "",
       "error": "CERT_HAS_EXPIRED",
@@ -8661,7 +8669,7 @@
     },
     {
       "url": "https://developerscorner.storymaps.arcgis.com/create-buttons-for-main-stage-actions-using-the-style-tag-144b3aeb5583",
-      "triage": {"id": "AL-021", "status": "pending-deployment", "action": "Owner-selected internal blog notice replaces the main-stage-action buttons article link; see triage.blogNoticePolicy."},
+      "triage": {"id": "AL-021", "status": "resolved", "action": "Owner-selected internal blog notice replaces the main-stage-action buttons article link; see triage.blogNoticePolicy."},
       "final": "https://developerscorner.storymaps.arcgis.com/create-buttons-for-main-stage-actions-using-the-style-tag-144b3aeb5583",
       "title": "",
       "error": "ENOTFOUND",
@@ -8722,7 +8730,7 @@
     },
     {
       "url": "https://geonet.esri.com/thread/150596",
-      "triage": {"id": "AL-022", "status": "pending-deployment", "destination": "https://community.esri.com/en/discussion/comment/499570#Comment_499570", "verifiedAt": "2026-10-08 19:28:02+00:00[UTC]", "action": "Owner supplied the migrated Community answer for GeoNet thread 150596. Use the clean comment permalink, omitting the supplied tracking suffix after the fragment. Preserve the FAQ question39 answer and this GeoNet question label.", "verification": "Official discussion title is Can you increase the number of bullets in a story map series? Chromium with normal certificate validation returned HTTP 200 and found visible comment 499570 describing MAX_NB_ENTRIES. The comment ID occurs in both All Replies and Accepted Answers, so verification was scoped to All Replies. The regression failed before the rewrite and passed afterward, comparing the full answer with only the href changed. All 102 Node tests and the local landing build passed. Original source captures and historical crawl evidence unchanged. Not committed or deployed."},
+      "triage": {"id": "AL-022", "status": "resolved", "destination": "https://community.esri.com/en/discussion/comment/499570#Comment_499570", "verifiedAt": "2026-10-08 19:28:02+00:00[UTC]", "action": "Owner supplied the migrated Community answer for GeoNet thread 150596. Use the clean comment permalink, omitting the supplied tracking suffix after the fragment. Preserve the FAQ question39 answer and this GeoNet question label.", "verification": "Official discussion title is Can you increase the number of bullets in a story map series? Chromium with normal certificate validation returned HTTP 200 and found visible comment 499570 describing MAX_NB_ENTRIES. The comment ID occurs in both All Replies and Accepted Answers, so verification was scoped to All Replies. The regression failed before the rewrite and passed afterward, comparing the full answer with only the href changed. All 102 Node tests and the local landing build passed. Original source captures and historical crawl evidence unchanged. Not committed or deployed."},
       "final": "https://community.esri.com/en/thread/150596",
       "status": 404,
       "title": "Esri Community",
@@ -8754,7 +8762,7 @@
     },
     {
       "url": "https://github.com/Esri/countdown-storytelling-template-js",
-      "triage": {"id": "AL-023", "status": "pending-deployment", "action": "Owner requested removal of Countdown download links. Source-download repository anchor is unwrapped; Go to GitHub heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-023", "status": "resolved", "action": "Owner requested removal of Countdown download links. Source-download repository anchor is unwrapped; Go to GitHub heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
       "final": "https://github.com/Esri/countdown-storytelling-template-js",
       "status": 404,
       "title": "Page not found · GitHub · GitHub",
@@ -8775,7 +8783,7 @@
     },
     {
       "url": "https://github.com/Esri/countdown-storytelling-template-js/archive/master.zip",
-      "triage": {"id": "AL-024", "status": "pending-deployment", "action": "Owner requested removal of Countdown download links. Both ZIP anchors are unwrapped; instructional text retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile Overview/Tutorial checks passed. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-024", "status": "resolved", "action": "Owner requested removal of Countdown download links. Both ZIP anchors are unwrapped; instructional text retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile Overview/Tutorial checks passed. All 97 Node tests passed; not deployed."},
       "final": "https://github.com/Esri/countdown-storytelling-template-js/archive/master.zip",
       "status": 404,
       "title": "",
@@ -8858,7 +8866,7 @@
     },
     {
       "url": "https://github.com/Esri/map-tour-storytelling-template-js/archive/master.zip",
-      "triage": {"id": "AL-025", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-tour/archive/refs/heads/master.zip", "action": "Use the canonical current source ZIP and relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads for verified archive, commit and browser checks; not deployed."},
+      "triage": {"id": "AL-025", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-tour/archive/refs/heads/master.zip", "action": "Use the canonical current source ZIP and relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads for verified archive, commit and browser checks; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-tour/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -8890,7 +8898,7 @@
     },
     {
       "url": "https://github.com/Esri/playlist-storytelling-template-js",
-      "triage": {"id": "AL-026", "status": "pending-deployment", "action": "Owner requested removal of Playlist download links. Source-download repository anchor is unwrapped; Go to GitHub heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
+      "triage": {"id": "AL-026", "status": "resolved", "action": "Owner requested removal of Playlist download links. Source-download repository anchor is unwrapped; Go to GitHub heading retained.", "verifiedAt": "2026-10-08 18:50:26+00:00[UTC]", "verification": "Focused regression and desktop/mobile checks passed. All 97 Node tests passed; not deployed."},
       "final": "https://github.com/Esri/playlist-storytelling-template-js",
       "status": 404,
       "title": "Page not found · GitHub · GitHub",
@@ -8957,7 +8965,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-basic/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-027", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-basic/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-027", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-basic/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-basic/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -8984,7 +8992,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-cascade/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-028", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-cascade/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP) and use canonical HTTPS GitHub link.", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-028", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-cascade/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP) and use canonical HTTPS GitHub link.", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-cascade/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9031,7 +9039,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-crowdsource/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-029", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-crowdsource/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-029", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-crowdsource/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-crowdsource/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9078,7 +9086,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-journal/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-030", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-journal/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-030", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-journal/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-journal/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9125,7 +9133,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-series/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-031", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-series/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-031", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-series/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-series/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9182,7 +9190,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-shortlist/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-032", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-shortlist/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-032", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-shortlist/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-shortlist/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9229,7 +9237,7 @@
     },
     {
       "url": "https://github.com/Esri/storymap-swipe/archive/refs/heads/master.zip",
-      "triage": {"id": "AL-033", "status": "pending-deployment", "sourceZip": "https://github.com/Esri/storymap-swipe/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
+      "triage": {"id": "AL-033", "status": "resolved", "sourceZip": "https://github.com/Esri/storymap-swipe/archive/refs/heads/master.zip", "action": "Retain verified current source ZIP; relabel as Download current source (ZIP).", "verification": "See triage.currentSourceDownloads; not deployed."},
       "final": "https://codeload.github.com/Esri/storymap-swipe/zip/refs/heads/master",
       "status": 200,
       "title": "",
@@ -9574,7 +9582,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/story_map_collection_instructional",
-      "triage": {"id": "AL-039", "status": "pending-deployment", "action": "Owner-selected unlinking of Instructional Story Maps collection, retaining text; see triage.collectionLinkRemoval."},
+      "triage": {"id": "AL-039", "status": "resolved", "action": "Owner-selected unlinking of Instructional Story Maps collection, retaining text; see triage.collectionLinkRemoval."},
       "final": "https://collections.storymaps.esri.com/how-to-stories/",
       "title": "",
       "error": "CERT_HAS_EXPIRED",
@@ -9601,7 +9609,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/story_map_collection_oceans",
-      "triage": {"id": "AL-040", "status": "pending-deployment", "action": "Owner-selected unlinking of Oceans collection, retaining text; see triage.collectionLinkRemoval."},
+      "triage": {"id": "AL-040", "status": "resolved", "action": "Owner-selected unlinking of Oceans collection, retaining text; see triage.collectionLinkRemoval."},
       "final": "https://collections.storymaps.esri.com/ocean-stories/",
       "title": "",
       "error": "CERT_HAS_EXPIRED",
@@ -9633,7 +9641,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/story_map_collections",
-      "triage": {"id": "AL-041", "status": "pending-deployment", "action": "Owner-selected unlinking of All Story Map Collections index, retaining text; see triage.collectionLinkRemoval."},
+      "triage": {"id": "AL-041", "status": "resolved", "action": "Owner-selected unlinking of All Story Map Collections index, retaining text; see triage.collectionLinkRemoval."},
       "final": "https://storymaps-classic.arcgis.com/en/gallery",
       "title": "",
       "error": "ENOTFOUND",
@@ -10703,7 +10711,7 @@
     },
     {
       "url": "https://twitter.com/EsriStoryMaps",
-      "triage": {"id": "AL-061", "status": "pending-deployment", "action": "Remove social profile links and suppress viewer social-sharing controls under the owner-wide no-social-links decision; see triage.newsletterAndSocialDecisions. No claim about whether the external profile exists."},
+      "triage": {"id": "AL-061", "status": "resolved", "action": "Remove social profile links and suppress viewer social-sharing controls under the owner-wide no-social-links decision; see triage.newsletterAndSocialDecisions. No claim about whether the external profile exists."},
       "final": "https://x.com/EsriStoryMaps",
       "status": 404,
       "title": "User Profile Not Found - X | 404 Error",
