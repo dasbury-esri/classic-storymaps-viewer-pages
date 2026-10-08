@@ -9835,7 +9835,7 @@
     },
     {
       "url": "https://links.esri.com/storymaps/user/montana_fwp",
-      "triage": {"id": "AL-045", "status": "open"},
+      "triage": {"id": "AL-045", "status": "open", "itemId": "0fa1de4222074cdeb7dbf0710ecb2ee0", "verification": "The retired Montana FWP Cascade endpoint references this item. Anonymous metadata and data requests through both www.arcgis.com and mtfwp.maps.arcgis.com return ArcGIS error 400, CONT_0001, Item does not exist or is inaccessible, despite HTTP 200. This does not distinguish deletion from restricted access. The organization's StoryMaps-filtered gallery redirects to Sign In and displays Sign in to Montana Fish, Wildlife & Parks. No sign-in was attempted; no viewer replacement was made.", "rejectedCandidateUrl": "https://mtfwp.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap", "nextAction": "Owner decision required: provide an approved public replacement or mark the organization example unavailable. Do not use the sign-in-only gallery as a public replacement."},
       "final": "https://mtfwp.maps.arcgis.com/apps/Cascade/index.html?appid=0fa1de4222074cdeb7dbf0710ecb2ee0",
       "status": 200,
       "title": "Item Replacement",

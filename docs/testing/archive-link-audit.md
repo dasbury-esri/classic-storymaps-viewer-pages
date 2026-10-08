@@ -114,7 +114,8 @@ are not recertified.
 
 ### P1: Story and Organization Examples
 
-Next bounded check: Montana FWP (AL-045). For retired endpoints,
+Montana FWP (AL-045) now needs an owner decision: its original item is inaccessible
+and its gallery requires sign-in. For retired endpoints,
 inspect the public item and try the matching supported viewer. Verify actual
 content and one representative interaction before selecting a replacement.
 For missing sites, locate a suitable preserved capture or explicitly mark the
@@ -122,7 +123,7 @@ destination unavailable. Do not infer that an item was deleted from a blank host
 
 - [ ] AL-013 `open`: Countdown Ports example returns 404; locate a preserved working example.
 - [ ] AL-014 `open`: Countdown Refugee Camps example returns 404; locate a preserved working example.
-- [ ] AL-045 `open`: Montana FWP organization example is blank; test its Cascade item with the viewer.
+- [ ] AL-045 `open`: Original Cascade item is inaccessible anonymously through both ArcGIS endpoints; the organization gallery redirects to sign-in. Owner decision needed: public replacement or unavailable state. See the follow-up below.
 - [ ] AL-046 `open`: NCC organization gallery is blank; find a preserved gallery or suitable destination.
 - [ ] AL-049 `open`: NPS organization example returns 404; test the referenced Journal item or find a preserved example.
 - [ ] AL-050 `open`: Nature Conservancy organization example returns 404; find a preserved Ogooue field-notes story.
@@ -431,6 +432,22 @@ The local landing build passed. A normal tile click opened the exact URL in a
 new tab with `window.opener === null`; "Gallery for BostonMaps" and the "Land Use
 Update" result were visible without signing in. Individual gallery stories were
 not recertified. AL-044 remains pending deployment and a production click check.
+
+## AL-045 Follow-up: Owner Decision Needed
+
+The retired Montana FWP Cascade endpoint references item
+`0fa1de4222074cdeb7dbf0710ecb2ee0`. Anonymous metadata and data requests through
+both `www.arcgis.com` and `mtfwp.maps.arcgis.com` return ArcGIS error 400,
+`CONT_0001`, "Item does not exist or is inaccessible", despite HTTP 200. This
+does not distinguish deletion from restricted access. A local viewer rewrite
+cannot recover an item that it cannot read.
+
+The candidate organization gallery at
+<https://mtfwp.maps.arcgis.com/home/gallery.html?sortField=relevance&sortOrder=desc&mode=keyword&focus=applications-storymap>
+redirected to a page titled "Sign In", displaying "Sign in to Montana Fish,
+Wildlife & Parks". It is not an anonymous replacement. No sign-in was attempted
+and no destination rewrite was made. The owner must select a public replacement
+or approve an explicit unavailable state before this task can proceed.
 
 ## NOAA Follow-up
 
