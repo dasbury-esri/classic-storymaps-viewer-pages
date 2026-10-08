@@ -13,6 +13,40 @@ The [original burn-down](archive-link-audit.md) is complete: 64 resolved and 5 a
 This fresh audit expands into rendered story content without overwriting original
 observations or reversing accepted limitations. New findings were not automatically fixed.
 
+## Verified Cleanup Release
+
+Verified live: 2026-10-08 23:34:04+00:00[UTC]. Release
+`52606da58715ba74e1180a2711c6ae54533d5485` was committed, pushed and deployed by
+[Pages run 37859406291](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37859406291).
+Both build and deploy jobs succeeded. Local release gates passed: 116 Node tests,
+all ten workflow builds and 62 actual-publish checks. CI used Node 24.
+
+- All 88 deployed first-party HTML responses matched the tested build. No My Stories
+  anchors remained. The deployed viewer policy and Cascade step-9 PNG matched local bytes.
+- The live relative launcher link opened A walking tour of the National Mall with 46 points.
+- The replacement PNG decoded in the live Cascade tutorial at 533 x 460.
+- All eight DA-003 original items passed live startup and representative interactions.
+  Normal authored-link clicks opened Transitions, the 2016 College Football Recruiting
+  Class and 737 Novels in local viewers, with original IDs and no opener.
+- Authored My Stories links in ways to make your story map sing were disabled;
+  a dynamically inserted My Stories anchor could not run its click handler.
+- The Sections guide's Cascade and other story map templates links used the approved
+  Esri Classic product URL. The Great In-Between exposed 80 rewritten journal-entry
+  anchors across DOM copies, all pointing to the approved Wayback homepage.
+
+Sections again recorded a late canceled YouTube iframe request after passing its
+interaction check. Crowdsource recorded three canceled feature queries during teardown.
+These do not certify every remote media resource; individual story repairs remain separate.
+The integrated browser did not expose a popup event, so normal-click popup verification
+was completed in standalone Chromium with standard TLS validation.
+
+DA-001, DA-002, DA-003, DA-005, DA-006 and DA-007 are resolved. The original crawl
+observations below and the dated local follow-up notes remain historical evidence;
+their earlier pending-deployment wording is superseded by this release verification.
+The Pages API still reports `cname: null`, and `SITE_BASE_PATH` remains
+`/classic-storymaps-viewer-pages`. The owner will enable the custom domain separately;
+root-domain hosting requires an empty `SITE_BASE_PATH` and a corresponding rebuild.
+
 ## Coverage
 
 - 426 distinct HTTP(S) destinations, including HTTP/HTTPS aliases.
@@ -35,19 +69,19 @@ No sign-ins, certificate bypasses, form submissions, remote edits or new depende
 
 ## Findings
 
-**6 open groups, 6 pending deployment and 3 verification groups cover 106 destination URLs.** Counts include
+**6 resolved groups, 6 open story groups and 3 story verification groups cover 106 destination URLs.** Nothing remains pending deployment. Counts include
 aliases, not independent broken sites. The original 116 automated flags remain separate
 from reviewed assessments. Exact URLs, referring pages/labels and observations are in JSON.
 
 | ID | Priority | Status | URLs | Finding |
 | --- | --- | --- | ---: | --- |
-| DA-001 | P1 | pending-deployment | 1 | My Stories links removed locally; text retained. |
-| DA-002 | P1 | pending-deployment | 1 | Launcher example uses a document-relative URL locally. |
-| DA-003 | P1 | pending-deployment | 8 | Authored cross-links use local viewers and original item IDs locally. |
+| DA-001 | P1 | resolved | 1 | My Stories links removed; text retained and live behavior verified. |
+| DA-002 | P1 | resolved | 1 | Relative launcher example opens the National Mall tour live. |
+| DA-003 | P1 | resolved | 8 | Authored cross-links use local viewers and original item IDs; verified live. |
 | DA-004 | P1 | open | 1 | World Ecosystems Journal blocks navigation with a sign-in dialog. |
-| DA-005 | P2 | pending-deployment | 1 | Owner replaced the Cascade tutorial step-9 image locally with a valid PNG. |
-| DA-006 | P2 | pending-deployment | 5 | Retired Classic links and audited aliases use the owner-selected product page locally. |
-| DA-007 | P2 | pending-deployment | 10 | Travel-blog links use the owner-selected Wayback homepage locally. |
+| DA-005 | P2 | resolved | 1 | Owner-replaced Cascade step-9 PNG decodes correctly live. |
+| DA-006 | P2 | resolved | 5 | Retired Classic links and audited aliases use the approved product page live. |
+| DA-007 | P2 | resolved | 10 | Travel-blog links use the owner-selected Wayback homepage live. |
 | DA-008 | P2 | open | 14 | Authored reference links return HTTP errors. |
 | DA-009 | P2 | open | 2 | Headquarters and NA-Pizza domains redirect to domain-sale URLs. |
 | DA-010 | P2 | open | 1 | An external destination fails certificate validation. |
@@ -63,9 +97,9 @@ DA-014 was a provisional review bucket; no entries remained after contextual rev
 
 All remaining open or needs-verification findings belong to individual stories.
 If individual story repairs are deferred, no additional site-level fix remains
-identified by this audit. The next site-level work is deployment and live verification
-of the six locally completed groups: DA-001, DA-002, DA-003, DA-005, DA-006 and DA-007.
-This does not certify untested content or authorize a deployment or custom-domain change.
+identified by this audit. Deployment and live verification of DA-001, DA-002, DA-003,
+DA-005, DA-006 and DA-007 are complete, as recorded above. This does not certify
+untested content or authorize a custom-domain change.
 
 Catalog story repairs by item ID and verified story title, retaining finding IDs as
 issue categories rather than treating each category as the next site-level task.

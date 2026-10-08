@@ -5,10 +5,39 @@
   "deployment": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37836630862",
   "base": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/",
   "triage": {
+    "cleanupRelease": {
+      "verifiedAt": "2026-10-08 23:34:04+00:00[UTC]",
+      "status": "deployed-verified",
+      "commit": "52606da58715ba74e1180a2711c6ae54533d5485",
+      "workflow": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37859406291",
+      "jobs": {"build": "success", "deploy": "success"},
+      "releaseGates": {"nodeTests": 116, "workflowBuilds": 10, "publishChecks": 62, "ciNodeMajor": 24},
+      "resolvedFindingIds": ["DA-001", "DA-002", "DA-003", "DA-005", "DA-006", "DA-007"],
+      "liveVerification": {
+        "htmlResponsesMatchingBuild": 88,
+        "myStoriesAnchorsInPublishedHtml": 0,
+        "policyAndPngMatchBuild": true,
+        "launcherExample": {"title": "A walking tour of the National Mall", "tourPoints": 46, "relativeLink": true},
+        "cascadeStep9": {"decoded": true, "width": 533, "height": 460},
+        "originalItemInteractionsPassed": 8,
+        "authoredClickThroughs": [
+          {"itemId": "7a0c165e7b404073b686f95ef98d6241", "title": "How To Cascade: Transitions", "runtime": "cascade", "noOpener": true},
+          {"itemId": "9557972486744ff18cd320d83ded9956", "title": "The 2016 College Football Recruiting Class", "runtime": "mapseries", "noOpener": true},
+          {"itemId": "734842b0043445eaaa9a2305d43c38b4", "title": "The American Experience in 737 Novels", "runtime": "crowdsource", "noOpener": true}
+        ],
+        "authoredMyStoriesDisabled": true,
+        "dynamicMyStoriesClickBlocked": true,
+        "classicProductLinkLabels": ["Cascade", "other story map templates"],
+        "travelArchiveAnchorsAcrossDomCopies": 80
+      },
+      "limitations": "Sections recorded the previously observed late canceled YouTube iframe after its interaction passed. Crowdsource recorded three canceled feature queries during teardown. The integrated browser did not expose a popup event; normal-click verification was completed in standalone Chromium without TLS bypass. Remote story media and destinations are not comprehensively certified; the 15-story repair backlog remains separate.",
+      "domain": {"cname": null, "siteBasePath": "/classic-storymaps-viewer-pages", "decision": "Unchanged. Owner will enable the custom domain after verification. Root hosting requires an empty SITE_BASE_PATH and rebuild."},
+      "history": "This release supersedes pending-deployment wording in earlier timestamped local triage notes. Original audit observations remain unchanged."
+    },
     "storyRepairBacklog": {
       "scope": "All remaining open and needs-verification findings, grouped by affected item ID and browser-verified title. Exclude individual story repairs from site cleanup when deferred; retain original finding statuses and evidence rather than marking unresolved work fixed.",
       "siteLevelFixesRemaining": 0,
-      "pendingDeploymentFindingIds": ["DA-001", "DA-002", "DA-003", "DA-005", "DA-006", "DA-007"],
+      "pendingDeploymentFindingIds": [],
       "distinctStories": 15,
       "distinctDestinations": 80,
       "storyDestinationPairs": 84,
@@ -122,7 +151,8 @@
     "browserAttempts": 400,
     "originalFlaggedDestinations": 116,
     "openFindingGroups": 6,
-    "pendingDeploymentFindingGroups": 6,
+    "pendingDeploymentFindingGroups": 0,
+    "resolvedFindingGroups": 6,
     "verificationFindingGroups": 3,
     "affectedDestinations": 106,
     "deepStories": 38,
@@ -134,7 +164,7 @@
   "findings": [
     {
       "id": "DA-001",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P1",
       "title": "My Stories remains on its loader",
       "destinations": [
@@ -143,7 +173,7 @@
     },
     {
       "id": "DA-002",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P1",
       "title": "Map Tour launcher example uses the inactive custom domain",
       "destinations": [
@@ -152,7 +182,7 @@
     },
     {
       "id": "DA-003",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P1",
       "title": "Retired hosted story cross-links return HTTP 200 unavailable or blank pages",
       "destinations": [
@@ -177,7 +207,7 @@
     },
     {
       "id": "DA-005",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P2",
       "title": "Cascade tutorial step-9 PNG contains HTML",
       "destinations": [
@@ -186,7 +216,7 @@
     },
     {
       "id": "DA-006",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P2",
       "title": "Authored Classic product links redirect to an unresolvable retired host",
       "destinations": [
@@ -199,7 +229,7 @@
     },
     {
       "id": "DA-007",
-      "status": "pending-deployment",
+      "status": "resolved",
       "priority": "P2",
       "title": "Travel-blog destinations fail DNS resolution",
       "destinations": [
