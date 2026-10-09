@@ -1,6 +1,6 @@
 {
   "verifiedAt": "2026-10-09 00:34:02+00:00[UTC]",
-  "deployment": "Local only; not committed or deployed",
+  "deployment": "Deployed and verified at 2026-10-09 01:17:42+00:00[UTC]; earlier local-only notes are historical.",
   "laterOwnerAdjustments": {
     "verifiedAt": "2026-10-09 00:52:09+00:00[UTC]",
     "shortlistSecondExample": {
@@ -984,6 +984,149 @@
     "nodeTestsPassed": 122,
     "publishChecksPassed": 68,
     "workflowBuildsPassed": 10,
-    "deployment": "Pending commit and deployment"
+    "deployment": "Deployed and verified in efb0120a2d6943f858a6b9324bef49a08de7ccb2"
+  },
+  "releaseVerification": {
+    "verifiedAt": "2026-10-09 01:17:42+00:00[UTC]",
+    "commit": "efb0120a2d6943f858a6b9324bef49a08de7ccb2",
+    "workflow": "https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37868814726",
+    "matchedFiles": [
+      "index.html",
+      "archive/index.html",
+      "archive/2017-12-10-pages/en__resources.html",
+      "archive/2017-12-10-pages/en__app-list__countdown.html",
+      "archive/2017-12-10-pages/en__app-list__cascade.html",
+      "archive/2017-12-10-pages/en__app-list__map-series.html",
+      "archive/2017-12-10-pages/en__app-list__shortlist.html",
+      "archive/2017-12-10-pages/en__app-list__crowdsource.html",
+      "viewers/assets/css/archive/support.css",
+      "viewers/assets/images/favicon.ico",
+      "viewers/favicon.ico",
+      "viewers/assets/images/archive/resources/basics.png",
+      "viewers/assets/images/archive/resources/faqs.png",
+      "viewers/assets/images/archive/resources/community.png",
+      "viewers/assets/images/archive/resources/blog.png",
+      "viewers/assets/images/archive/resources/newsletter.png",
+      "viewers/assets/images/archive/resources/developers.png",
+      "viewers/assets/images/archive/resources/trophy.png",
+      "viewers/assets/images/examples/5a9c34acf59a49f0a67d5f7293b44d6b.jpg",
+      "viewers/assets/images/examples/79798a56715c4df183448cc5b7e1b999.jpg",
+      "viewers/assets/images/examples/b861ca9ea1114af7908600022ee9d033.jpg",
+      "viewers/assets/images/examples/f2e8448fef064238ace4f324ffc16fde.jpg"
+    ],
+    "resourcesBrowser": [
+      {
+        "width": 1440,
+        "images": [
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/basics.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/faqs.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/community.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/blog.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/newsletter.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/developers.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/trophy.png",
+            "width": 400,
+            "height": 400,
+            "display": "block"
+          }
+        ],
+        "icon": {
+          "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/favicon.ico?v=folded-map",
+          "width": 64,
+          "height": 64
+        },
+        "overflow": false
+      },
+      {
+        "width": 390,
+        "images": [
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/basics.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/faqs.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/community.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/blog.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/newsletter.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/developers.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/trophy.png",
+            "width": 400,
+            "height": 400,
+            "display": "block"
+          }
+        ],
+        "icon": {
+          "url": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/assets/images/favicon.ico?v=folded-map",
+          "width": 64,
+          "height": 64
+        },
+        "overflow": false
+      }
+    ],
+    "browserErrors": [],
+    "waybackRenderingRequests": [],
+    "pages": {
+      "htmlUrl": "https://dasbury-esri.github.io/classic-storymaps-viewer-pages/",
+      "cname": null
+    }
   }
 }

@@ -55,8 +55,11 @@ Ports position at the end. The publishing transform swaps complete linked screen
 leaving the two middle examples and original capture unchanged. The ordering regression
 failed before the change and passed afterward. All 63 actual-publish checks pass;
 desktop 1440px and mobile 390px checks verified order, destinations and image decoding.
-This follow-up is not committed or deployed. Repository transfer and domain changes
-remain paused.
+This follow-up was deployed in `efb0120a2d6943f858a6b9324bef49a08de7ccb2` and
+verified live at 2026-10-09 01:17:42+00:00[UTC]. The published Countdown HTML
+matched the tested local output. See the latest deployment verification in
+[the archive example audit](archive-examples-audit.md). Repository transfer and
+domain changes remain paused.
 
 ## Coverage
 

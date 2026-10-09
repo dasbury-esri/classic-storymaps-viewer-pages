@@ -9,7 +9,29 @@ The owner-approved changes are now deployed at
 The initial audit below predates deployment; its original test counts and
 observations are retained separately from the checkpoint verification.
 
-### Deployment Checkpoint
+### Latest Deployment Verification
+
+Verified: 2026-10-09 01:17:42+00:00[UTC]. Release commit
+`efb0120a2d6943f858a6b9324bef49a08de7ccb2` deployed successfully in
+[Pages run 37868814726](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/37868814726).
+Both build and deploy jobs passed. This publishes the owner-selected example
+updates, Countdown reorder, layout illustrations, folded-map favicon, and restored
+Resources media documented below. Earlier local-only and pending-deployment notes
+are historical and superseded by this verification.
+
+All 122 Node tests, ten workflow builds, and 68 actual-publish checks passed.
+Twenty-two deployed HTML, CSS, favicon, and image files matched the tested local
+build byte-for-byte. Live Resources checks at 1440px and 390px decoded all seven
+restored images and the 64x64 favicon, with no horizontal overflow, browser errors,
+or Wayback rendering requests. The original mobile hiding of circular illustrations
+is preserved. The [evidence](artifacts/overview-examples-2026-10-09.json) includes
+the checked file list, live browser results, asset sources, and workflow URL.
+
+GitHub Pages still reports no custom domain. Repository transfer and domain changes
+remain paused. Rupert's authored-logo failure is accepted; Shale Gas's two legacy
+script errors remain documented, with its second panel verified working.
+
+### Earlier Deployment Checkpoint
 
 Verified: 2026-10-08 03:24:06+00:00[UTC]. Commit
 `5a458e1e848a140bfff2affe6746aa225ad5d793` deployed successfully in
