@@ -832,6 +832,71 @@ test('NOAA organization tile uses the owner-selected Wayback capture', () => {
   assert.ok(!html.includes('href="https://links.esri.com/storymaps/user/noaa"'));
 });
 
+test('Resources section illustrations are local PNG assets rather than missing Wayback backgrounds', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__resources.html'), 'utf8');
+  const illustrations = [...html.matchAll(/class="rsrc-circle"[^>]*background-image:url\('([^']+)'\)/g)].map(match => match[1]);
+  const names = ['basics', 'faqs', 'community', 'blog', 'newsletter', 'developers'];
+  assert.deepEqual(illustrations, names.map(name => `${base}/viewers/assets/images/archive/resources/${name}.png`));
+  assert.ok(html.includes(`href="${base}/viewers/assets/css/archive/support.css"`));
+  const stylesheet = readFileSync(path.join(publish, 'viewers/assets/css/archive/support.css'), 'utf8');
+  assert.ok(stylesheet.includes('../../images/archive/resources/trophy.png'));
+  assert.doesNotMatch(stylesheet, /web\.archive\.org/);
+  for (const name of [...names, 'trophy']) {
+    const image = readFileSync(path.join(publish, `viewers/assets/images/archive/resources/${name}.png`));
+    assert.equal(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  }
+});
+
+test('site pages use the shared local folded-map favicon', () => {
+  const files = ['index.html', 'archive/index.html', 'viewers/index.html',
+    ...runtimes.map(runtime => `viewers/${runtime}-launcher.html`),
+    'archive/2017-12-10-pages/en__app-list__shortlist.html'];
+  for (const file of files) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    const icons = [...html.matchAll(/<link\b[^>]*rel="(?:shortcut )?icon"[^>]*>/g)];
+    assert.ok(icons.length > 0, file + ': favicon exists');
+    for (const icon of icons) assert.ok(icon[0].includes(`href="${base}/viewers/assets/images/favicon.ico?v=folded-map"`), file);
+  }
+  const icon = readFileSync(path.join(publish, 'viewers/assets/images/favicon.ico'));
+  assert.equal(icon.readUInt16LE(2), 1);
+  assert.deepEqual(readFileSync(path.join(publish, 'viewers/favicon.ico')), icon);
+});
+
+test('Map Series layout options retain their compact layout illustrations', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__map-series.html'), 'utf8');
+  const options = html.slice(html.indexOf('<div class="feature-options">'), html.indexOf('<div class="clear">'));
+  assert.deepEqual([...options.matchAll(/<img[^>]*src="([^"]+)"/g)].map(match => path.basename(match[1])), [
+    'mapseries_layout_tabbed.jpg', 'mapseries_layout_side_accordion.jpg', 'mapseries_layout_bulleted.jpg',
+  ]);
+});
+
+test('Shortlist Get inspired and Map Series Side Accordion illustration use the owner-selected destinations', () => {
+  const shortlist = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__shortlist.html'), 'utf8');
+  const examples = [...shortlist.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+    .filter(match => match[2].includes('<img') && match[2].includes('View this story map'));
+  assert.ok(examples[1][1].endsWith('/viewers/shortlist/index.html?appid=5a9c34acf59a49f0a67d5f7293b44d6b'));
+  assert.match(examples[1][2], /alt="The Raised Bogs of Ireland"/);
+  assert.ok(examples[0][1].endsWith('appid=0584dbad6ebf433a96f1111f4cc7e3bd'));
+  assert.ok(examples[2][1].endsWith('appid=62eef62250984b188b7512ec8f1caadb'));
+  const series = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__map-series.html'), 'utf8');
+  const accordion = [...series.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+    .find(match => match[2].includes('mapseries_layout_side_accordion.jpg'));
+  assert.equal(accordion?.[1], 'https://storymaps.esri.com/archives/stories/2013/ShaleGas/');
+});
+
+test('Countdown overview leads with Ports and ends with 25 Busiest Airports', () => {
+  const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__countdown.html'), 'utf8');
+  const examples = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>\s*<img[^>]*countdown([1-4])\.jpg[^>]*>[\s\S]*?<\/a>/g)];
+  assert.deepEqual(examples.map(example => example[2]), ['4', '2', '3', '1']);
+  assert.equal(examples[0][1], 'https://storymaps.esri.com/archives/stories/2013/ports/');
+  assert.match(examples[1][1], /\/debellgolf\//);
+  assert.equal(examples[2][1], 'https://storymaps.esri.com/archives/stories/2013/refugee-camps/');
+  assert.match(examples[3][1], /\/stories\/2013\/airports\//);
+  const top = html.slice(html.indexOf('<div id="top-feat">'), html.indexOf('<div id="features"'));
+  assert.match(top, /countdown4\.jpg/);
+  assert.doesNotMatch(top, /countdown1\.jpg/);
+});
+
 for (const story of ['ports', 'refugee-camps']) {
   test(`Countdown ${story} example uses its owner-selected archived destination`, () => {
     const html = readFileSync(path.join(publish, 'archive/2017-12-10-pages/en__app-list__countdown.html'), 'utf8');
@@ -870,11 +935,42 @@ test('Map Tour sample and fourth Overview example use the owner-selected stories
   assert.ok(examples[3][0].includes('target="_blank"'));
 });
 
+test('owner-selected Cascade, Map Series and Crowdsource examples match their screenshots and samples', () => {
+  for (const [slug, position, id] of [
+    ['cascade', 1, 'f2e8448fef064238ace4f324ffc16fde'],
+    ['map-series', 1, '79798a56715c4df183448cc5b7e1b999'],
+    ['crowdsource', 0, '467eccf026ca416cae01a2c6f086b2b9'],
+  ]) {
+    const html = readFileSync(path.join(publish, `archive/2017-12-10-pages/en__app-list__${slug}.html`), 'utf8');
+    const examples = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+      .filter(match => match[2].includes('<img') && match[2].includes('View this story map'));
+    assert.ok(examples[position][1].endsWith('index.html?appid=' + id), slug + ': example destination');
+    assert.ok(examples[position][2].includes('/images/examples/' + id + '.jpg'), slug + ': paired screenshot');
+    if (slug === 'crowdsource') {
+      assert.ok(examples[1][1].endsWith('appid=f1fcc302b0864b0c94beffc5177da2b8'));
+      assert.ok(examples[2][1].endsWith('appid=b861ca9ea1114af7908600022ee9d033'));
+      assert.ok(examples[2][2].includes('/images/examples/b861ca9ea1114af7908600022ee9d033.jpg'));
+      assert.match(html, /href="[^"]*appid=467eccf026ca416cae01a2c6f086b2b9"[^>]*>View a Crowdsource Story/);
+    }
+    if (slug === 'cascade') {
+      assert.ok(examples[0][1].endsWith('appid=dbc3574e3d0d4f4a81ae95f2e86b0dc2'));
+      assert.ok(examples[2][1].endsWith('appid=9497dbc933bc46efacc5236722cebde6'));
+    }
+  }
+  for (const file of ['index.html', 'archive/index.html', 'viewers/archive-root.html']) {
+    const html = readFileSync(path.join(publish, file), 'utf8');
+    const blocks = [...html.matchAll(/<div class="app-text">([\s\S]*?)<\/div>/g)].map(match => match[1]);
+    for (const [label, id] of [['Story Map Cascade', 'f2e8448fef064238ace4f324ffc16fde'], ['Side Accordion Layout', '79798a56715c4df183448cc5b7e1b999'], ['Story Map Crowdsource', '467eccf026ca416cae01a2c6f086b2b9']]) {
+      assert.ok(blocks.find(block => block.includes(label))?.includes('appid=' + id), file + ': ' + label);
+    }
+  }
+});
+
 test('archive examples replace failed stories and match advertised sample layouts', () => {
   const slugs = ['map-tour', 'map-journal', 'map-series', 'cascade', 'shortlist', 'swipe-spyglass', 'crowdsource', 'basic'];
   const files = ['index.html', 'archive/index.html', 'viewers/archive-root.html',
     ...slugs.map(slug => 'archive/2017-12-10-pages/en__app-list__' + slug + '.html')];
-  const retired = ['2c62acf3468c4cbbba6b82f1035bfe22', '5afdbed13fad458cb6288c46a0bad060', 'd6635d5602b04c05a445058f53da5cb5', 'ef703d9454bb4e4e8a9c1b086b5b66b5', 'c7ad1a55de0247a68454a76f251225a4', 'a0a12caf5025441497d49d35b01a07f8', '716b6277db404a5aaf2406f7bb444295', 'f2e8448fef064238ace4f324ffc16fde'];
+  const retired = ['2c62acf3468c4cbbba6b82f1035bfe22', '5afdbed13fad458cb6288c46a0bad060', 'd6635d5602b04c05a445058f53da5cb5', 'ef703d9454bb4e4e8a9c1b086b5b66b5', 'c7ad1a55de0247a68454a76f251225a4', 'a0a12caf5025441497d49d35b01a07f8', '716b6277db404a5aaf2406f7bb444295'];
   for (const file of files) {
     const html = readFileSync(path.join(publish, file), 'utf8');
     for (const match of html.matchAll(/<a\b[^>]*href="([^"]+)"/g)) {
@@ -884,7 +980,7 @@ test('archive examples replace failed stories and match advertised sample layout
   for (const file of files.slice(0, 3)) {
     const html = readFileSync(path.join(publish, file), 'utf8');
     const blocks = [...html.matchAll(/<div class="app-text">([\s\S]*?)<\/div>/g)].map(match => match[1]);
-    for (const [label, id] of [['Tabbed Layout', '6aab740eb5f146d0bbc073185aa726cb'], ['Side Accordion Layout', '77245a2c7bb540878fd3b24ebd048b20'], ['Story Map Spyglass', '97ae55e015774b7ea89fd0a52ca551c2']]) {
+    for (const [label, id] of [['Tabbed Layout', '6aab740eb5f146d0bbc073185aa726cb'], ['Side Accordion Layout', '79798a56715c4df183448cc5b7e1b999'], ['Story Map Spyglass', '97ae55e015774b7ea89fd0a52ca551c2']]) {
       const block = blocks.find(content => content.includes(label));
       assert.ok(block?.includes('appid=' + id), file + ': ' + label);
     }

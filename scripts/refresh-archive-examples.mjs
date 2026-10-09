@@ -6,15 +6,15 @@ const replacements = [
   ['5afdbed13fad458cb6288c46a0bad060', 'maptour', 'd79e17055aa14e119c9c6e8621b23a6a', 'Monuments Men'],
   ['d6635d5602b04c05a445058f53da5cb5', 'mapjournal', '68affb679afc40718babf3493927b4ac', 'The Great In-Between'],
   ['https://storymaps.arcgis.com/stories/749af21064e34f029bdd53946d9d941a', 'mapjournal', '86b78bfd59a0405bba1540eb9ecbffb1', 'There are Riches Here.'],
-  ['ef703d9454bb4e4e8a9c1b086b5b66b5', 'mapseries', '77245a2c7bb540878fd3b24ebd048b20', 'Stewardship'],
+  ['ef703d9454bb4e4e8a9c1b086b5b66b5', 'mapseries', '79798a56715c4df183448cc5b7e1b999', 'A Nation of Drones'],
   ['https://www.staridasgeography.gr/web-gis/story-maps/map-series/footpaths-of-erissos/en/', 'mapseries', '167ca9b1c85e4c7ea5eac8c6be43358b', 'Favorite Places: Paris Cafes'],
   ['https://storymaps.arcgis.com/stories/7d1db2f4802a46f5ba785c651f81053a', 'cascade', 'dbc3574e3d0d4f4a81ae95f2e86b0dc2', 'Palau'],
-  ['f2e8448fef064238ace4f324ffc16fde', 'cascade', 'dbc3574e3d0d4f4a81ae95f2e86b0dc2', 'Palau'],
+  ['f2e8448fef064238ace4f324ffc16fde', 'cascade', 'f2e8448fef064238ace4f324ffc16fde', 'Remembering Rupert'],
   ['https://storymaps.esri.com/stories/2017/the-uprooted/', 'cascade', '9497dbc933bc46efacc5236722cebde6', 'Seeing Green Infrastructure'],
   ['https://storymaps.esri.com/stories/shortlist-sandiego', 'shortlist', '0584dbad6ebf433a96f1111f4cc7e3bd', 'San Diego Shortlist'],
   ['https://storymaps.esri.com/stories/2017/flw/buildings/', 'shortlist', '62eef62250984b188b7512ec8f1caadb', 'Palm Springs Shortlist'],
   ['https://storymaps.esri.com/stories/2016/national-park-memories/', 'crowdsource', 'f1fcc302b0864b0c94beffc5177da2b8', 'San Diego Cool'],
-  ['https://storymaps.esri.com/stories/honoring-our-veterans/index.html', 'crowdsource', '467eccf026ca416cae01a2c6f086b2b9', 'The 2016 Esri UC Selfie Story Map'],
+  ['https://storymaps.esri.com/stories/honoring-our-veterans/index.html', 'crowdsource', 'b861ca9ea1114af7908600022ee9d033', 'Chicago HomeStories'],
   ['c7ad1a55de0247a68454a76f251225a4', 'crowdsource', '467eccf026ca416cae01a2c6f086b2b9', 'The 2016 Esri UC Selfie Story Map'],
   ['a0a12caf5025441497d49d35b01a07f8', 'basic', 'ef329532de2645239789978efe531f3b', 'Brazil: World Cup Stadiums and Interesting Places'],
   ['http://www.esrinl.nl/storymaps/Flitsmeister/Flitsrisico/index.html', 'basic', '30066075caa947178f6c2ae438e7efa4', 'Wildlife Strikes by Month'],
@@ -68,6 +68,19 @@ const unavailableOrganizations = new Set([
 
 for (const file of process.argv.slice(2)) {
   let html = readFileSync(file, 'utf8');
+  if (/(?:^|\/)en__resources\.html$/.test(file)) {
+    html = html.replace(/(?:https?:\/\/web\.archive\.org)?(?:\/web\/\d+(?:im_|id_)?\/)?https?:\/\/storymaps\.arcgis\.com\/assets\/images\/images\/(basics|faqs|community|blog|newsletter|developers)\.png/g,
+      '/viewers/assets/images/archive/resources/$1.png');
+    html = html.replace(/href="[^"]*\/assets\/css\/support\.css(?:\?[^"]*)?"/g,
+      'href="/viewers/assets/css/archive/support.css"');
+  }
+  if (/(?:^|\/)en__app-list__countdown\.html$/.test(file)) {
+    const pattern = /<a\b[^>]*>\s*<img[^>]*countdown([14])\.jpg[^>]*>[\s\S]*?<\/a>/g;
+    const examples = [...html.matchAll(pattern)];
+    if (examples.length === 2 && examples[0][1] === '1' && examples[1][1] === '4') {
+      html = html.replace(pattern, (anchor, image) => image === '1' ? examples[1][0] : examples[0][0]);
+    }
+  }
   const sourceRepository = sourceRepositories[file.match(/(?:^|\/)en__app-list__([^/]+)\.html$/)?.[1]];
   if (/(?:^|\/)en\.html$/.test(file)) {
     html = html.replace(/<div id="mini-gallery"[^>]*>\s*<\/div>\s*/g, '')
@@ -81,7 +94,9 @@ for (const file of process.argv.slice(2)) {
       section.replace(/<a\b[^>]*href="#"[^>]*>(linked|embedded)<\/a>/g, '$1'));
   }
   html = html.replace(/<footer class="footer sticky-footer">[\s\S]*?<\/footer>/g, archiveFooter);
-  html = html.replace(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g, (anchor, attributes, href, body) => {
+  html = html.replace(/<link\b[^>]*\brel="(?:shortcut )?icon"[^>]*>/g, icon =>
+    icon.replace(/\bhref="[^"]*"/, 'href="/viewers/assets/images/favicon.ico?v=folded-map"'));
+  html = html.replace(/<a\b([^>]*\bhref="([^"]*)"[^>]*)>([\s\S]*?)<\/a>/g, (anchor, attributes, href, body, offset) => {
     const label = body.replace(/<[^>]*>/g, '').trim();
     if (sourceRepository && ['Download the ready-to-deploy app', 'Download current source (ZIP)', 'Get the source code on GitHub'].includes(label)) {
       const repositoryUrl = `https://github.com/Esri/${sourceRepository}`;
@@ -189,20 +204,33 @@ for (const file of process.argv.slice(2)) {
     if (url.href === 'https://links.esri.com/storymaps/user/noaa') {
       return anchor.replace(/\bhref="[^"]*"/, 'href="https://web.archive.org/web/20250223200002/https://oceanservice.noaa.gov/map-stories/welcome.html"');
     }
-    const replacement = replacements.find(([previous]) => /^[a-f0-9]{32}$/.test(previous)
+    if (file.endsWith('/en__app-list__map-series.html') && body.includes('/mapseries_layout_side_accordion.jpg')) {
+      return anchor.replace(/\bhref="[^"]*"/, 'href="https://storymaps.esri.com/archives/stories/2013/ShaleGas/"');
+    }
+    let replacement = replacements.find(([previous]) => /^[a-f0-9]{32}$/.test(previous)
       ? (url.searchParams.get('appid') || url.searchParams.get('webmap')) === previous
       : url.href.replace(/\/$/, '') === previous.replace(/\/$/, ''));
+    if (file.endsWith('/en__app-list__cascade.html') && body.includes('/cascade_overview2.jpg')) {
+      replacement = ['', 'cascade', 'f2e8448fef064238ace4f324ffc16fde', 'Remembering Rupert'];
+    }
+    if (file.endsWith('/en__app-list__shortlist.html') && body.includes('/shortlist2b.jpg')) {
+      replacement = ['', 'shortlist', '5a9c34acf59a49f0a67d5f7293b44d6b', 'The Raised Bogs of Ireland'];
+    }
+    if (file.endsWith('/en__app-list__crowdsource.html') && offset < html.indexOf('<div id="features"')
+      && url.href === 'https://storymaps.esri.com/stories/2016/national-park-memories/') {
+      replacement = ['', 'crowdsource', '467eccf026ca416cae01a2c6f086b2b9', 'The 2016 Esri UC Selfie Story Map'];
+    }
     if (!replacement) return anchor;
     const [, runtime, id, title, parameter] = replacement;
     attributes = attributes.replace(/\bhref="[^"]*"/, `href="${viewerUrl(runtime, id, parameter)}"`);
-    body = body.replace(/<img\b[^>]*>/g, image => image
+    body = body.replace(/<img\b[^>]*>/g, image => /\bsrc="[^"]*\/mapseries_layout_[^"]+"/.test(image) ? image : image
       .replace(/\bsrc="[^"]*"/, `src="/viewers/assets/images/examples/${id}.jpg"`)
       .replace(/\balt="[^"]*"/, `alt="${title}"`));
     return `<a${attributes}>${body}</a>`;
   });
   html = html.replace(/(<div class="app-text">)([\s\S]*?)(<\/div>)/g, (block, opening, content, closing) => {
     const sample = content.includes('Tabbed Layout') ? viewerUrl('mapseries', '6aab740eb5f146d0bbc073185aa726cb')
-      : content.includes('Side Accordion Layout') ? viewerUrl('mapseries', '77245a2c7bb540878fd3b24ebd048b20')
+      : content.includes('Side Accordion Layout') ? viewerUrl('mapseries', '79798a56715c4df183448cc5b7e1b999')
         : content.includes('Story Map Spyglass') ? viewerUrl('swipe', '97ae55e015774b7ea89fd0a52ca551c2') : null;
     if (!sample) return block;
     return opening + content.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>\s*View Sample\s*<\/a>)/gi, `$1${sample}$2`) + closing;

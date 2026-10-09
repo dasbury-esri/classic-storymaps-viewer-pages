@@ -41,6 +41,119 @@ The second item's ArcGIS metadata title is "Around the world in 8 days - alone";
 its configured and rendered story title is "Epic Flight". Its screenshot and alt
 text use the rendered title. The first Overview example remains the Lincoln tour.
 
+## Owner-selected Overview Follow-up
+
+Verified locally: 2026-10-09 00:34:02+00:00[UTC]. These changes are not committed
+or deployed. Repository transfer and custom-domain changes remain paused.
+
+- Cascade's second linked example and the Apps View Sample button now open
+  Remembering Rupert (`f2e8448fef064238ace4f324ffc16fde`). Palau stays first;
+  Seeing Green Infrastructure stays last.
+- A Nation of Drones (`79798a56715c4df183448cc5b7e1b999`) replaces Stewardship
+  in the Map Series Overview and Side Accordion sample. The transform preserves
+  the three original layout illustrations instead of replacing the Side Accordion
+  illustration with a full-size story screenshot. The illustrations again form
+  one desktop row and wrap without horizontal overflow on mobile.
+- Crowdsource Overview now shows UC Selfie first, San Diego Cool second, and
+  Chicago HomeStories (`b861ca9ea1114af7908600022ee9d033`) third. The owner selected
+  Chicago after reviewing the candidate results. The Apps sample remains UC Selfie.
+- New screenshots were captured from the local viewers. Historical source captures,
+  converter fixtures, and remote ArcGIS items were not changed.
+
+All 119 Node tests and 65 actual-publish checks passed. New ordering, destination,
+and illustration checks failed before their corresponding changes. Chromium checks
+verified image decoding and no horizontal overflow at 1440px and 390px, the three
+Map Series illustrations in one desktop row, and real Apps sample clicks opening
+the three correct items in new tabs with no opener.
+
+Rupert loaded and scrolled past its cover, but its authored Esri logo request to
+`story.maps.arcgis.com/apps/MapSeries/resources/tpl/viewer/icons/esri-logo-white.png`
+failed with `net::ERR_BLOCKED_BY_ORB`. This prevents a clean browser-audit pass;
+the remote item was left unchanged. A Nation of Drones passed startup, second-entry
+navigation, and visible-image checks without browser errors.
+
+### Later Owner Adjustments
+
+Verified locally: 2026-10-09 00:52:09+00:00[UTC]. Still not committed or deployed.
+
+- Restored The Raised Bogs of Ireland (`5a9c34acf59a49f0a67d5f7293b44d6b`) in
+  Shortlist Overview's second, "Get inspired!" example, with a newly captured
+  screenshot. San Diego remains first and Palm Springs remains last. Public
+  startup, second-place navigation, visible images, and the real example click passed.
+- The Map Series Side Accordion layout illustration depicts Shale Gas, so its
+  link now opens the owner-supplied
+  <https://storymaps.esri.com/archives/stories/2013/ShaleGas/>. This changes the
+  illustration link only; the separate Drones story example and Apps sample remain.
+  The archive returned HTTP 200 over normal HTTPS and its State by State Comparison
+  panel opened. It reports two legacy JavaScript errors: `OTCompleteCount is not
+  defined` and `Unexpected identifier 'content'`. No external story repair was made.
+- Replaced both local favicon copies with a 64x64 ICO derived from the owner's
+  supplied folded-map artwork, square-padded with its original background color.
+  The catalog, launchers, Apps, and Overview pages now use the shared local icon
+  with `?v=folded-map` to refresh cached icons. Native macOS and Chromium decoding
+  checks passed; both copies are byte-identical.
+- The owner accepted Rupert's failing authored logo. No logo or remote item change
+  is needed for this work.
+
+All 121 Node tests and 67 actual-publish checks passed. The new link and favicon
+regressions failed before implementation. Desktop 1440px and mobile 390px browser
+checks verified all Overview images, favicon decoding, no horizontal overflow,
+and the three Map Series layout illustrations still aligned in one desktop row.
+
+### Crowdsource Candidate Results
+
+Tested all 24 distinct item IDs in the 25 data fixtures under the converter's
+`tests/classics/Crowdsource` directory, using anonymous live item data in the local
+view-only viewer. Eight qualified, including the two existing samples:
+
+| Story | Item ID | Result |
+| --- | --- | --- |
+| The 2016 Esri UC Selfie Story Map | `467eccf026ca416cae01a2c6f086b2b9` | Existing sample; startup, map and visible images passed |
+| San Diego Cool | `f1fcc302b0864b0c94beffc5177da2b8` | Existing sample; startup, map and visible images passed |
+| Chicago HomeStories | `b861ca9ea1114af7908600022ee9d033` | Selected third example; contribution selection and visible media passed |
+| The American Experience in 737 Novels | `734842b0043445eaaa9a2305d43c38b4` | Contribution selection and visible media passed |
+| 1Frame4Nature | `99abe066efef4c72837da71c403798c6` | Custom cover, contribution selection and visible media passed |
+| Kyoto University Postcard Collection | `3625639d89454282b44c7eb899fc910f` | Japanese cover control, contribution selection and visible media passed |
+| Story Map Crowdsource | `8c76de0b9a1648ef81f1a7e15e5b0c4d` | Custom cover, contribution selection and visible media passed |
+| UC2016 Story Maps Workshop Roll Call | `af540f454ff14b739a69990c26ecf905` | Custom cover, contribution selection and visible media passed; two contributions |
+
+The initial audit expected the exact cover label "Explore Map". Four candidates
+passed after follow-up checks used their actual customized or localized controls;
+their initial failures remain in the evidence. The six alternatives were also
+checked for visible CSS-background media, not only image elements. Novels and
+Kyoto each recorded three cancelled feature queries during teardown, separately
+from errors. The other sixteen candidates did not qualify because the gallery
+did not load within 30 seconds or browser, service, or media errors occurred.
+This is representative-interaction coverage, not certification of every contribution.
+
+[Detailed candidate and UI evidence](artifacts/overview-examples-2026-10-09.json)
+records every item, failures, follow-ups, cancellations, and layout checks. The
+original replacement table below is historical; this owner follow-up takes precedence.
+
+## Resources Media Restoration
+
+Verified locally: 2026-10-09 01:13:09+00:00[UTC], pending deployment.
+
+At the owner's request, recovered media referenced by the
+[December 2017 Resources capture](https://web.archive.org/web/20171224040826/http://storymaps.arcgis.com/en/resources/).
+The six circular illustrations (Basics, FAQs, Community, Blog, Newsletter, and
+Developers) had broken Wayback-relative paths. They now use local PNGs, alongside
+the recovered trophy image and `support.css`. The stylesheet is unchanged except
+for its trophy URL. Existing approved link cleanup and historical captures remain
+intact; no social, My Stories, or retired developer links were restored.
+
+Wayback resolved the requested asset URLs to February 2018 captures. The detailed
+[evidence](artifacts/overview-examples-2026-10-09.json) records each requested URL,
+resolved capture, byte count, and SHA-256. The six illustrations are 204x204 PNGs;
+the trophy is 400x400. Desktop 1440px and mobile 390px checks decoded all seven
+assets with zero Wayback rendering requests or horizontal overflow. The original
+stylesheet hides the circular illustrations below 480px; that behavior is preserved.
+
+The Resources regression failed before each fix. All 122 Node tests, all ten
+workflow build steps, and 68 checks against the real publish output passed before
+the owner-authorized push. This release also includes the pending example swaps,
+layout illustration correction, restored Shortlist example, and folded-map favicon.
+
 ## Replacement Policy
 
 [refresh-archive-examples.mjs](../../scripts/refresh-archive-examples.mjs) owns the

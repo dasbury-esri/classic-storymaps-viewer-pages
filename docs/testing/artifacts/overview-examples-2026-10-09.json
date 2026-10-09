@@ -1,0 +1,989 @@
+{
+  "verifiedAt": "2026-10-09 00:34:02+00:00[UTC]",
+  "deployment": "Local only; not committed or deployed",
+  "laterOwnerAdjustments": {
+    "verifiedAt": "2026-10-09 00:52:09+00:00[UTC]",
+    "shortlistSecondExample": {
+      "id": "5a9c34acf59a49f0a67d5f7293b44d6b",
+      "title": "The Raised Bogs of Ireland",
+      "startupNavigationAndVisibleImagesPassed": true,
+      "realExampleClickPassed": true
+    },
+    "mapSeriesSideAccordionIllustration": {
+      "url": "https://storymaps.esri.com/archives/stories/2013/ShaleGas/",
+      "httpStatus": 200,
+      "normalTlsValidation": true,
+      "interaction": "Opened State by State Comparison",
+      "scriptErrors": [
+        "OTCompleteCount is not defined",
+        "Unexpected identifier 'content'"
+      ],
+      "separateDronesExampleAndAppsSampleUnchanged": true
+    },
+    "favicon": {
+      "artwork": "Owner-supplied pale-blue folded map on blue-gray background",
+      "format": "ICO",
+      "dimensions": [
+        64,
+        64
+      ],
+      "identicalLocalCopies": true,
+      "nativeAndBrowserDecodingPassed": true,
+      "versionQuery": "v=folded-map"
+    },
+    "rupertLogoLimitationAcceptedByOwner": true,
+    "nodeTestsPassed": 121,
+    "publishChecksPassed": 67,
+    "responsiveWidths": [
+      1440,
+      390
+    ]
+  },
+  "fixtureSource": "ArcGIS-StoryMaps-Classic-Converter-App/tests/classics/Crowdsource",
+  "fixtureFiles": 25,
+  "distinctCrowdsourceItems": 24,
+  "selectedThirdCrowdsource": "b861ca9ea1114af7908600022ee9d033",
+  "scope": "Anonymous current live item data in local viewers; startup, representative interaction and visible media only. No sign-in or item changes.",
+  "results": [
+    {
+      "id": "895e4a4e0a534c479670532c136b8ba7",
+      "runtime": "crowdsource",
+      "title": "Tester for GFN",
+      "fixtures": [
+        "0.1.0/895e4a4e0a534c479670532c136b8ba7.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "interaction": "Explore Map opened",
+        "failure": "Browser errors (see errors in report)\n\n1 !== 0\n",
+        "errors": [
+          "request: https://www.arcgis.com/sharing/rest/content/items/b50ad4b631b2472c9920c08d2b36bf2d/resources/introSplashBackgroundPhoto_0bb339lsq.jpeg net::ERR_BLOCKED_BY_ORB"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "b1a64944a8e542699209b26bff1b97b0",
+      "runtime": "crowdsource",
+      "title": "How Climate Change Changes the World",
+      "fixtures": [
+        "0.1.0/b1a64944a8e542699209b26bff1b97b0.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "interaction": "Explore Map opened",
+        "failure": "Browser errors (see errors in report)\n\n1 !== 0\n",
+        "errors": [
+          "console: Error: Webmap Controller - Error: Item does not exist or is inaccessible. [url:https://utility.arcgis.com/usrsvcs/servers/a383a000182149afa4b20e9e759022bb/rest/services/World_Temp_Chng_2050_26/ImageServer]\n    at q.load (https://js.arcgis.com/3.25/init.js:1032:182)\n    at https://js.arcgis.com/3.25/init.js:87:429\n    at c (https://js.arcgis.com/3.25/init.js:103:393)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at c (https://js.arcgis.com/3.25/init.js:104:96)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at https://js.arcgis.com/3.25/init.js:92:118\n    at k (https://js.arcgis.com/3.25/init.js:107:277)"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "8ff6978af0914e0f9eb090ffd3784526",
+      "runtime": "crowdsource",
+      "title": "Crowdsource from My Content",
+      "fixtures": [
+        "0.1.0/8ff6978af0914e0f9eb090ffd3784526.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "f210a48ff55d47acb0929a31e0a5963b",
+      "runtime": "crowdsource",
+      "title": "My Special Crowdsource",
+      "fixtures": [
+        "0.1.0/f210a48ff55d47acb0929a31e0a5963b.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "4520e9a8d400495fa1505f3afc7e3f73",
+      "runtime": "crowdsource",
+      "title": "The Power of Parks",
+      "fixtures": [
+        "0.2.0/4520e9a8d400495fa1505f3afc7e3f73.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "eb6ddfd65e8d4b35b199375dba681529",
+      "runtime": "crowdsource",
+      "title": "National Park Memories",
+      "fixtures": [
+        "0.2.0/eb6ddfd65e8d4b35b199375dba681529.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "interaction": "Explore Map opened",
+        "failure": "Visible story images failed to load\n+ actual - expected\n\n+ [\n+   '/common/commonspot/templates/assetsCT/images/branding/logo.png'\n+ ]\n- []\n",
+        "errors": [
+          "request: https://www.nps.gov/common/commonspot/templates/assetsCT/images/branding/logo.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/2/6.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/2/4.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/3/4.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/4/4.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/3/6.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/4/6.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/5/4.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/2/7.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://a.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/5/6.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/3/7.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/2/5.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/5/5.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/5/7.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/3/5.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/4/5.png net::ERR_BLOCKED_BY_ORB",
+          "request: https://b.tiles.mapbox.com/v4/nps.2yxv8n84,nps.jhd2e8lb/4/4/7.png net::ERR_BLOCKED_BY_ORB"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "af540f454ff14b739a69990c26ecf905",
+      "runtime": "crowdsource",
+      "title": "UC2016 Story Maps Workshop Roll Call",
+      "fixtures": [
+        "0.2.0/af540f454ff14b739a69990c26ecf905.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": false,
+        "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByText('Explore Map', { exact: true })\n",
+        "errors": [],
+        "cancelled": []
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 2,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "22b0e7589531423ea1860d8fbcaba74c",
+      "runtime": "crowdsource",
+      "title": " asdf awerq3323",
+      "fixtures": [
+        "0.3.0/22b0e7589531423ea1860d8fbcaba74c.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "70342117deb14086ad496c8b4e69524f",
+      "runtime": "crowdsource",
+      "title": "Why Science Matters",
+      "fixtures": [
+        "0.3.0/70342117deb14086ad496c8b4e69524f.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "72791b4657ee4dc8bdd89ef2dbdf7d0d",
+      "runtime": "crowdsource",
+      "title": "test",
+      "fixtures": [
+        "0.3.0/72791b4657ee4dc8bdd89ef2dbdf7d0d.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "8c76de0b9a1648ef81f1a7e15e5b0c4d",
+      "runtime": "crowdsource",
+      "title": "Story Map Crowdsource",
+      "fixtures": [
+        "0.3.0/8c76de0b9a1648ef81f1a7e15e5b0c4d.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": false,
+        "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByText('Explore Map', { exact: true })\n",
+        "errors": [],
+        "cancelled": []
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 7,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "e2c49078b6904593bb044628b912567c",
+      "runtime": "crowdsource",
+      "title": "2016 GIS Day Events",
+      "fixtures": [
+        "0.3.0/e2c49078b6904593bb044628b912567c.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [
+          "console: Access to XMLHttpRequest at 'https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer?f=json' from origin '' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+          "request: https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer net::ERR_FAILED",
+          "console: Failed to load resource: net::ERR_FAILED"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "f26248bd542e43348992b4782c882e23",
+      "runtime": "crowdsource",
+      "title": "Green on Gray: An Urban Food Movement",
+      "fixtures": [
+        "0.3.0/f26248bd542e43348992b4782c882e23.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "734842b0043445eaaa9a2305d43c38b4",
+      "runtime": "crowdsource",
+      "title": "The American Experience in 737 Novels",
+      "fixtures": [
+        "0.5.1/734842b0043445eaaa9a2305d43c38b4.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": true,
+        "interaction": "Explore Map opened",
+        "errors": [],
+        "cancelled": [
+          "request: https://services.arcgis.com/nzS0F0zdNLvs7nc8/arcgis/rest/services/theAmericanExperienceIn737Novels/FeatureServer/0/query net::ERR_ABORTED"
+        ]
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 12,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": [
+          "net::ERR_ABORTED /nzS0F0zdNLvs7nc8/arcgis/rest/services/theAmericanExperienceIn737Novels/FeatureServer/0/query",
+          "net::ERR_ABORTED /nzS0F0zdNLvs7nc8/arcgis/rest/services/theAmericanExperienceIn737Novels/FeatureServer/0/query",
+          "net::ERR_ABORTED /nzS0F0zdNLvs7nc8/arcgis/rest/services/theAmericanExperienceIn737Novels/FeatureServer/0/query"
+        ]
+      }
+    },
+    {
+      "id": "ff3a27bb9dc54b329cf436f30d2fce33",
+      "runtime": "crowdsource",
+      "title": "Bears awairs",
+      "fixtures": [
+        "0.3.0/ff3a27bb9dc54b329cf436f30d2fce33.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "68a9b3c1d665458d9cabe2287cb857e5",
+      "runtime": "crowdsource",
+      "title": "Share Your Eclipse Event!",
+      "fixtures": [
+        "0.5.1/68a9b3c1d665458d9cabe2287cb857e5.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "b861ca9ea1114af7908600022ee9d033",
+      "runtime": "crowdsource",
+      "title": "Chicago HomeStories",
+      "fixtures": [
+        "0.7.0/b861ca9ea1114af7908600022ee9d033.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": true,
+        "interaction": "Explore Map opened",
+        "errors": [],
+        "cancelled": []
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 10,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "467eccf026ca416cae01a2c6f086b2b9",
+      "runtime": "crowdsource",
+      "title": "The 2016 Esri UC Selfie Story Map",
+      "fixtures": [
+        "0.9.0/467eccf026ca416cae01a2c6f086b2b9.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": true,
+        "interaction": "Explore Map opened",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "f1fcc302b0864b0c94beffc5177da2b8",
+      "runtime": "crowdsource",
+      "title": "San Diego Cool",
+      "fixtures": [
+        "0.9.0/app2-f1fcc302b0864b0c94beffc5177da2b8.json",
+        "0.9.0/f1fcc302b0864b0c94beffc5177da2b8.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": true,
+        "interaction": "Explore Map opened",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "8cf240d07bfe481d96d472b076337a95",
+      "runtime": "crowdsource",
+      "title": "Game On!",
+      "fixtures": [
+        "0.5.1/8cf240d07bfe481d96d472b076337a95.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "3625639d89454282b44c7eb899fc910f",
+      "runtime": "crowdsource",
+      "title": "京都大学地理学教室所蔵の絵葉書コレクション",
+      "fixtures": [
+        "0.8.0/app1-3625639d89454282b44c7eb899fc910f.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": false,
+        "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByText('Explore Map', { exact: true })\n",
+        "errors": [],
+        "cancelled": [
+          "request: https://services.arcgis.com/wlVTGRSYTzAbjjiC/arcgis/rest/services/kyotouniv_postcard/FeatureServer/0/query net::ERR_ABORTED",
+          "request: https://services.arcgis.com/wlVTGRSYTzAbjjiC/arcgis/rest/services/kyotouniv_postcard/FeatureServer/0/query net::ERR_ABORTED"
+        ]
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 12,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": [
+          "net::ERR_ABORTED /wlVTGRSYTzAbjjiC/arcgis/rest/services/kyotouniv_postcard/FeatureServer/0/query",
+          "net::ERR_ABORTED /wlVTGRSYTzAbjjiC/arcgis/rest/services/kyotouniv_postcard/FeatureServer/0/query",
+          "net::ERR_ABORTED /wlVTGRSYTzAbjjiC/arcgis/rest/services/kyotouniv_postcard/FeatureServer/0/query"
+        ]
+      }
+    },
+    {
+      "id": "99abe066efef4c72837da71c403798c6",
+      "runtime": "crowdsource",
+      "title": "1Frame4Nature",
+      "fixtures": [
+        "dev0.3.0-130117/99abe066efef4c72837da71c403798c6.json"
+      ],
+      "qualified": true,
+      "initial": {
+        "pass": false,
+        "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByText('Explore Map', { exact: true })\n",
+        "errors": [],
+        "cancelled": []
+      },
+      "followup": {
+        "pass": true,
+        "interaction": "Opened customized cover and selected first contribution",
+        "galleryCount": 12,
+        "brokenMedia": [],
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "f2e8448fef064238ace4f324ffc16fde",
+      "runtime": "cascade",
+      "title": "Remembering Rupert",
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "interaction": "Scrolled past the cover",
+        "failure": "Browser errors (see errors in report)\n\n1 !== 0\n",
+        "errors": [
+          "request: https://story.maps.arcgis.com/apps/MapSeries/resources/tpl/viewer/icons/esri-logo-white.png net::ERR_BLOCKED_BY_ORB"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "79798a56715c4df183448cc5b7e1b999",
+      "runtime": "mapseries",
+      "title": "A Nation of Drones",
+      "qualified": true,
+      "initial": {
+        "pass": true,
+        "interaction": "Opened the second story entry",
+        "errors": [],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "4a1091186ae84524bfeb703d6ab6819f",
+      "runtime": "crowdsource",
+      "title": "Side Panel",
+      "fixtures": [
+        "unknown/4a1091186ae84524bfeb703d6ab6819f.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [
+          "console: Error: ArcGIS - Item - {_ssl: undefined, settings: Object, properties: Object}",
+          "console: {_ssl: undefined, settings: Object, properties: Object} \n    ----------------------------------------\n    rejected at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:753782\n    at c (https://js.arcgis.com/3.25/init.js:103:393)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at c (https://js.arcgis.com/3.25/init.js:104:96)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at c (https://js.arcgis.com/3.25/init.js:104:96)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    ----------------------------------------\nError\n    at Object.B [as getDataById] (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:750764)\n    at e.value (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:756716)\n    at e.value (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:755582)\n    at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:161062\n    at Array.forEach (<anonymous>)\n    at i (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:161035)\n    at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:484221\n    at Object.setPortalInstance (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:768222)\n    at Object.<anonymous> (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:771034)\n    at Object.<anonymous> (https://js.arcgis.com/3.25/init.js:660:468)"
+        ],
+        "cancelled": []
+      }
+    },
+    {
+      "id": "79cc38f0dc834fc9b2b560ac301ecece",
+      "runtime": "crowdsource",
+      "title": "Picture Yourself in San Diego",
+      "fixtures": [
+        "unknown/79cc38f0dc834fc9b2b560ac301ecece.json"
+      ],
+      "qualified": false,
+      "initial": {
+        "pass": false,
+        "failure": "page.waitForFunction: Timeout 30000ms exceeded.",
+        "errors": [
+          "console: Error: ArcGIS - Item - {_ssl: undefined, settings: Object, properties: Object}",
+          "console: {_ssl: undefined, settings: Object, properties: Object} \n    ----------------------------------------\n    rejected at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:753782\n    at c (https://js.arcgis.com/3.25/init.js:103:393)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at c (https://js.arcgis.com/3.25/init.js:104:96)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    at c (https://js.arcgis.com/3.25/init.js:104:96)\n    at e (https://js.arcgis.com/3.25/init.js:103:182)\n    at resolve.callback (https://js.arcgis.com/3.25/init.js:105:10)\n    ----------------------------------------\nError\n    at Object.B [as getDataById] (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:750764)\n    at e.value (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:756716)\n    at e.value (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:755582)\n    at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:161062\n    at Array.forEach (<anonymous>)\n    at i (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:161035)\n    at /classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:484221\n    at Object.setPortalInstance (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:768222)\n    at Object.<anonymous> (/classic-storymaps-viewer-pages/viewers/crowdsource/app/main-app.min.js?v=0.10.0:1:771034)\n    at Object.<anonymous> (https://js.arcgis.com/3.25/init.js:660:468)"
+        ],
+        "cancelled": []
+      }
+    }
+  ],
+  "ui": {
+    "verifiedAt": "2026-10-09T00:34:02.907Z",
+    "results": [
+      {
+        "slug": "cascade",
+        "width": 1440,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/dbc3574e3d0d4f4a81ae95f2e86b0dc2.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=dbc3574e3d0d4f4a81ae95f2e86b0dc2",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/f2e8448fef064238ace4f324ffc16fde.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=f2e8448fef064238ace4f324ffc16fde",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/cascade_overview3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/9497dbc933bc46efacc5236722cebde6.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=9497dbc933bc46efacc5236722cebde6",
+            "width": 1280
+          }
+        ],
+        "layouts": [],
+        "scrollWidth": 1440
+      },
+      {
+        "slug": "map-series",
+        "width": 1440,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries1.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=6aab740eb5f146d0bbc073185aa726cb",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_tabbed.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=6aab740eb5f146d0bbc073185aa726cb",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_side_accordion.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_bulleted.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=50aea84a9853491f994f775cb989ea92",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/79798a56715c4df183448cc5b7e1b999.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/167ca9b1c85e4c7ea5eac8c6be43358b.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=167ca9b1c85e4c7ea5eac8c6be43358b",
+            "width": 1280
+          }
+        ],
+        "layouts": [
+          {
+            "x": 104,
+            "y": 773.171875,
+            "width": 300,
+            "height": 193.984375,
+            "top": 773.171875,
+            "right": 404,
+            "bottom": 967.15625,
+            "left": 104
+          },
+          {
+            "x": 436,
+            "y": 773.171875,
+            "width": 300,
+            "height": 193.984375,
+            "top": 773.171875,
+            "right": 736,
+            "bottom": 967.15625,
+            "left": 436
+          },
+          {
+            "x": 768,
+            "y": 773.171875,
+            "width": 300,
+            "height": 193.984375,
+            "top": 773.171875,
+            "right": 1068,
+            "bottom": 967.15625,
+            "left": 768
+          }
+        ],
+        "scrollWidth": 1440
+      },
+      {
+        "slug": "crowdsource",
+        "width": 1440,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/467eccf026ca416cae01a2c6f086b2b9.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=467eccf026ca416cae01a2c6f086b2b9",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/f1fcc302b0864b0c94beffc5177da2b8.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=f1fcc302b0864b0c94beffc5177da2b8",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/crowdsource_overview3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/b861ca9ea1114af7908600022ee9d033.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=b861ca9ea1114af7908600022ee9d033",
+            "width": 1280
+          }
+        ],
+        "layouts": [],
+        "scrollWidth": 1440
+      },
+      {
+        "slug": "cascade",
+        "width": 390,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/dbc3574e3d0d4f4a81ae95f2e86b0dc2.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=dbc3574e3d0d4f4a81ae95f2e86b0dc2",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/f2e8448fef064238ace4f324ffc16fde.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=f2e8448fef064238ace4f324ffc16fde",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/cascade_overview3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/9497dbc933bc46efacc5236722cebde6.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=9497dbc933bc46efacc5236722cebde6",
+            "width": 1280
+          }
+        ],
+        "layouts": [],
+        "scrollWidth": 390
+      },
+      {
+        "slug": "map-series",
+        "width": 390,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries1.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=6aab740eb5f146d0bbc073185aa726cb",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_tabbed.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=6aab740eb5f146d0bbc073185aa726cb",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_side_accordion.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries_layout_bulleted.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/?appid=50aea84a9853491f994f775cb989ea92",
+            "width": 300
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/79798a56715c4df183448cc5b7e1b999.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/mapseries3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/167ca9b1c85e4c7ea5eac8c6be43358b.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=167ca9b1c85e4c7ea5eac8c6be43358b",
+            "width": 1280
+          }
+        ],
+        "layouts": [
+          {
+            "x": 24,
+            "y": 1016.5625,
+            "width": 300,
+            "height": 193.984375,
+            "top": 1016.5625,
+            "right": 324,
+            "bottom": 1210.546875,
+            "left": 24
+          },
+          {
+            "x": 24,
+            "y": 1210.546875,
+            "width": 300,
+            "height": 193.984375,
+            "top": 1210.546875,
+            "right": 324,
+            "bottom": 1404.53125,
+            "left": 24
+          },
+          {
+            "x": 24,
+            "y": 1404.53125,
+            "width": 300,
+            "height": 193.984375,
+            "top": 1404.53125,
+            "right": 324,
+            "bottom": 1598.515625,
+            "left": 24
+          }
+        ],
+        "scrollWidth": 390
+      },
+      {
+        "slug": "crowdsource",
+        "width": 390,
+        "images": [
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/467eccf026ca416cae01a2c6f086b2b9.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=467eccf026ca416cae01a2c6f086b2b9",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/f1fcc302b0864b0c94beffc5177da2b8.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=f1fcc302b0864b0c94beffc5177da2b8",
+            "width": 1280
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/crowdsource_overview3.jpg",
+            "width": 712
+          },
+          {
+            "source": "/classic-storymaps-viewer-pages/viewers/assets/images/examples/b861ca9ea1114af7908600022ee9d033.jpg",
+            "destination": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=b861ca9ea1114af7908600022ee9d033",
+            "width": 1280
+          }
+        ],
+        "layouts": [],
+        "scrollWidth": 390
+      }
+    ],
+    "clicks": [
+      {
+        "label": "Story Map Cascade",
+        "id": "f2e8448fef064238ace4f324ffc16fde",
+        "url": "/classic-storymaps-viewer-pages/viewers/cascade/index.html?appid=f2e8448fef064238ace4f324ffc16fde"
+      },
+      {
+        "label": "Side Accordion Layout",
+        "id": "79798a56715c4df183448cc5b7e1b999",
+        "url": "/classic-storymaps-viewer-pages/viewers/mapseries/index.html?appid=79798a56715c4df183448cc5b7e1b999"
+      },
+      {
+        "label": "Story Map Crowdsource",
+        "id": "467eccf026ca416cae01a2c6f086b2b9",
+        "url": "/classic-storymaps-viewer-pages/viewers/crowdsource/index.html?appid=467eccf026ca416cae01a2c6f086b2b9"
+      }
+    ]
+  },
+  "resourcesRestoration": {
+    "verifiedAt": "2026-10-09 01:13:09+00:00[UTC]",
+    "requestedPage": "https://web.archive.org/web/20171224040826/http://storymaps.arcgis.com/en/resources/",
+    "sources": [
+      {
+        "name": "basics",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/basics.png",
+        "resolved": "https://web.archive.org/web/20180228214505im_/http://storymaps.arcgis.com/assets/images/images/basics.png",
+        "bytes": 86320,
+        "sha256": "b525de4d84f82f7c7be58944c836b72a6ddb3a680a73295a9e9a7c1ad20ce09c"
+      },
+      {
+        "name": "faqs",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/faqs.png",
+        "resolved": "https://web.archive.org/web/20180228214506im_/http://storymaps.arcgis.com/assets/images/images/faqs.png",
+        "bytes": 67403,
+        "sha256": "49bff3c0b405619df41812877dc2e2bad54f30a621974eea7ef22ef5f83aebf3"
+      },
+      {
+        "name": "community",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/community.png",
+        "resolved": "https://web.archive.org/web/20180228214553im_/http://storymaps.arcgis.com/assets/images/images/community.png",
+        "bytes": 98188,
+        "sha256": "31cadba78b1e2e31925d89352192f51009587293b998ddcc47f8ae815d42b712"
+      },
+      {
+        "name": "blog",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/blog.png",
+        "resolved": "https://web.archive.org/web/20180228214554im_/http://storymaps.arcgis.com/assets/images/images/blog.png",
+        "bytes": 51102,
+        "sha256": "9e6ec7689761b06b2fd02b93180e5fb0dd55924779552550d64b085c725ea138"
+      },
+      {
+        "name": "newsletter",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/newsletter.png",
+        "resolved": "https://web.archive.org/web/20180228214555im_/http://storymaps.arcgis.com/assets/images/images/newsletter.png",
+        "bytes": 84095,
+        "sha256": "274b1ab36b3dafa3cc143d0bd763173e34e5508b1d5c723702c50e3d01c28667"
+      },
+      {
+        "name": "developers",
+        "requested": "https://web.archive.org/web/20171224040826im_/http://storymaps.arcgis.com/assets/images/images/developers.png",
+        "resolved": "https://web.archive.org/web/20180228214556im_/http://storymaps.arcgis.com/assets/images/images/developers.png",
+        "bytes": 72273,
+        "sha256": "e7176365af57e63829b2e1b41ef5a88f86963ce156c7706ff87f62d4f4279e92"
+      },
+      {
+        "name": "support.css",
+        "requested": "https://web.archive.org/web/20171224040826id_/http://storymaps.arcgis.com/assets/css/support.css?1494458333",
+        "resolved": "https://web.archive.org/web/20180228214501id_/http://storymaps.arcgis.com/assets/css/support.css?1494458333",
+        "bytes": 2017,
+        "sha256": "f774871f120fcee2f1cd060e591680aee0e21063f347958ffaacf4e812f76321"
+      },
+      {
+        "name": "trophy",
+        "requested": "https://web.archive.org/web/20171224040826id_/http://storymaps.arcgis.com/assets/images/images/trophy.png",
+        "resolved": "https://web.archive.org/web/20180228233054id_/http://storymaps.arcgis.com/assets/images/images/trophy.png",
+        "bytes": 7856,
+        "sha256": "2c2344a9203764065a2333a99755091de5fd5a5b8491fa1771b81df566ed1cd3"
+      }
+    ],
+    "stylingChange": "Original support.css retained except trophy URL changed to ../../images/archive/resources/trophy.png",
+    "browserChecks": [
+      {
+        "width": 1440,
+        "media": [
+          {
+            "name": "basics.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/basics.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "faqs.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/faqs.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "community.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/community.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "blog.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/blog.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "newsletter.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/newsletter.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "developers.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/developers.png",
+            "width": 204,
+            "height": 204,
+            "display": "block"
+          },
+          {
+            "name": "trophy.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/trophy.png",
+            "width": 400,
+            "height": 400,
+            "display": "block"
+          }
+        ],
+        "overflow": false
+      },
+      {
+        "width": 390,
+        "media": [
+          {
+            "name": "basics.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/basics.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "faqs.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/faqs.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "community.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/community.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "blog.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/blog.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "newsletter.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/newsletter.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "developers.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/developers.png",
+            "width": 204,
+            "height": 204,
+            "display": "none"
+          },
+          {
+            "name": "trophy.png",
+            "url": "/classic-storymaps-viewer-pages/viewers/assets/images/archive/resources/trophy.png",
+            "width": 400,
+            "height": 400,
+            "display": "block"
+          }
+        ],
+        "overflow": false
+      }
+    ],
+    "waybackRenderingRequests": [],
+    "nodeTestsPassed": 122,
+    "publishChecksPassed": 68,
+    "workflowBuildsPassed": 10,
+    "deployment": "Pending commit and deployment"
+  }
+}

@@ -47,6 +47,17 @@ The Pages API still reports `cname: null`, and `SITE_BASE_PATH` remains
 `/classic-storymaps-viewer-pages`. The owner will enable the custom domain separately;
 root-domain hosting requires an empty `SITE_BASE_PATH` and a corresponding rebuild.
 
+## Countdown Ordering Follow-up
+
+Verified locally: 2026-10-09 00:06:52+00:00[UTC]. At the owner's request, the
+Countdown Overview now leads with Ports; 25 Busiest Airports occupies the former
+Ports position at the end. The publishing transform swaps complete linked screenshots,
+leaving the two middle examples and original capture unchanged. The ordering regression
+failed before the change and passed afterward. All 63 actual-publish checks pass;
+desktop 1440px and mobile 390px checks verified order, destinations and image decoding.
+This follow-up is not committed or deployed. Repository transfer and domain changes
+remain paused.
+
 ## Coverage
 
 - 426 distinct HTTP(S) destinations, including HTTP/HTTPS aliases.
