@@ -9,6 +9,29 @@ The owner-approved changes are now deployed at
 The initial audit below predates deployment; its original test counts and
 observations are retained separately from the checkpoint verification.
 
+### Gallery Deployment Verification
+
+Release commit `d7e2f84022d645b5916aa283955cb81bdffc0edc` deployed successfully
+in [Pages run 38010498781](https://github.com/dasbury-esri/classic-storymaps-viewer-pages/actions/runs/38010498781).
+The deploy job completed at 2026-10-09 17:48:21-07:00[America/Los_Angeles].
+Both build and deploy jobs passed, including CI tests and publish validation.
+
+Live verification at
+<https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/>
+confirmed eight initial launcher cards and nineteen public gallery stories at
+1440px and 390px, with all nineteen thumbnails decoded and no horizontal overflow.
+Raised Bogs of Ireland loaded at both widths with no visible Edit control.
+These anonymous browser checks reported no page errors and performed no real
+sign-in or conversion. Owner eligibility was tested locally as described below.
+
+Fifteen live assets matched the tested local build byte-for-byte: the Viewers
+page, all eight launcher pages, gallery/configuration/loader/launcher JavaScript,
+launcher CSS, and the patched Shortlist bundle. The Map Journal bundle matched
+after removing its generated banner; its only difference was the build timestamp.
+Production conversion remains disabled, and no development client or local
+converter override was published. Domain and Netlify deployment settings were
+not changed. Earlier local-only notes below are historical, not current status.
+
 ### Gallery Release Preparation
 
 The owner authorized committing, pushing, and deploying the gallery redesign and
