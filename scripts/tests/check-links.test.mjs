@@ -1021,9 +1021,14 @@ test('catalog cards omit support badges and retain all launcher links', () => {
   vm.runInContext(readFileSync(path.join(publish, 'viewers/assets/js/classic-storymaps-config.js'), 'utf8'), context);
   const html = readFileSync(path.join(publish, 'viewers/index.html'), 'utf8');
   const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
-  vm.runInContext(script.slice(script.indexOf('    const SUPPORT_STATE'), script.indexOf('    const grid')), context);
-  vm.runInContext(script.slice(script.indexOf('    function getActionMarkup')), context);
-  assert.equal((context.grid.innerHTML.match(/<article\b/g) || []).length, runtimes.length);
+  vm.runInContext(script.slice(script.indexOf('    const CLASSIC_CONFIG'), script.indexOf('    const grid')), context);
+  vm.runInContext(script.slice(script.indexOf('    function cardTemplate')), context);
+  const cards = [...context.grid.innerHTML.matchAll(/<a class="card" href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
+  assert.equal(cards.length, runtimes.length);
+  for (const card of cards) {
+    assert.ok(runtimes.some(runtime => card[1] === runtime + '-launcher.html'));
+    assert.doesNotMatch(card[2], /<a\b|<button\b/);
+  }
   assert.doesNotMatch(context.grid.innerHTML, /class="(?:badge|row)\b|In Progress|>Supported</);
   assert.equal((context.grid.innerHTML.match(/class="link-btn"/g) || []).length, runtimes.length);
 });

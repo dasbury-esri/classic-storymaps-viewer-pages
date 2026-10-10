@@ -1,0 +1,31 @@
+.launcher-page { width: min(1100px, 94vw); }
+.launcher-nav { margin-bottom: 28px; }
+.launcher-header { display: grid; grid-template-columns: 240px minmax(0, 1fr); align-items: center; gap: 32px; padding: 0 0 30px; border-bottom: 1px solid var(--line); }
+.launcher-thumbnail { display: block; width: 100%; height: auto; max-height: 210px; object-fit: contain; }
+.launcher-heading { font-size: 1.85rem; overflow-wrap: anywhere; letter-spacing: 0; }
+.launcher-copy { min-width: 0; }
+.launcher-copy .eyebrow { letter-spacing: 0; }
+.launcher-description { margin: 14px 0 0; font-size: 1.05rem; line-height: 1.6; color: var(--ink-1); }
+.launcher-examples { padding: 24px 0 32px; }
+.launcher-examples h2 { margin: 0 0 20px; font-size: 1.2rem; }
+.launcher-example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
+.launcher-example { display: block; min-width: 0; color: var(--ink-0); text-decoration: none; }
+.launcher-screenshot { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: #e7eeef; border: 1px solid var(--line); }
+.launcher-example h3 { font-size: 1rem; line-height: 1.45; margin: 12px 0 0; overflow-wrap: anywhere; }
+.launcher-example:hover h3 { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.launcher-example:focus-visible, .launcher-advanced summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+.launcher-advanced { border-top: 1px solid var(--line); padding-top: 18px; }
+.launcher-advanced > summary { cursor: pointer; font-size: 1rem; font-weight: 600; padding: 8px 0; color: var(--accent); }
+.launcher-advanced > .panel { margin-top: 16px; border-radius: 8px; box-shadow: none; }
+.launcher-advanced .box { border: 0; background: transparent; padding: 0; }
+.launcher-advanced .appid-box-image-wrap { display: none; }
+.launcher-advanced .appid-box-layout { display: block; }
+.launcher-advanced input, .launcher-advanced .loader-appid-row, .launcher-advanced .loader-webmap-row { min-width: 0; }
+.launcher-advanced .route-block { border-radius: 6px; }
+@media (max-width: 640px) {
+  .launcher-header { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .launcher-thumbnail { width: min(230px, 100%); max-height: 145px; object-position: left; }
+  .launcher-heading { font-size: 1.4rem; }
+  .launcher-example-grid { grid-template-columns: minmax(0, 1fr); }
+  .launcher-nav { margin-bottom: 20px; }
+}

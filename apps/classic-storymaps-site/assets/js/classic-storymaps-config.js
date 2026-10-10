@@ -132,6 +132,49 @@
     }
   ];
 
+  var EXAMPLE_STORIES = {
+    maptour: [
+      ['016c31c6dcd54c7ca635cc63e4bc82a4', 'Epic Flight'],
+      ['d79e17055aa14e119c9c6e8621b23a6a', 'Monuments Men']
+    ],
+    swipe: [
+      ['5c851a0bd60d42f0b2955966ee933465', 'Swipe to the Past: Washington DC 1851 and Today'],
+      ['4e44be0f61094d6ab36a1a1df215daed', 'The Linked Burdens of Obesity and Diabetes']
+    ],
+    mapjournal: [
+      ['68affb679afc40718babf3493927b4ac', 'The Great In-Between'],
+      ['86b78bfd59a0405bba1540eb9ecbffb1', 'There are Riches Here.']
+    ],
+    mapseries: [
+      ['79798a56715c4df183448cc5b7e1b999', 'A Nation of Drones'],
+      ['167ca9b1c85e4c7ea5eac8c6be43358b', 'Favorite Places: Paris Cafes']
+    ],
+    cascade: [
+      ['dbc3574e3d0d4f4a81ae95f2e86b0dc2', 'Palau'],
+      ['f2e8448fef064238ace4f324ffc16fde', 'Remembering Rupert'],
+      ['9497dbc933bc46efacc5236722cebde6', 'Seeing Green Infrastructure']
+    ],
+    shortlist: [
+      ['0584dbad6ebf433a96f1111f4cc7e3bd', 'San Diego Shortlist'],
+      ['5a9c34acf59a49f0a67d5f7293b44d6b', 'The Raised Bogs of Ireland'],
+      ['62eef62250984b188b7512ec8f1caadb', 'Palm Springs Shortlist']
+    ],
+    crowdsource: [
+      ['467eccf026ca416cae01a2c6f086b2b9', 'The 2016 Esri UC Selfie Story Map'],
+      ['f1fcc302b0864b0c94beffc5177da2b8', 'San Diego Cool'],
+      ['b861ca9ea1114af7908600022ee9d033', 'Chicago HomeStories']
+    ],
+    basic: [
+      ['ef329532de2645239789978efe531f3b', 'Brazil: World Cup Stadiums and Interesting Places'],
+      ['30066075caa947178f6c2ae438e7efa4', 'Wildlife Strikes by Month']
+    ]
+  };
+  Object.keys(EXAMPLE_STORIES).forEach(function(runtime) {
+    EXAMPLE_STORIES[runtime] = EXAMPLE_STORIES[runtime].map(function(example) {
+      return { id: example[0], title: example[1], runtime: runtime, image: 'assets/images/examples/' + example[0] + '.jpg' };
+    });
+  });
+
   function getRuntimeViewerByApp() {
     var map = {};
     Object.keys(APP_REGISTRY).forEach(function(runtime) {
@@ -142,7 +185,8 @@
   }
 
   function classifyClassicRuntimeFromItem(item) {
-    var keywords = Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [];
+    var keywords = (Array.isArray(item && item.typeKeywords) ? item.typeKeywords : [])
+      .concat(Array.isArray(item && item.tags) ? item.tags : []);
     var normalizedKeywords = keywords.map(function(keyword) {
       return String(keyword || "").toLowerCase();
     });
@@ -185,6 +229,15 @@
     legacyBasePaths: LEGACY_BASE_PATHS,
     appRegistry: APP_REGISTRY,
     catalogApps: CATALOG_APPS,
+    exampleStoriesByRuntime: EXAMPLE_STORIES,
+    gallery: {
+      publicGroupId: '',
+      converter: {
+        enabled: false,
+        url: 'https://regal-sable-0a6dde.netlify.app/',
+        runtimes: ['maptour', 'mapjournal', 'mapseries', 'cascade', 'swipe']
+      }
+    },
     runtimeViewerByApp: getRuntimeViewerByApp(),
     classifyClassicRuntimeFromItem: classifyClassicRuntimeFromItem
   };

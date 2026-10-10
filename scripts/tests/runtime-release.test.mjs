@@ -9,6 +9,50 @@ import vm from 'node:vm';
 
 const repo = fileURLToPath(new URL('../../', import.meta.url));
 
+test('Map Journal staged embedded routes preserve deployment base and Swipe parameters', () => {
+  const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-journal-embedded-'));
+  const sourcePath = 'app/storymaps/tpl/ui/MainStage.js';
+  const source = readFileSync(path.join(repo, 'runtimes/mapjournal/upstream/src', sourcePath), 'utf8');
+  const normalizer = source.slice(source.indexOf('function normalizeLegacyStorytellingSwipeUrl('), source.indexOf('function normalizeSecureArcGisEmbedUrl('));
+  const minified = 'function getBasePath(){var marker="/templates/classic-storymaps",pathname=String(window.location.pathname||"").toLowerCase(),index=pathname.indexOf(marker);return index>=0?(window.location.pathname.substring(0,index)+marker).replace(/\\/+$/,""):marker}';
+  try {
+    mkdirSync(path.dirname(path.join(temporary, sourcePath)), { recursive: true });
+    writeFileSync(path.join(temporary, sourcePath), normalizer);
+    for (const filename of ['viewer-min.js', 'builder-min.js']) writeFileSync(path.join(temporary, 'app', filename), minified);
+    const patch = () => spawnSync('node', [path.join(repo, 'runtimes/mapjournal/patches/embedded-base-path.mjs'), temporary], { encoding: 'utf8' });
+    const result = patch();
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const patchedSource = readFileSync(path.join(temporary, sourcePath), 'utf8');
+    for (const [pathname, expected] of [
+      ['/classic-storymaps-viewer-pages/viewers/mapjournal/index.html', '/classic-storymaps-viewer-pages/viewers'],
+      ['/viewers/mapjournal/', '/viewers'],
+      ['/nested/site/viewers/mapjournal/index.html', '/nested/site/viewers'],
+      ['/prefix/templates/classic-storymaps/mapjournal/', '/prefix/templates/classic-storymaps'],
+      ['/templates/classic-storymaps/mapjournal/', '/templates/classic-storymaps']
+    ]) {
+      const window = { URL, location: { pathname, origin: 'https://example.org', hostname: 'example.org' } };
+      for (const filename of ['viewer-min.js', 'builder-min.js']) {
+        const bundle = readFileSync(path.join(temporary, 'app', filename), 'utf8');
+        assert.equal(vm.runInNewContext(bundle + ';getBasePath()', { window }), expected);
+      }
+      const normalize = vm.runInNewContext(patchedSource + ';normalizeLegacyStorytellingSwipeUrl', {
+        window, $: { each: (items, callback) => { for (const [index, item] of items.entries()) if (callback(index, item) === false) break; } }
+      });
+      for (const itemId of ['6b58de911fa44d309431d8b3cf7bba6c', 'd96143b7a084446ebb0417a111c38016']) {
+        const suffix = '?appid=' + itemId + '&embed&classicEmbedMode#section';
+        assert.equal(normalize('https://story.maps.arcgis.com/apps/StorytellingSwipe/index.html' + suffix), 'https://example.org' + expected + '/swipe/index.html' + suffix);
+        assert.equal(normalize('https://example.org/templates/classic-storymaps/swipe/index.html' + suffix), 'https://example.org' + expected + '/swipe/index.html' + suffix);
+      }
+      assert.equal(normalize('https://example.org/unrelated'), 'https://example.org/unrelated');
+    }
+    assert.notEqual(patch().status, 0, 'Repeated patch must fail closed');
+    const build = readFileSync(path.join(repo, 'scripts/build-mapjournal-runtime.sh'), 'utf8');
+    assert.match(build, /node .*patches\/embedded-base-path\.mjs.*"\$OUTPUT_PATH"/);
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
 test('Map Series staged embedded routes respect viewer and legacy deployment bases', () => {
   const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-series-embedded-'));
   const original = 'function getBasePath(){var marker="/templates/classic-storymaps",pathname=String(window.location.pathname||"").toLowerCase(),index=pathname.indexOf(marker);return index>=0?(window.location.pathname.substring(0,index)+marker).replace(/\\/+$/,""):marker}';
@@ -79,6 +123,24 @@ for (const runtime of ['cascade', 'shortlist', 'mapseries']) {
         assert.deepEqual(JSON.parse(html.match(expression)[1]), JSON.parse(source.match(expression)[1]));
       }
       const bundle = readFileSync(path.join(output, 'app/viewer-min.js'), 'utf8');
+      if (runtime === 'shortlist') {
+        const gateName = bundle.match(/hasSwitchBuilderButton:([\w$]+)/)?.[1];
+        assert.ok(gateName, 'Shortlist edit-button eligibility must be identifiable');
+        const gates = [...bundle.matchAll(new RegExp('function ' + gateName.replace(/\$/g, '\\$') + '\\(\\)\\{([^{}]*)\\}', 'g'))];
+        const gate = gates.find(candidate => candidate[1].includes('app.userCanEdit') || candidate[1] === 'return false;');
+        assert.ok(gate, 'Shortlist edit-button eligibility function must be present');
+        assert.doesNotMatch(gate[1], /app\.userCanEdit/, 'Ownership must not enable Edit in the local viewer');
+        for (const userCanEdit of [true, false]) {
+          const eligible = vm.runInNewContext('(' + gate[0] + ')', { app: { userCanEdit, isInBuilder: false } });
+          assert.equal(eligible(), false);
+        }
+        const switchFunction = bundle.match(/switchToBuilder:(function\(\)\{[^{}]*\}),isArcGISHosted/);
+        assert.ok(switchFunction, 'Builder transition helper must be identifiable');
+        const switchToBuilder = vm.runInNewContext('(' + switchFunction[1] + ')', {
+          document: { get location() { throw new Error('Viewer-only helper must not access navigation'); } }
+        });
+        assert.equal(switchToBuilder(), false);
+      }
       const start = bundle.indexOf('getAppID:function');
       const end = bundle.indexOf('},get', start);
       assert.ok(start >= 0 && end > start);

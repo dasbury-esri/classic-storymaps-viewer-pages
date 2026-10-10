@@ -238,6 +238,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/classic-launcher.css">
 </head>
 <body>
   <main class="page">
@@ -271,7 +272,7 @@
         </div>
       </div>
 
-      <form id="launch-form" novalidate>
+      <form id="launch-form" data-classic-runtime="swipe" novalidate>
         <label for="appid">Swipe app ID</label>
         <input id="appid" name="appid" type="text" autocomplete="off" placeholder="Enter 32-character app ID" maxlength="64" inputmode="latin" aria-describedby="appid-status">
 
@@ -296,6 +297,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="assets/js/classic-storymaps-config.js"></script>
   <script src="assets/js/arcgis-resource-helpers.js"></script>
+  <script src="assets/js/classic-launcher.js"></script>
   <script src="assets/js/classic-story-loader.js"></script>
   <script>
     window.ClassicStoryLoader && window.ClassicStoryLoader.init();

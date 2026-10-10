@@ -330,6 +330,43 @@
       word-break: break-word;
     }
 
+    [hidden] { display: none !important; }
+    .card { color: inherit; text-decoration: none; }
+    .card:focus-visible, .story-action:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .catalog-switch { margin: 26px 0 0; display: flex; justify-content: flex-end; }
+    .story-gallery { margin-top: 20px; }
+    .story-gallery h2 { font-size: 1.4rem; margin: 0 0 18px; }
+    .story-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+    .story-toolbar label { display: grid; gap: 5px; font-size: .85rem; font-weight: 600; }
+    .story-toolbar label:first-child { flex: 1 1 240px; }
+    .story-toolbar input, .story-toolbar select { width: 100%; min-width: 0; min-height: 40px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink-0); font: inherit; }
+    .story-toolbar select { max-width: 220px; }
+    .story-control { min-height: 40px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+    .story-control:disabled { opacity: .5; cursor: default; }
+    .story-control:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+    .story-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .story-card { position: relative; display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card-bg); }
+    .story-card:hover { border-color: var(--accent); }
+    .story-card:has(.story-link:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .story-link { color: inherit; text-decoration: none; }
+    .story-link:focus-visible { outline: none; }
+    .story-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+    .story-image { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #e3e9e8; }
+    .story-body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 16px; }
+    .story-kind, .story-owner { margin: 0; color: var(--ink-1); font-size: .8rem; overflow-wrap: anywhere; }
+    .story-kind { color: var(--accent); font-weight: 600; }
+    .story-title { margin: 0; font-size: 1.05rem; line-height: 1.4; overflow-wrap: anywhere; }
+    .story-actions { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .story-action { position: relative; z-index: 2; text-decoration: none; background: var(--accent); color: white; padding: 8px 16px; border: 1px solid var(--accent); border-radius: 5px; font-weight: 600; }
+    .story-action-secondary { background: #28ACDB; border-color: #28ACDB; color: var(--ink-0); }
+    .story-status { min-height: 24px; font-size: .9rem; color: var(--ink-1); }
+    .story-pagination { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 24px 0; }
+    .story-pagination button { width: 44px; padding: 8px; font-size: 1.2rem; }
+    .omni-input { min-width: 0; }
+    @media (max-width: 900px) { .story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 540px) { .story-grid { grid-template-columns: minmax(0, 1fr); } .story-toolbar label { flex: 1 1 120px; } }
+    @media (prefers-reduced-motion: reduce) { .card { animation: none; } }
+
     .footer-note {
       margin-top: 20px;
       color: var(--ink-1);
@@ -410,7 +447,26 @@
 
     </section>
 
+    <div class="catalog-switch">
+      <button id="stories-toggle" class="story-control" type="button" aria-expanded="false" aria-controls="story-gallery catalog-grid">Browse Stories</button>
+    </div>
     <section class="grid" id="catalog-grid" aria-label="Classic app catalog"></section>
+    <section id="story-gallery" class="story-gallery" aria-labelledby="stories-heading" hidden>
+      <h2 id="stories-heading">Featured Stories</h2>
+      <div class="story-toolbar">
+        <label>Search stories<input id="stories-search" type="search" maxlength="200" autocomplete="off"></label>
+        <label>App type<select id="stories-runtime" aria-label="App type"><option value="">All app types</option></select></label>
+        <label>Sort<select id="stories-sort" aria-label="Sort"><option value="modified">Recently updated</option><option value="title">Title A-Z</option></select></label>
+        <button id="stories-refresh" class="story-control" type="button" title="Refresh stories" aria-label="Refresh stories">&#8635;</button>
+      </div>
+      <p id="stories-status" class="story-status" role="status" aria-live="polite"></p>
+      <div id="story-cards" class="story-grid"></div>
+      <nav class="story-pagination" aria-label="Story pages">
+        <button id="stories-previous" class="story-control" type="button" aria-label="Previous page" title="Previous page" disabled>&#8592;</button>
+        <span id="stories-page"></span>
+        <button id="stories-next" class="story-control" type="button" aria-label="Next page" title="Next page" disabled>&#8594;</button>
+      </nav>
+    </section>
 
     <p class="footer-note">
       I may put a link to a GitHub repo to collect feedback and issues, following the Esri-ps assistant model.
@@ -419,11 +475,8 @@
 
   <script src="assets/js/classic-storymaps-config.js"></script>
   <script src="assets/js/arcgis-auth-helpers.js"></script>
+  <script src="assets/js/classic-story-gallery.js"></script>
   <script>
-    const SUPPORT_STATE = {
-      SUPPORTED: "supported"
-    };
-
     const CLASSIC_CONFIG = window.ClassicStoryMapsConfig || {};
     const apps = Array.isArray(CLASSIC_CONFIG.catalogApps) ? CLASSIC_CONFIG.catalogApps : [];
 
@@ -444,6 +497,8 @@
     const classifyRuntime = typeof CLASSIC_CONFIG.classifyClassicRuntimeFromItem === "function"
       ? CLASSIC_CONFIG.classifyClassicRuntimeFromItem
       : null;
+    let galleryController = null;
+    let galleryExpiryTimer;
 
     function getStoredToken() {
       try {
@@ -528,6 +583,14 @@
     }
 
     function setAuthUi(token) {
+      if (typeof galleryController !== "undefined" && galleryController) {
+        galleryController.setSession(token);
+        clearTimeout(galleryExpiryTimer);
+        if (token) {
+          const remaining = Number(sessionStorage.getItem(AUTH_EXPIRY_KEY)) - Date.now();
+          galleryExpiryTimer = setTimeout(() => setAuthUi(getStoredToken()), Math.min(Math.max(remaining, 1), 2147483647));
+        }
+      }
       if (token) {
         authButton.textContent = "Sign Out";
         authButton.setAttribute("aria-label", "Sign out of ArcGIS Online");
@@ -552,6 +615,7 @@
         const state = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
         const returnPath = window.location.pathname + window.location.search;
         sessionStorage.setItem(AUTH_STATE_KEY, JSON.stringify({ state, returnPath }));
+        if (typeof galleryController !== "undefined" && galleryController && galleryController.isOpen()) sessionStorage.setItem("classic_gallery_return", "open");
         const authUrl = window.ClassicArcgisAuthHelpers.buildAuthorizeUrl(AUTH_CONFIG.clientId, AUTH_CONFIG.redirectUri, state);
         window.location.assign(authUrl);
       } catch {
@@ -656,6 +720,16 @@
       beginArcgisLogin();
     });
 
+    galleryController = window.ClassicStoryGallery.mount({
+      config: CLASSIC_CONFIG,
+      getToken: getStoredToken,
+      onExpired: function() {
+        clearStoredToken();
+        setAuthUi(null);
+        setOmniStatus("Your session expired. Sign in again to browse your stories.", "error");
+      }
+    });
+
     const tokenFromHash = getTokenFromHash();
     if (tokenFromHash) {
       storeToken(tokenFromHash.token, tokenFromHash.expiresIn);
@@ -670,31 +744,25 @@
       setAuthUi(storedToken);
     }
 
+    try {
+      const returnToGallery = sessionStorage.getItem("classic_gallery_return");
+      sessionStorage.removeItem("classic_gallery_return");
+      if (tokenFromHash && returnToGallery === "open") galleryController.show();
+    } catch {}
     omniForm.addEventListener("submit", handleOmniSubmit);
-
-    function getActionMarkup(app) {
-      const label = app.action || "Open Launcher";
-
-      if (app.state === SUPPORT_STATE.SUPPORTED) {
-        const route = app.launchRoute || app.route || "#";
-        return `<a class="link-btn" href="${route}" aria-label="Launch ${app.title}">${label}</a>`;
-      }
-
-      return `<span class="muted-btn" aria-label="${label}">${label}</span>`;
-    }
+    window.addEventListener("focus", () => setAuthUi(getStoredToken()));
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) setAuthUi(getStoredToken()); });
 
     function cardTemplate(app, index) {
-      const action = getActionMarkup(app);
-
       return `
-        <article class="card" style="animation-delay:${Math.min(index * 0.04, 0.36)}s">
+        <a class="card" href="${app.launchRoute}" style="animation-delay:${Math.min(index * 0.04, 0.36)}s">
           <img src="${app.image}" alt="${app.title} thumbnail" loading="lazy">
           <div class="card-body">
             <h2 class="title">${app.title}</h2>
             <p class="desc">${app.description}</p>
-            <div class="action-row">${action}</div>
+            <div class="action-row"><span class="link-btn">${app.action || "Open Launcher"}</span></div>
           </div>
-        </article>
+        </a>
       `;
     }
 

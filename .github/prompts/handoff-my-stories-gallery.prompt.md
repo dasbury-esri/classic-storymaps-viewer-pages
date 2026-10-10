@@ -1,5 +1,5 @@
 ---
-description: "Handoff for a signed-in My Stories gallery on the Viewers page, adapted from Health Reporter for owned Classic Story Maps Web Mapping Applications."
+description: "Continue or validate the Classic Viewers story gallery and launcher redesign, including owned/public browsing, advanced tools, and gated conversion."
 agent: "agent"
 ---
 
@@ -7,19 +7,21 @@ agent: "agent"
 
 ## Goal and Scope
 
-Add a signed-in My Stories gallery to this repository so users can visually browse their own Classic Story Maps and select one without copying an item ID or URL. Adapt the working gallery in the sibling `ArcGIS-StoryMaps-Health-Reporter` repository; do not port its scanner or replace this site's architecture.
+Maintain and validate the Viewers story gallery and redesigned launchers so users can browse owned or curated public Classic Story Maps without copying an item ID. The sibling `ArcGIS-StoryMaps-Health-Reporter` gallery informed the interaction pattern; do not port its scanner or replace this site's static architecture.
 
-This is an implementation handoff, not an implementation of the target gallery. It now lives in the standard `.github/prompts` directory. The current owner instruction is to move and update this handoff only; do not change application code until implementation is separately requested.
+The owner subsequently requested implementation and authorized committing, pushing, and deploying this release. The target now has a browser-only gallery, shared curated examples, whole-card catalog links, and launcher screenshot galleries with collapsed Advanced tools. Inspect the current worktree, [README](../../README.md), and [release verification notes](../../docs/testing/archive-examples-audit.md) before continuing; implementation does not imply production deployment or real-account acceptance. Production Convert remains disabled because its locked deployment predates the required ownership and prefill changes. Future commits, pushes, domain changes, and remote ArcGIS changes require their own authorization.
 
 Read current target instructions and preserve the other agent's working-tree changes. Source gallery changes were uncommitted during handoff preparation: inspect the sibling working tree, not an assumed release or commit. No authentication secrets, private item payloads, or saved reports belong in fixtures or this handoff.
 
 ## Owner-confirmed Placement
 
-The gallery will appear on the existing [Viewers page](https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/) after the user signs in. It belongs in [viewers.html](../../apps/classic-storymaps-site/viewers.html), not on a new gallery page or the archived My Stories page.
+The gallery belongs on the existing [Viewers page](https://dasbury-esri.github.io/classic-storymaps-viewer-pages/viewers/) in [viewers.html](../../apps/classic-storymaps-site/viewers.html), not on a new page or the archived My Stories page. These decisions supersede the original signed-in-only handoff.
 
-- Show the gallery after successful sign-in and when a valid signed-in session is restored on page load.
-- Keep the gallery hidden while signed out. Logout, expiry, and account replacement must clear account-bound cards and cancel outstanding requests.
-- Keep the existing viewer catalog and manual item-ID entry available. The gallery adds a visual selection path to the existing launch flow.
+- Initially show eight whole-card launcher links for everyone. Browse Stories opens the gallery; Hide Stories restores the cards. Preserve an explicitly opened gallery through a validated OAuth round trip, but do not automatically open it merely because a session exists.
+- Story cards remain fully clickable. When conversion is enabled and eligible, show green View and blue Convert buttons together; otherwise omit the action row. Shortlist's staged viewer-only patch suppresses Edit even for owners and disables its builder-transition helper.
+- Signed-in browsing shows owned Classic Web Mapping Applications identified by tags or typeKeywords. Signed-out browsing uses the curated archive examples until `gallery.publicGroupId` is configured. Never show Convert to signed-out users.
+- Logout, expiry, and account replacement clear private cards, abort requests, and revoke thumbnail object URLs before an open gallery switches to public content.
+- Keep the landing page's manual app-ID form. Launcher pages use their catalog image/description and two to eight linked screenshots first, with existing manual launch and download/export controls retained inside closed Advanced tools. This later owner choice supersedes the earlier proposal to remove launcher forms.
 - Reuse the Viewers page's existing authentication handling, including `setAuthUi`, OAuth return processing, and logout cleanup. Do not restore the retired archive's My Stories navigation links.
 
 ## Source Implementation Map
@@ -55,13 +57,13 @@ The source uses React and Lucide with its existing styles, not a packaged Esri g
 The target must browse **Web Mapping Applications with Classic Story Maps metadata**, not modern `StoryMap` items and not every Web Mapping Application.
 
 - Change both the query's item type and the post-query type predicate. Changing only the query leaves the source validator rejecting every Classic result.
-- Keep the owner constraint mandatory. Quote/escape all user-controlled search text. Parenthesize any OR clauses so a keyword/tag alternative cannot escape the owner/type filters.
+- Keep the owner constraint mandatory for signed-in browsing. Public group browsing instead requires the configured group and public-access constraints. Quote/escape all user-controlled search text. Parenthesize any OR clauses so a keyword/tag alternative cannot escape scope/type filters.
 - Do not treat `tags` and `typeKeywords` as interchangeable REST fields. Inspect both before projecting the card model. The target already has related but different classifiers; align them deliberately instead of adding a third conflicting classifier.
 - [classic-story-loader.js](../../apps/classic-storymaps-site/assets/js/classic-story-loader.js) has `getItemMetadataTerms`, which combines tags and typeKeywords; `termsContainAny`, which normalizes punctuation and checks fragments; and `validateAppMetadata`, which requires Web Mapping Application type, a Story Map term, and a runtime-specific term.
-- [classic-storymaps-config.js](../../apps/classic-storymaps-site/assets/js/classic-storymaps-config.js) exports `classifyClassicRuntimeFromItem` and `appRegistry`. Its runtime classifier checks typeKeywords and URL fragments, not tags; some runtime matches occur before its fallback type check. Therefore, it is not sufficient by itself as the gallery's owner/type/Classic membership gate.
+- [classic-storymaps-config.js](../../apps/classic-storymaps-site/assets/js/classic-storymaps-config.js) exports `classifyClassicRuntimeFromItem` and `appRegistry`. Its runtime classifier now checks tags, typeKeywords and URL fragments; some runtime matches occur before its fallback type check. Therefore, it is not sufficient by itself as the gallery's owner/type/Classic membership gate. [classic-story-gallery.js](../../apps/classic-storymaps-site/assets/js/classic-story-gallery.js) applies the stricter membership gate and rejects ambiguous runtime metadata before rendering.
 - The registry supplies variants for Tour, Swipe/Spyglass, Journal, Series, Cascade, Shortlist, Crowdsource, and Basic. Reuse those runtime mappings rather than hard-coding a second list. Keep unsupported or unknown Classic entries distinct from launchable ones; do not invent a runtime destination.
 
-Recommended first implementation: search the signed-in owner's `type:"Web Mapping Application"` items, then apply an explicit Classic tag/keyword predicate locally. This avoids assuming that a narrow search phrase has the same matching semantics as the target's punctuation-normalized fragment classifier. Treat non-Classic apps as expected filtered-out candidates, not a malformed-page error; wrong-owner or invalid identity results remain invalid.
+The current implementation searches the signed-in owner's `type:"Web Mapping Application"` items, then applies an explicit Classic tag/keyword predicate locally. This avoids assuming that a narrow search phrase has the same matching semantics as the target's punctuation-normalized fragment classifier. Non-Classic, wrong-owner, invalid-identity and unlaunchable candidates are excluded; buffered pagination follows `nextStart` with at most three candidate requests per action.
 
 Follow ArcGIS `nextStart` even when filtering leaves a short or empty page. Do not announce that the account has no stories merely because the first candidate page has no Classic matches. Either show bounded candidate pages with continuation or fetch a bounded number of additional pages to fill the view. Never scan an entire account eagerly. Report counts as displayed/loaded results unless a true Classic-only total is available.
 
@@ -108,7 +110,7 @@ If results are integrated later, retain these constraints:
 6. Reuse the target's [scripts/tests](../../scripts/tests) and built-in Node test runner. Run focused new tests first, then `node --test scripts/tests/*.test.mjs` from the target root. Follow the README's build/link checks when changing deployed assets or routing; keep generated output untracked.
 7. Verify a real signed-in account's owned Classic content, sorting/search, private thumbnails, and runtime launch on the target deployment. Synthetic browser tests alone do not establish live ArcGIS acceptance. Record unverified cases honestly.
 
-Source tests cover the current modern gallery and session workflow. They were inspected for this handoff, not rerun. Live private-gallery acceptance in the source remained unverified after its OAuth callback correction. This document does not assert that the target gallery has been implemented or tested.
+Source tests cover the modern gallery and session workflow and were inspected, not rerun here. Target tests now include [gallery contracts](../../scripts/tests/classic-story-gallery.test.mjs) and the `gallery,launchers` modes of [the browser runner](../../scripts/validate-release-viewers-browser.mjs). The release passed 137 Node tests, ten workflow builds, 68 publish checks, and 32 gallery/launcher/Shortlist browser scenarios. These verify local/synthetic behavior, not live private-gallery acceptance. The owner confirmed development Viewers sign-in and previously confirmed converter sign-in preserves the incoming item ID. The preview-only converter override also passed an actual local handoff without sign-in or conversion. Private thumbnails/runtime launches and readiness of the deployed converter remain separate acceptance gates; do not describe the previously confirmed sign-in/prefill behavior as untested.
 
 ## References and Instruction Availability
 

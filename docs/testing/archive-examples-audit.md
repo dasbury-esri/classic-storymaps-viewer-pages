@@ -9,6 +9,60 @@ The owner-approved changes are now deployed at
 The initial audit below predates deployment; its original test counts and
 observations are retained separately from the checkpoint verification.
 
+### Gallery Release Preparation
+
+The owner authorized committing, pushing, and deploying the gallery redesign and
+follow-up fixes. Final pre-push validation passed 137 Node tests, all ten workflow
+builds, 68 actual-publish checks, and 32 browser scenarios covering the gallery,
+eight launchers, and desktop/mobile Shortlist with and without the edit query.
+Earlier failing regressions reproduced the paired-action and Shortlist ownership
+issues before their fixes. A separate loaded-page check simulated Shortlist owner
+eligibility and verified no Edit control or builder transition.
+
+This release includes paired green View/blue Convert actions, corrected nested
+Map Journal runtime paths, and preview-only OAuth/local-converter settings.
+Production conversion remains disabled; development overrides do not modify the
+published files. The owner confirmed development Viewers sign-in and previously
+confirmed converter sign-in/prefill retention. Private-content acceptance and the
+old locked converter deployment remain separate gates. No automated real sign-in,
+conversion, remote ArcGIS mutation, domain change, or Netlify deployment occurred.
+
+### Initial Local Gallery and Launcher Redesign
+
+Verified locally: 2026-10-09 22:50:11+00:00[UTC]. At this initial checkpoint the
+redesign was not committed, pushed, or deployed. These original counts are
+historical; subsequent release preparation is recorded above.
+
+- All 133 Node tests and ten workflow builds passed with the project prefix.
+- All 68 actual-publish checks passed separately for project-prefix and root-hosted
+  output. The root build used a separate temporary directory; the existing local
+  project-prefix preview was preserved.
+- The browser runner's `gallery,launchers` modes passed all 28 scenarios on each
+  output: eight launchers at 1440, 390, and 320 pixels, three public-gallery layout
+  checks, and one synthetic-session workflow. Screenshot checks found no horizontal
+  overflow; generic images and example screenshots decoded successfully.
+- Launcher checks verified native screenshot destinations and new-tab attributes,
+  collapsed Advanced tools, validation, retained export controls, and actual
+  downloads of intercepted synthetic item metadata. Whole catalog-card image
+  clicks navigated to the appropriate launcher.
+- Gallery checks covered curated filtering, search, sorting, empty results,
+  pagination, safe text rendering, authenticated blob thumbnails, account changes,
+  stale-response cancellation, retry, logout, expiry, public-group isolation, and
+  browser-history restoration. Test-only conversion enablement verified the
+  runtime/identity gates and ID-only destination; production configuration remains
+  disabled.
+- All nineteen featured item metadata endpoints returned public Web Mapping
+  Applications. This verifies public item metadata, not every dependent service,
+  authored asset, or runtime workflow. Earlier story-specific caveats remain.
+
+No real account was signed in during automated testing. Real ownership results,
+private-thumbnail CORS, private runtime launches, and deployed converter sign-in
+and prefill were not exercised by this automation; subsequent owner confirmations
+and the remaining deployment gate are recorded above. The public group is not yet
+configured. Domain and repository-transfer work remain paused. See the
+[browsing documentation](../../README.md#story-browsing-and-launchers) for
+configuration and the reproducible browser command.
+
 ### Latest Deployment Verification
 
 Verified: 2026-10-09 01:17:42+00:00[UTC]. Release commit

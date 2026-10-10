@@ -61,9 +61,10 @@
   "patches": {
     "patchSetId": "mapjournal-public-appid-v2",
     "files": [
-      "runtimes/mapjournal/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch"
+      "runtimes/mapjournal/patches/0001-allow-url-appid-with-authorized-owners-wildcard.patch",
+      "runtimes/mapjournal/patches/embedded-base-path.mjs"
     ],
-    "rationale": "Allow public appid launches in IIS deployments by setting the runtime authorized owner list to wildcard."
+    "rationale": "Allow public appid launches in IIS deployments by setting the runtime authorized owner list to wildcard. Correct embedded Classic runtime URLs in staged output to retain the current viewers deployment base, including project prefixes, while preserving legacy template paths."
   },
   "verification": {
     "smokeProfile": "mapjournal-baseline",

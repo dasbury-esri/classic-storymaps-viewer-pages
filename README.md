@@ -131,7 +131,89 @@ See [Batch B verification](docs/testing/review-fixes-batch-b.md) for local build
 results, action and checksum provenance, fallback limitations, and pending
 hosted checks.
 
+## Story Browsing and Launchers
+
+The Viewers page starts with eight app-type cards. Each whole card opens its
+launcher. **Browse Stories** replaces those cards with an in-page gallery;
+**Hide Stories** restores them. The manual app-ID form remains available.
+
+Signed-in browsing resolves the current ArcGIS Online username, searches owned
+Web Mapping Applications, and validates ownership, type, ID, Classic tags or
+typeKeywords, and supported runtime before displaying a card. Search, app-type
+filtering, sorting, refresh, and pagination are available. Pages contain up to
+24 stories, with at most three candidate requests per action. A filtered-empty
+page can still have more results; displayed counts are not account-wide totals.
+
+Signed-out browsing uses nineteen curated examples. The shared
+`exampleStoriesByRuntime` records in
+[classic-storymaps-config.js](apps/classic-storymaps-site/assets/js/classic-storymaps-config.js)
+also supply each launcher's two to eight screenshot links. Launcher headers
+reuse the catalog image and description. A closed **Advanced tools** disclosure
+retains the existing manual launch, supported web-map inputs, and download/export
+controls. Entire story cards and example screenshots open the story in a new tab.
+Cards without conversion have no separate View button; their title link supports
+keyboard navigation. When Convert is available, the card also shows a green View
+button beside a blue Convert button. Both actions remain independently clickable.
+
+Set `gallery.publicGroupId` in that configuration when a curated public ArcGIS
+Online group is ready. Group browsing replaces the built-in examples, requests
+only public items without credentials, and does not silently substitute examples
+for an empty or inaccessible group. The group, included items, and their required
+services/media must be publicly accessible. This change does not create or share
+any ArcGIS items or groups.
+
+`gallery.converter.enabled` is **false** until an owner-approved converter release
+containing ownership enforcement and app-ID prefill is deployed. The owner has
+verified the sign-in/prefill flow, but the confirmed locked production release
+predates those changes. When enabled, Convert is
+available only to validated signed-in users for Tour, Journal, Series, Cascade,
+and Swipe. Its configured destination is currently
+`https://regal-sable-0a6dde.netlify.app/?appid=<item-id>`; no credentials are passed,
+and conversion is not started automatically. Switching to
+`https://convert.classicstorymaps.com/` requires separate domain and OAuth
+readiness work. Basic, Shortlist, and Crowdsource do not receive Convert buttons.
+
+The gallery sends authenticated REST requests only to `www.arcgis.com` using
+`X-Esri-Authorization`, not token-bearing rendered URLs. Thumbnails use temporary
+blob URLs with generic-image fallback; missing images do not block View.
+Logout, expiry, account replacement, hiding the gallery, and page exit cancel
+requests and release account-bound state. Browser-history restoration reloads
+the gallery. The shared-origin cookie limitation below remains unchanged.
+
+After building, the existing optional Playwright runner can exercise all eight
+launchers and the gallery at desktop, phone, and narrow-phone widths:
+
+```sh
+SITE_BASE_PATH=/classic-storymaps-viewer-pages \
+RUNTIME_FILTER=gallery,launchers \
+node scripts/validate-release-viewers-browser.mjs
+```
+
+Playwright must already be available. `PLAYWRIGHT_NODE_MODULES` can point to an
+existing directory containing its package; no dependency is added to this repo.
+For a root-hosted build set `SITE_BASE_PATH=""` and, for a separate build tree,
+set `PUBLISH_CHECK_ROOT` to that directory. The runner starts an isolated local
+HTTPS preview, uses synthetic intercepted ArcGIS sessions rather than signing
+in, checks pagination/account changes/expiry/stale responses, and downloads
+synthetic item metadata through each launcher's existing export control.
+
+Real account ownership results, private thumbnails and private runtime launches
+still require owner-controlled acceptance on a registered OAuth origin.
+Mocked sessions do not establish those results or deployed converter readiness.
+
 ## Authentication and Shared-Origin Risk
+
+Shortlist's [staged viewer-only patch](runtimes/shortlist/patches/viewer-only.mjs)
+disables the owner-enabled Edit control and the helper that switches to builder
+mode. It applies after either Grunt or official-release staging, without changing
+upstream files or authentication. Builder bundle removal and publish-time query
+guards remain in place. The official-release regression failed before this fix;
+local browser checks loaded Raised Bogs of Ireland, simulated owner eligibility,
+and confirmed no visible Edit control or builder navigation. The paired gallery
+actions passed desktop and mobile checks; all 137 Node tests and 68 publish
+checks passed. These are local checks; see the
+[release verification notes](docs/testing/archive-examples-audit.md) for deployment
+status and production evidence.
 
 Owner decision for review fix A1: continue on the shared GitHub Pages origin
 with a requested 120-minute ArcGIS token. The catalog uses the OAuth response's
@@ -156,6 +238,41 @@ site's origin remains a separate risk even on a dedicated origin.
 
 References: [ArcGIS OAuth authorize parameters and response](https://developers.arcgis.com/rest/users-groups-and-items/authorize/)
 and [MDN cookie attributes and path limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#attributes).
+
+### Local OAuth Preview
+
+Register a development OAuth client for user authentication with this callback:
+`https://127.0.0.1:61326/classic-storymaps-viewer-pages/viewers/`.
+Start the local HTTPS preview from the repository root:
+
+```sh
+CLASSIC_DEV_CLIENT_ID=YOUR_DEVELOPMENT_CLIENT_ID \
+CLASSIC_DEV_CONVERTER_URL=http://localhost:8888/ \
+PORT=61326 SITE_BASE_PATH=/classic-storymaps-viewer-pages \
+node scripts/preview-server.mjs
+```
+
+The server injects the client ID and canonical Viewers callback into that page's
+response only. It does not modify built files, runtime pages, or the production
+client ID. Without the environment variable, the existing configuration is used.
+Use the registered hostname, port, and path consistently; a different preview
+address needs its own registered callback. The server uses a temporary self-signed
+localhost certificate, so a browser may require local certificate acceptance
+after restart. Only a client ID is needed here, never a client secret.
+Real sign-in and private-content acceptance remain owner-controlled checks.
+
+`CLASSIC_DEV_CONVERTER_URL` optionally enables Convert in preview responses and
+targets an already-running local converter. Only HTTP/HTTPS loopback destinations
+without credentials, query strings, or fragments are accepted. HTTP links require
+this explicit development override; normal gallery configuration remains
+HTTPS-only. Owned-story and supported-template checks still apply, and links pass
+only `appid`. Omit this setting to retain the production conversion gate.
+The local converter has its own sign-in; opening it does not start conversion.
+
+The development handoff passed 36 focused tests and an isolated browser check:
+a synthetic signed-in gallery opened the actual local converter, which captured
+the item ID while signed out. Signed-out and unsupported-template Convert actions
+remained absent. The check attempted no writes and did not use a real session.
 
 ## Next Steps
 1. Refine the site deployment plan prompt for phase sequencing and effort sizing.

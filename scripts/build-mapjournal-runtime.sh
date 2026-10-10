@@ -58,4 +58,6 @@ else
   copy_item "$RUNTIME_PATH/src/web.config" "$OUTPUT_PATH"
 fi
 
+node "$(dirname "${BASH_SOURCE[0]}")/../runtimes/mapjournal/patches/embedded-base-path.mjs" "$OUTPUT_PATH"
+
 echo "Map Journal build output copied to $OUTPUT_PATH"

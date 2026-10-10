@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 import { createPreviewHandler } from './preview-server.mjs';
 
 const publish = path.resolve(process.env.PUBLISH_CHECK_ROOT || 'publish');
-const basePath = process.env.SITE_BASE_PATH || '/classic-storymaps-viewer-pages';
+const basePath = process.env.SITE_BASE_PATH ?? '/classic-storymaps-viewer-pages';
 const temporary = await mkdtemp(path.join(os.tmpdir(), 'classic-release-browser-'));
 const modulePath = process.env.PLAYWRIGHT_NODE_MODULES;
 const { chromium } = modulePath
@@ -32,6 +32,270 @@ async function observePage(width) {
   return { context, page, errors };
 }
 try {
+  if (selectedRuntimes.has('launchers')) {
+    for (const width of [1440, 390, 320]) {
+      const { context, page, errors } = await observePage(width);
+      let selectedApp;
+      const itemId = '0123456789abcdef0123456789abcdef';
+      await context.route('https://www.arcgis.com/sharing/rest/**', async route => {
+        const url = new URL(route.request().url());
+        const payload = url.pathname.endsWith('/data') ? {} : {
+          id: itemId, title: 'Synthetic advanced-tools story', type: 'Web Mapping Application',
+          typeKeywords: [selectedApp.demoType], tags: ['Story Map'], access: 'public', owner: 'synthetic-owner',
+          url: 'https://www.arcgis.com/apps/' + selectedApp.runtimeFolder + '/index.html?appid=' + itemId
+        };
+        await route.fulfill({ json: payload });
+      });
+      await page.goto(origin + basePath + '/viewers/');
+      const config = await page.evaluate(() => window.ClassicStoryMapsConfig);
+      for (const app of config.catalogApps) {
+        selectedApp = config.appRegistry[app.runtime];
+        const result = { runtime: 'launcher-' + app.runtime, width };
+        results.push(result);
+        try {
+          await page.goto(origin + basePath + '/viewers/' + app.launchRoute);
+          assert.equal(await page.locator('.launcher-heading').innerText(), app.title);
+          assert.equal(await page.locator('.launcher-description').innerText(), app.description);
+          assert.equal(await page.locator('#advanced-tools').getAttribute('open'), null);
+          const links = await page.locator('.launcher-example').evaluateAll(anchors => anchors.map(anchor => ({ href: anchor.getAttribute('href'), target: anchor.target, rel: anchor.rel })));
+          assert.equal(links.length, config.exampleStoriesByRuntime[app.runtime].length);
+          links.forEach((link, index) => {
+            assert.equal(link.href, config.runtimeViewerByApp[app.runtime] + '?appid=' + config.exampleStoriesByRuntime[app.runtime][index].id);
+            assert.equal(link.target, '_blank');
+            assert.ok(link.rel.includes('noopener') && link.rel.includes('noreferrer'));
+          });
+          await page.locator('.launcher-header img, .launcher-screenshot').evaluateAll(images => Promise.all(images.map(image => { image.loading = 'eager'; return image.decode(); })));
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+          await page.screenshot({ path: path.join(temporary, 'launcher-' + app.runtime + '-' + width + '.png'), fullPage: true });
+          await page.getByText('Advanced tools', { exact: true }).click();
+          await page.locator('#appid').fill('invalid');
+          assert.equal(await page.locator('#launch-form button[type=submit]').isDisabled(), true);
+          assert.equal(await page.locator('#advanced-tools button[id^=download-]').count(), 4);
+          await page.locator('#appid').fill(itemId);
+          await page.locator('#launch-form button[type=submit]').click();
+          await page.waitForFunction(() => !document.getElementById('download-item-btn').disabled);
+          const downloadPromise = page.waitForEvent('download');
+          await page.locator('#download-item-btn').click();
+          const download = await downloadPromise;
+          const metadata = JSON.parse(await readFile(await download.path(), 'utf8'));
+          assert.equal(metadata.id, itemId);
+          assert.equal(await page.locator('#open-story-btn').isEnabled(), true);
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+          result.pass = true;
+          result.examples = links.length;
+          result.advancedMetadataDownload = true;
+        } catch (error) { result.pass = false; result.failure = error.message; }
+      }
+      assert.deepEqual(errors.filter(message => message.startsWith('page:')), []);
+      await context.close();
+    }
+  }
+  if (selectedRuntimes.has('gallery')) {
+    for (const width of [1440, 390, 320]) {
+      const { context, page, errors } = await observePage(width);
+      const result = { runtime: 'public-gallery', width };
+      results.push(result);
+      try {
+        await page.goto(origin + basePath + '/viewers/');
+        assert.equal(await page.locator('#catalog-grid > a.card').count(), 8);
+        assert.equal(await page.locator('#story-gallery').isVisible(), false);
+        await page.getByRole('button', { name: 'Browse Stories', exact: true }).click();
+        await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 19);
+        assert.equal(await page.locator('#stories-sort option:checked').innerText(), 'Featured order');
+        assert.equal(await page.locator('#catalog-grid').isVisible(), false);
+        assert.equal(await page.getByRole('link', { name: /^Convert / }).count(), 0);
+        assert.equal(await page.locator('.story-title > a').count(), 19);
+        assert.equal(await page.locator('.story-actions').count(), 0);
+        assert.equal(await page.locator('.story-card a a').count(), 0);
+        const firstCard = page.locator('.story-card').first();
+        const storyLink = firstCard.locator('.story-title > a');
+        assert.notEqual(await storyLink.innerText(), 'View');
+        const storyUrl = new URL(await storyLink.getAttribute('href'), page.url()).href;
+        await context.route(storyUrl, route => route.fulfill({ contentType: 'text/html', body: '<title>Local story destination</title>' }));
+        for (const activation of ['image', 'padding', 'keyboard']) {
+          const popupPromise = page.waitForEvent('popup');
+          if (activation === 'keyboard') {
+            await storyLink.focus();
+            await page.keyboard.press('Enter');
+          } else {
+            const bounds = await firstCard.boundingBox();
+            await firstCard.click({ position: { x: 12, y: activation === 'image' ? 12 : bounds.height - 12 } });
+          }
+          const popup = await popupPromise;
+          await popup.waitForLoadState();
+          assert.equal(popup.url(), storyUrl);
+          assert.equal(await popup.evaluate(() => window.opener), null);
+          await popup.close();
+        }
+        await context.unroute(storyUrl);
+        await page.getByLabel('App type', { exact: true }).selectOption('cascade');
+        await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 3);
+        await page.getByLabel('Search stories', { exact: true }).fill('Rupert');
+        await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 1);
+        assert.match(await page.locator('.story-title').innerText(), /Rupert/);
+        await page.getByLabel('Search stories', { exact: true }).fill('no matching synthetic title');
+        await page.waitForFunction(() => document.getElementById('stories-status').textContent === 'No matching stories found.');
+        await page.getByLabel('Search stories', { exact: true }).fill('');
+        await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 3);
+        await page.getByLabel('Sort', { exact: true }).selectOption('title');
+        await page.waitForFunction(() => document.querySelector('.story-title')?.textContent === 'Palau');
+        await page.locator('.story-image').evaluateAll(images => Promise.all(images.map(image => { image.loading = 'eager'; return image.decode(); })));
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+        await page.screenshot({ path: path.join(temporary, 'gallery-' + width + '.png'), fullPage: true });
+        await page.getByRole('button', { name: 'Hide Stories', exact: true }).click();
+        assert.equal(await page.locator('#catalog-grid').isVisible(), true);
+        await page.locator('#catalog-grid > a.card img').first().click();
+        await page.waitForURL('**/maptour-launcher.html');
+        assert.deepEqual(errors.filter(message => message.startsWith('page:')), []);
+        result.pass = true;
+      } catch (error) { result.pass = false; result.failure = error.message; }
+      await context.close();
+    }
+    const { context, page, errors } = await observePage(1280);
+    const result = { runtime: 'gallery-synthetic-sessions' };
+    results.push(result);
+    let mode = 'normal';
+    let releaseHeldRequest;
+    let requestHeld;
+    const captured = [];
+    const syntheticItem = (number, owner) => ({
+      id: number.toString(16).padStart(32, '0'), title: number === 1 ? '<img src=x onerror=alert(1)>' : 'Synthetic story ' + number,
+      owner, type: 'Web Mapping Application', tags: ['Story Map'], access: 'private',
+      typeKeywords: [number === 2 ? 'Story Map Basic' : 'Story Map Journal'], thumbnail: number === 1 ? 'thumbnail/test.png' : null
+    });
+    await context.addInitScript(() => {
+      sessionStorage.setItem('arcgis_access_token', 'synthetic-one');
+      sessionStorage.setItem('arcgis_access_token_expires', String(Date.now() + 600000));
+    });
+    await context.route('https://www.arcgis.com/sharing/rest/**', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      const authorization = request.headers()['x-esri-authorization'];
+      const owner = authorization === 'Bearer synthetic-two' ? 'owner-two' : 'owner-one';
+      assert.ok(!url.searchParams.has('token'));
+      if (url.pathname.endsWith('/community/self')) { await route.fulfill({ json: { username: owner } }); return; }
+      if (url.pathname.endsWith('/info/thumbnail/test.png')) {
+        await route.fulfill({ contentType: 'image/png', body: await readFile(path.join(publish, 'viewers/assets/images/archive/resources/basics.png')) }); return;
+      }
+      captured.push({ query: url.searchParams.get('q'), authenticated: Boolean(authorization) });
+      if (mode === 'held') {
+        requestHeld();
+        await new Promise(resolve => { releaseHeldRequest = resolve; });
+      }
+      if (mode === 'error') { await route.fulfill({ json: { error: { code: 500 } } }); return; }
+      if (mode === 'expired') { await route.fulfill({ json: { error: { code: 498 } } }); return; }
+      const group = url.searchParams.get('q').includes('group:');
+      let stories = Array.from({ length: 30 }, (_, index) => syntheticItem(index + 1, owner));
+      if (group) stories = [ { ...syntheticItem(1, 'public-owner'), access: 'public' }, syntheticItem(2, 'public-owner') ];
+      stories.push(syntheticItem(100, 'wrong-owner'), { ...syntheticItem(101, owner), type: 'StoryMap' });
+      await route.fulfill({ json: { results: stories, nextStart: -1 } }).catch(() => {});
+    });
+    try {
+      await page.goto(origin + basePath + '/viewers/');
+      assert.equal(await page.locator('#story-gallery').isVisible(), false);
+      await page.getByRole('button', { name: 'Browse Stories', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 24);
+      await page.evaluate(() => {
+        window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+        window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+      });
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 24);
+      assert.equal(await page.locator('#stories-heading').innerText(), 'My Stories');
+      assert.equal(await page.locator('.story-title').first().innerText(), '<img src=x onerror=alert(1)>');
+      assert.equal(await page.locator('.story-title img').count(), 0);
+      await page.waitForFunction(() => document.querySelector('.story-image').src.startsWith('blob:'));
+      assert.equal(await page.getByRole('link', { name: /^Convert / }).count(), 0);
+      await page.getByRole('button', { name: 'Next page', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 6);
+      await page.getByRole('button', { name: 'Previous page', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 24);
+      await page.evaluate(() => { window.ClassicStoryMapsConfig.gallery.converter.enabled = true; });
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-action-secondary').length === 23);
+      assert.equal(await page.locator('.story-action-view').count(), 23);
+      const viewAction = page.locator('.story-action-view').first();
+      const viewDestination = new URL(await viewAction.getAttribute('href'), page.url()).href;
+      assert.equal(viewDestination, new URL(await page.locator('.story-title > a').first().getAttribute('href'), page.url()).href);
+      await context.route(viewDestination, route => route.fulfill({ contentType: 'text/html', body: '<title>Local viewer destination</title>' }));
+      const viewPopupPromise = page.waitForEvent('popup');
+      await viewAction.click();
+      const viewPopup = await viewPopupPromise;
+      await viewPopup.waitForLoadState();
+      assert.equal(viewPopup.url(), viewDestination);
+      assert.equal(await viewPopup.evaluate(() => window.opener), null);
+      await viewPopup.close();
+      await context.unroute(viewDestination);
+      for (const width of [1440, 390, 320]) {
+        await page.setViewportSize({ width, height: 850 });
+        const actions = await page.locator('.story-actions').first().evaluate(node => [...node.children].map(action => ({
+          text: action.textContent, background: getComputedStyle(action).backgroundColor,
+          top: action.getBoundingClientRect().top
+        })));
+        assert.deepEqual(actions.map(action => action.text), ['View', 'Convert']);
+        assert.deepEqual(actions.map(action => action.background), ['rgb(11, 111, 95)', 'rgb(40, 172, 219)']);
+        assert.ok(Math.abs(actions[0].top - actions[1].top) < 1);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+        await page.locator('.story-card').first().screenshot({ path: path.join(temporary, 'gallery-actions-' + width + '.png') });
+      }
+      await page.setViewportSize({ width: 1280, height: 850 });
+      const conversion = new URL(await page.locator('.story-action-secondary').first().getAttribute('href'));
+      assert.equal(conversion.origin, 'https://regal-sable-0a6dde.netlify.app');
+      assert.deepEqual([...conversion.searchParams.keys()], ['appid']);
+      assert.equal(await page.locator('.story-title > a').count(), 24);
+      assert.equal(await page.locator('.story-card a a').count(), 0);
+      await context.route(conversion.href, route => route.fulfill({ contentType: 'text/html', body: '<title>Local converter destination</title>' }));
+      const conversionPopupPromise = page.waitForEvent('popup');
+      await page.locator('.story-action-secondary').first().click();
+      const conversionPopup = await conversionPopupPromise;
+      await conversionPopup.waitForLoadState();
+      assert.equal(conversionPopup.url(), conversion.href);
+      assert.equal(await conversionPopup.evaluate(() => window.opener), null);
+      await conversionPopup.close();
+      await context.unroute(conversion.href);
+      mode = 'error';
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await page.waitForFunction(() => document.getElementById('stories-status').textContent.includes('could not be loaded'));
+      mode = 'normal';
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 24);
+      await page.evaluate(() => { sessionStorage.setItem('arcgis_access_token', 'synthetic-two'); window.dispatchEvent(new Event('focus')); });
+      await page.waitForFunction(() => document.querySelector('.story-owner')?.textContent === 'owner-two');
+      assert.ok(captured.some(entry => entry.query.includes('owner:"owner\\-two"')));
+      mode = 'held';
+      const held = new Promise(resolve => { requestHeld = resolve; });
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await held;
+      await page.getByRole('button', { name: 'Sign out of ArcGIS Online', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 19);
+      mode = 'normal';
+      releaseHeldRequest();
+      await page.evaluate(() => new Promise(requestAnimationFrame));
+      assert.equal(await page.locator('.story-owner').count(), 0);
+      assert.equal(await page.locator('.story-action-secondary').count(), 0);
+      await page.evaluate(() => { window.ClassicStoryMapsConfig.gallery.publicGroupId = 'a'.repeat(32); });
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 1);
+      assert.equal(await page.locator('.story-owner').innerText(), 'public-owner');
+      assert.equal(captured.at(-1).authenticated, false);
+      assert.match(captured.at(-1).query, /group:"a{32}" AND access:public/);
+      await page.evaluate(() => {
+        window.ClassicStoryMapsConfig.gallery.publicGroupId = '';
+        sessionStorage.setItem('arcgis_access_token', 'synthetic-one');
+        sessionStorage.setItem('arcgis_access_token_expires', String(Date.now() + 600000));
+        window.dispatchEvent(new Event('focus'));
+      });
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 24);
+      mode = 'expired';
+      await page.getByRole('button', { name: 'Refresh stories', exact: true }).click();
+      await page.waitForFunction(() => document.querySelectorAll('.story-card').length === 19);
+      assert.equal(await page.evaluate(() => sessionStorage.getItem('arcgis_access_token')), null);
+      assert.equal(await page.locator('.story-action-secondary').count(), 0);
+      assert.deepEqual(errors.filter(message => message.startsWith('page:')), []);
+      result.pass = true;
+      result.checks = ['owner isolation', 'pagination', 'safe text', 'private thumbnail blob', 'conversion gate', 'retry', 'account replacement', 'stale-response rejection', 'public group isolation', 'expiry cleanup'];
+    } catch (error) { result.pass = false; result.failure = error.message; }
+    await context.close();
+  }
   if (selectedRuntimes.has('crowdsource')) {
   for (const width of [1280, 390]) {
     for (const suffix of ['', '&edit=true', '&fromScratch=true']) {

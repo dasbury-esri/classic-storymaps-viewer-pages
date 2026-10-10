@@ -873,6 +873,9 @@
       }
     }
 
+    var form = document.getElementById("launch-form");
+    var declaredRuntime = form && form.getAttribute("data-classic-runtime");
+    if (Object.prototype.hasOwnProperty.call(APP_REGISTRY, declaredRuntime)) runtimeId = declaredRuntime;
     return {
       defaultAppId: appId,
       runtimeId: runtimeId,
