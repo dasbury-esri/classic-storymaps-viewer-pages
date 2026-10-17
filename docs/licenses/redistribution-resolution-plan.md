@@ -31,6 +31,44 @@ Allowed dispositions are:
 
 ## Work Sequence
 
+### Execution Checkpoint
+
+The [release membership report](../testing/release-content-membership.json)
+now compares the recorded candidates with the fresh local artifact checked in
+session 0003. Of 827 non-runtime-context candidates, 282 paths have exact copies
+in the artifact: 19 site-source files, four Tailcoat fonts, 180 other assets,
+75 catalog/captured assets and four Basic social fonts. All 350 matching output
+copies were independently byte-compared with `cmp`, including duplicates.
+The artifact has 2,927 files; the report records its deterministic path/size/hash
+manifest digest and the source inventory digest.
+
+Both unresolved font families are actually included in this artifact, not just
+referenced in unused source. Their [bounded upstream investigation](runtime-font-provenance.md#execution-investigation)
+did not establish exact glyph provenance. Owner evidence or a specific
+retain/replace decision is required before clearing that cohort.
+
+The 545 candidates without exact matches are **not automatically excluded or
+cleared**: archive HTML and styles/scripts can be transformed by the build,
+and content may be embedded or fetched remotely. Source retention and artifact
+distribution remain separate questions. This checkpoint changed no font,
+image or runtime source and accepted no new rights. Subsequent notice-text
+changes do not retroactively change this artifact snapshot.
+
+### Replacement Proposals for Owner Review
+
+The owner was unavailable during execution. General autonomy was not treated
+as image/font risk acceptance or approval of a specific replacement.
+
+| Cohort | Proposed fallback | Acceptance checks before any removal |
+| --- | --- | --- |
+| Basic social font | Reuse verified Font Awesome 4.7.0 files from Map Tour, mapping the five semantic classes to equivalent glyphs and preserving OFL/copyright notices | Owner-approved appearance; share and up/down controls; all formats matched to pinned source |
+| Tailcoat | Inventory archive consumers including data-icon attributes, breadcrumbs and button states; map generic controls to verified Ionicons; handle custom/brand glyphs separately | Approved mapping for every used glyph and desktop/mobile archive checks |
+| Copied catalog/tutorial images | Use authored synthetic examples and approved media, or propose excluding affected archive sections from a future release | Approval of replacements or reduced archive scope; preserve originals locally before removing tracked copies |
+
+These are proposals, not implemented substitutions. All original font and
+image bytes remain unchanged. Deferring research does not resolve inclusion
+in a transferred repository or new release.
+
 | Order | Cohort | Proposed action | Completion evidence |
 | --- | --- | --- | --- |
 | 1 | Eight Tailcoat/Basic Fontello files | Trace original glyph selections and terms; request owner retention decision or approve replacement if evidence is unavailable | Font-specific evidence, credits, and desktop/mobile comparison; no deletion of referenced fonts |
@@ -70,8 +108,10 @@ screens must not be counted as visible attribution.
 
 **Result: sampled map credits confirmed; overall attribution clearance remains
 open.** The observed legacy marks were logos, not literal "Powered by Esri"
-text. The runtime notice index credits Esri but the document-head license link
-does not provide visible navigation. Do not infer that these alone satisfy the
+text. The runtime notice index now includes literal Powered by Esri text and
+an Esri link. All eight generated pages passed desktop/mobile Chrome checks,
+sixteen checks total. The document-head license link still does not provide
+visible navigation. Do not infer that these alone satisfy the
 current text/discoverability requirement, particularly on no-map/cover screens.
 Archived site logo removal is likewise not proof of compliant replacement
 attribution, nor grounds to restore branding without review.

@@ -11,7 +11,7 @@ next_action: "Resolve retained-content rights before migration. See [migration h
 updated: 2026-10-17
 extra:
   agents: [claude, copilot-enterprise]
-  phase: Resolution/defer plan recorded; sampled map credits verified; complete attribution and rights decisions remain release gates
+  phase: Artifact membership and notice-page attribution verified; font/image decisions and full viewer attribution remain pending
 ---
 
 # Classic StoryMaps Viewer Pages
@@ -21,14 +21,19 @@ publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`
 
 ## Current state
 
-The [resolution/defer plan](docs/licenses/redistribution-resolution-plan.md)
-prioritizes the two unresolved font families and shipped copied assets, with
-explicit evidence and owner-decision criteria. Shortlist and Journal map views
-displayed native Esri marks and provider credits on desktop/mobile. This does
-not clear all eight runtimes, cover/no-map states, provider expansion or legacy
-logo treatment under current text requirements. Complete attribution remains a
-release gate. The owner authorized scoped commit/push with CI skipped, not
-Pages deployment or transfer. See the [closure log](session-logs/2026-10-17-0005-session-log.md).
+Execution of the [resolution/defer plan](docs/licenses/redistribution-resolution-plan.md)
+produced a [release membership report](docs/testing/release-content-membership.json):
+282 candidate paths have 350 exact output copies, independently byte-compared.
+All eight unresolved font files ship. Bounded public-source checks did not
+establish their exact glyph provenance. The owner was unavailable for new
+rights decisions; specific replacement proposals are recorded, not implemented.
+No font or image was removed, changed or newly accepted.
+
+All eight generated runtime notice pages now display Powered by Esri, verified
+in sixteen desktop/mobile browser checks. In-app discoverability, map-provider
+expansion and actual layer-credit coverage remain open; notice-page checks are
+not blanket compliance. Closure uses CI-skip markers, with no Pages deployment
+or transfer. See the [execution log](session-logs/2026-10-17-0006-session-log.md).
 
 The [current inventory](docs/testing/remaining-content-inventory.json) records
 5,345 tracked, present files: 827 review candidates and 4,518 runtime import or

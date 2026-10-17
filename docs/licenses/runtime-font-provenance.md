@@ -130,3 +130,31 @@ applicable terms and required attribution, or an owner-approved replacement.
 Unlike the retired unused Shortlist fonts, these have direct CSS references;
 no removal is proposed or authorized by this inventory. EOT files were hashed
 but their metadata was not independently decoded. No font bytes were changed.
+
+### Execution Investigation
+
+The [release membership report](../testing/release-content-membership.json)
+independently byte-compares all eight files to their shipped copies. They are
+not candidates for unused-font removal.
+
+Basic's SVG names five glyphs: `facebook-squared`, `twitter`, `link`, `up-open`
+and `down-open`. Fontello's public
+[submodule declarations](https://github.com/fontello/fontello/blob/master/.gitmodules)
+identify `awesome-uni.font` as one available source family. The public
+[Font Awesome conversion source](https://github.com/fontello/awesome-uni.font/tree/c3e6d81b31ccc2c04f001df8c206a6aa250bd70b)
+contains these names, but none of the five SVG path strings matched exactly
+at that revision or in the twelve most recent pre-2016 revisions of
+`font/fontawesome.svg`. Different SVG representations can describe equivalent
+outlines; this negative literal comparison neither proves different authorship
+nor establishes a font-specific grant. The font generator name is insufficient.
+
+The public [Esri Viewer source](https://github.com/Esri/Viewer/tree/44e3e67929434d7a47e006a59e1d5ce747e7027f)
+cited by Basic's README had no `social` path in its available Git history.
+The public [Calcite Web source](https://github.com/Esri/calcite-web/tree/3095ead7bd70a0a69c3db6c00ce3dabb7d4d8498)
+had no `tailcoat` path in its available Git history. These were bounded source
+checks, not exhaustive searches or evidence that no grant exists elsewhere.
+The checked README/root license terms were not extended to unidentified glyphs.
+
+The next decision is owner-supplied source/permission evidence, an approved
+replacement proposal, or explicit owner-risk retention for the eight recorded
+hashes. No new permission or replacement decision has been inferred.

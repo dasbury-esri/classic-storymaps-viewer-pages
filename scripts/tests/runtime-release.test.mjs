@@ -32,6 +32,7 @@ test('runtime publishing preserves root, font and editor license documents verba
       assert.deepEqual(manifest.documents, notices);
       assert.equal(new Set(notices).size, notices.length);
       const noticeIndex = readFileSync(path.join(output, 'notices/index.html'), 'utf8');
+      assert.match(noticeIndex, /<p>Powered by <a href="https:\/\/www\.esri\.com\/">Esri<\/a>\.<\/p>/);
       for (const document of notices) {
         assert.ok(existsSync(path.join(output, 'notices', document)), document);
         assert.ok(noticeIndex.includes(`href="${document}"`), document);
