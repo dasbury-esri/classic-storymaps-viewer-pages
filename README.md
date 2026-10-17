@@ -24,6 +24,36 @@ the source default when the URL ID is absent or malformed. Their
 CI records these values in its run summary. Old ignored `release-*` directories
 are no longer used. See [Batch D verification](docs/testing/review-fixes-batch-d.md).
 
+## Runtime License Delivery
+
+The runtime publish script runs `scripts/stage-runtime-notices.mjs` for all eight
+apps. It preserves the tracked upstream root license and component legal texts,
+adds `notices/index.html` and a manifest, and links that index from the runtime
+document. Source documents are copied verbatim. Supplemental full OFL, MIT, Open
+Sans and Glyphicons terms accompany identified font credits.
+
+Journal and Series contain CKEditor 4.5.3, revision `6c70c82`. Their supplemental
+notice selects the offered MPL 1.1 option without removing recipients' alternative
+license rights, links pinned public source, and supplies bundled editor and
+configuration/customization source as text. License text also ships beside the
+editor. Maintain source availability and change notices when modifying covered
+code. Shortlist's CKEditor-named paths are plugins/styles, not standalone core.
+
+The [font provenance record](docs/licenses/runtime-font-provenance.md) identifies
+Shortlist's Ionicons v2.0.1 fonts, preserves their MIT and Google CC BY 4.0
+attribution, and records removal of eight unused unidentified font files.
+Generic terms do not clear other unidentified glyphs. Runtime notices do
+not license captured websites, catalog images or dependent story content. The
+notice regression covers all eight runtimes and compares original legal bytes.
+A fresh isolated release under Node 24 passed all 139 viewer tests and 68
+published-link checks, with independently verified notice and editor-source
+copies. Four runtimes used Grunt, three used pinned releases, and Basic used
+its static-copy build. See the
+[fresh release record](session-logs/2026-10-17-0003-session-log.md) for build
+warnings and verification limits. Hosted acceptance and content rights remain
+separate. Notice staging requires a Git checkout and the tracked upstream legal
+documents; its CLI also supports invocation through a linked directory.
+
 ## Local Build and Preview
 
 `publish/` is generated output and is no longer tracked. Build it locally or use

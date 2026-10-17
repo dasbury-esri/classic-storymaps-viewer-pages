@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -8,6 +8,80 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const repo = fileURLToPath(new URL('../../', import.meta.url));
+
+test('runtime publishing preserves root, font and editor license documents verbatim', async () => {
+  const { stageRuntimeNotices } = await import('../stage-runtime-notices.mjs');
+  const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-runtime-notices-'));
+  try {
+    for (const runtime of ['maptour', 'swipe', 'mapjournal', 'mapseries', 'cascade', 'shortlist', 'crowdsource', 'basic']) {
+      const output = path.join(temporary, runtime);
+      mkdirSync(output);
+      writeFileSync(path.join(output, 'index.html'), '<html><head></head><body></body></html>');
+      const retiredFonts = ['icomoon', 'fontelloIcons'].flatMap(family => ['eot', 'svg', 'ttf', 'woff'].map(extension => `resources/tpl/viewer/font/font/${family}.${extension}`));
+      if (runtime === 'shortlist') {
+        for (const filename of retiredFonts) {
+          mkdirSync(path.dirname(path.join(output, filename)), { recursive: true });
+          writeFileSync(path.join(output, filename), 'stale build asset');
+        }
+      }
+      const notices = stageRuntimeNotices(runtime, output);
+      assert.ok(notices.length > 0);
+      assert.ok(existsSync(path.join(output, 'LICENSE.txt')));
+      const manifest = JSON.parse(readFileSync(path.join(output, 'notices/manifest.json'), 'utf8'));
+      assert.equal(manifest.runtime, runtime);
+      assert.deepEqual(manifest.documents, notices);
+      assert.equal(new Set(notices).size, notices.length);
+      const noticeIndex = readFileSync(path.join(output, 'notices/index.html'), 'utf8');
+      for (const document of notices) {
+        assert.ok(existsSync(path.join(output, 'notices', document)), document);
+        assert.ok(noticeIndex.includes(`href="${document}"`), document);
+      }
+      const rootLicense = notices.find(document => /^upstream\/license[^/]*$/i.test(document));
+      assert.ok(rootLicense);
+      assert.deepEqual(readFileSync(path.join(output, 'LICENSE.txt')), readFileSync(path.join(repo, 'runtimes', runtime, rootLicense)));
+      for (const document of notices.filter(filename => filename.startsWith('upstream/'))) {
+        assert.deepEqual(readFileSync(path.join(output, 'notices', document)), readFileSync(path.join(repo, 'runtimes', runtime, document)));
+      }
+      if (['mapjournal', 'mapseries'].includes(runtime)) assert.ok(notices.includes('upstream/src/lib-app/ckeditor/LICENSE.md'));
+      assert.match(readFileSync(path.join(output, 'notices/supplemental/OFL-1.1.txt'), 'utf8'), /SIL OPEN FONT LICENSE Version 1.1/);
+      if (runtime === 'shortlist') {
+        for (const filename of retiredFonts) assert.equal(existsSync(path.join(output, filename)), false);
+        assert.ok(notices.includes('supplemental/Ionicons-2.0.1-LICENSE.txt'));
+        assert.deepEqual(readFileSync(path.join(output, 'notices/supplemental/Ionicons-2.0.1-LICENSE.txt')), readFileSync(path.join(repo, 'docs/licenses/ionicons-2.0.1-LICENSE.txt')));
+        assert.match(readFileSync(path.join(output, 'notices/supplemental/Ionicons-2.0.1-LICENSE.txt'), 'utf8'), /Copyright \(c\) 2014 Drifty/);
+        assert.match(readFileSync(path.join(output, 'notices/supplemental/Ionicons-attribution.txt'), 'utf8'), /Google.*CC BY 4\.0/);
+      }
+      if (['mapjournal', 'mapseries'].includes(runtime)) {
+        assert.match(readFileSync(path.join(output, 'resources/lib/ckeditor/legal.txt'), 'utf8'), /6c70c820595044f78fb39ee72410b806164fe448/);
+        assert.deepEqual(readFileSync(path.join(output, 'resources/lib/ckeditor/LICENSE.md')), readFileSync(path.join(repo, 'runtimes', runtime, 'upstream/src/lib-app/ckeditor/LICENSE.md')));
+        assert.deepEqual(readFileSync(path.join(output, 'notices/supplemental/bundled-editor-source/src/lib-app/ckeditor/ckeditor.js.txt')), readFileSync(path.join(repo, 'runtimes', runtime, 'upstream/src/lib-app/ckeditor/ckeditor.js')));
+      }
+      assert.equal(stageRuntimeNotices(runtime, output).length, notices.length);
+      assert.equal(readFileSync(path.join(output, 'index.html'), 'utf8').split('rel="license"').length - 1, 1);
+    }
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('runtime notice CLI stages documents when invoked through a linked directory', () => {
+  const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-notice-cli-'));
+  try {
+    const linkedScripts = path.join(temporary, 'scripts');
+    symlinkSync(path.join(repo, 'scripts'), linkedScripts, 'junction');
+    const output = path.join(temporary, 'output');
+    mkdirSync(output);
+    writeFileSync(path.join(output, 'index.html'), '<html><head></head><body></body></html>');
+    const result = spawnSync(process.execPath, [path.join(linkedScripts, 'stage-runtime-notices.mjs'), 'basic', output], { encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.stdout, /basic: \d+ upstream notice documents preserved/);
+    assert.ok(existsSync(path.join(output, 'LICENSE.txt')));
+    assert.equal(JSON.parse(readFileSync(path.join(output, 'notices/manifest.json'), 'utf8')).runtime, 'basic');
+    assert.match(readFileSync(path.join(output, 'index.html'), 'utf8'), /rel="license" href="notices\/index.html"/);
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
+});
 
 test('Map Journal staged embedded routes preserve deployment base and Swipe parameters', () => {
   const temporary = mkdtempSync(path.join(os.tmpdir(), 'classic-journal-embedded-'));
