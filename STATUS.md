@@ -7,11 +7,11 @@ confidential: false
 state: active
 health: yellow
 priority: 1
-next_action: "Resolve retained-content rights before migration. See [migration handoff](https://github.com/dasbury-esri/ArcGIS-StoryMaps-Classic-Converter-App/blob/main/docs/runbooks/migration-handoff.md)."
+next_action: "David to run the transfer preflight, then transfer after the converter. See [transfer decisions](.github/prompts/transfer-decisions.prompt.md)."
 updated: 2026-10-17
 extra:
   agents: [claude, copilot-enterprise]
-  phase: Artifact membership and notice-page attribution verified; font/image decisions and full viewer attribution remain pending
+  phase: Transfer approved 2026-10-17 without rights gate; font/image decisions and full viewer attribution now gate the next public release
 ---
 
 # Classic StoryMaps Viewer Pages
@@ -20,6 +20,16 @@ This repository hosts the Classic StoryMaps viewers and their GitHub Pages
 publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`.
 
 ## Current state
+
+**Transfer approved, 2026-10-17.** David approved transferring this repository
+to `davidasbury` now, with retained-content rights review moved to "before any
+new public release". The repository stays hybrid (`extra.agents`); `domain: work`
+and `confidential: false` are unchanged. The
+[transfer decisions](.github/prompts/transfer-decisions.prompt.md) record the
+decisions, a two-question answer sheet for the next release, and the ordered
+viewer steps. Older text below that makes rights a transfer gate is superseded.
+No transfer, Pages, DNS or OAuth change has been made yet. See
+[session 0007](session-logs/2026-10-17-0007-session-log.md).
 
 Execution of the [resolution/defer plan](docs/licenses/redistribution-resolution-plan.md)
 produced a [release membership report](docs/testing/release-content-membership.json):
@@ -51,7 +61,7 @@ The owner designated this project as hybrid: both Claude and Copilot Enterprise
 may work on its non-confidential content. Work-domain reporting remains unchanged;
 hybrid designation is recorded by `extra.agents`, not a new domain value.
 
-Retained-content rights must be resolved before migration. The
+Superseded 2026-10-17 by the transfer decisions above: retained-content rights now gate the next public release, not migration. The
 [migration handoff](https://github.com/dasbury-esri/ArcGIS-StoryMaps-Classic-Converter-App/blob/main/docs/runbooks/migration-handoff.md)
 is the continuation guide and requires access to the converter repository.
 No transfer, new deployment or rights clearance is implied by onboarding.

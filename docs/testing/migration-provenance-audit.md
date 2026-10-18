@@ -2,6 +2,10 @@
 
 ## Gate Status
 
+**2026-10-17:** this gate now applies to the next public release, not to the
+repository transfer. See
+[transfer decisions](../../.github/prompts/transfer-decisions.prompt.md).
+
 Current inventory update: 2026-10-17. The exact candidate list is
 [remaining-content-inventory.json](remaining-content-inventory.json): 5,345
 tracked, present files, of which 4,518 are runtime import/local-patch context

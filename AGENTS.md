@@ -15,6 +15,9 @@ facts in here.
   applies to every agent, not only Copilot.
 - **Project conventions** (document roles, OS-agnostic paths): `CONVENTIONS.md`.
 - **Local decisions**: `docs/decisions/` — immutable once active.
+- **Ownership transfer** to `davidasbury` (owner-approved 2026-10-17), including
+  the scoped exception to the "no personal GitHub" rule:
+  `.github/prompts/transfer-decisions.prompt.md`.
 
 ---
 

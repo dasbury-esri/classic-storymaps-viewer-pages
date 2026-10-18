@@ -127,6 +127,11 @@ certification or blanket confirmation for arbitrary user-supplied maps.
 
 ## Release Gates and Deferrals
 
+**Changed 2026-10-17:** the owner moved this review to "before any new public
+release". It no longer gates the repository transfer. See
+[transfer decisions](../../.github/prompts/transfer-decisions.prompt.md).
+Wherever the text below says "transfer", read "new public release".
+
 Do not describe this plan as completed rights clearance. Before a transfer or
 new publication, approve the exact repository and artifact content sets, resolve
 or explicitly decide every applicable remaining candidate, verify account/use
