@@ -8,10 +8,10 @@ state: active
 health: yellow
 priority: 1
 next_action: "David to run the transfer preflight, then transfer after the converter. See [transfer decisions](.github/prompts/transfer-decisions.prompt.md)."
-updated: 2026-10-17
+updated: 2026-10-22
 extra:
   agents: [claude, copilot-enterprise]
-  phase: Transfer approved 2026-10-17 without rights gate; font/image decisions and full viewer attribution now gate the next public release
+  phase: Follow-up transfer safeguards documented; owner preflight and converter acceptance pending; next-public-release gates unchanged
 ---
 
 # Classic StoryMaps Viewer Pages
@@ -22,10 +22,14 @@ publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`
 ## Current state
 
 **Transfer plan reconciled, 2026-10-22.**
-- This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now carry the safeguarded viewer steps.
-- Domain verification is already held by `davidasbury`, and DNS already matches the cutover target.
-- The pinned revision is `1ce19fd`, or a documentation-only descendant of it.
-- The cutover waits for acceptance of the converter transfer. See [session 0008](session-logs/2026-10-22-0008-session-log.md).
+
+- This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now include the follow-up safeguards: safe paginated inventory output, explicit baseline-completion responsibilities, drained deployment queues and exact selected-SHA checks.
+- Session 0008 recorded domain verification under `davidasbury` and DNS matching the target; recheck both before execution.
+- The baseline revision remains `1ce19fd`; a documentation-only descendant requires verified ancestry and an allowed-path diff, with its full SHA selected before dispatch and matched to the run and deployed revision.
+- The cutover still waits for owner preflight and acceptance of the converter transfer. Owner decisions and next-public-release gates are unchanged.
+
+See [follow-up session 0009](session-logs/2026-10-22-0009-session-log.md) and the
+[earlier reconciliation](session-logs/2026-10-22-0008-session-log.md).
 
 **Transfer approved, 2026-10-17.** David approved transferring this repository
 to `davidasbury` now, with retained-content rights review moved to "before any
