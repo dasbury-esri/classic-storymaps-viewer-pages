@@ -23,12 +23,12 @@ publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`
 
 **Transfer plan reconciled, 2026-10-22.**
 
-- This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now include the follow-up safeguards: safe paginated inventory output, explicit baseline-completion responsibilities, drained deployment queues and exact selected-SHA checks.
+- This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now include the follow-up safeguards: a read-only baseline script (`.github/prompts/transfer-baseline.sh`) run before and after the transfer, with the owner approving the comparison; drained deployment queues; and exact selected-SHA checks.
 - Session 0008 recorded domain verification under `davidasbury` and DNS matching the target; recheck both before execution.
 - The baseline revision remains `1ce19fd`; a documentation-only descendant requires verified ancestry and an allowed-path diff, with its full SHA selected before dispatch and matched to the run and deployed revision.
 - The cutover still waits for owner preflight and acceptance of the converter transfer. Owner decisions and next-public-release gates are unchanged.
 
-See [follow-up session 0009](session-logs/2026-10-22-0009-session-log.md) and the
+See [session 0010](session-logs/2026-10-22-0010-session-log.md), [follow-up session 0009](session-logs/2026-10-22-0009-session-log.md) and the
 [earlier reconciliation](session-logs/2026-10-22-0008-session-log.md).
 
 **Transfer approved, 2026-10-17.** David approved transferring this repository

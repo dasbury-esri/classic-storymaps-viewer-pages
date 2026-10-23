@@ -89,32 +89,25 @@ Authorized documentation commits and read-only checks are separate. Record
 results and unknowns in an attributed session log. Never record tokens, private
 keys, recovery codes or credential-bearing URLs.
 
-1. **Snapshot (initial collection by the agent; completion accepted by the owner):**
-   - Copilot runs these read-only commands on the work Mac, with `gh` signed in as `dasbury-esri`. These commands are not the complete baseline. Check each command's exit status; denied or failed requests remain unknown, never empty inventories.
+1. **Snapshot (agent-collected; the owner approves the comparison):**
+   - **Settings baseline:** Copilot runs [`transfer-baseline.sh`](transfer-baseline.sh) on the work Mac, with `gh` signed in as an **admin** of the repository. Every call is read-only. Keep the output **outside the repository**:
 
      ```sh
-     R=dasbury-esri/classic-storymaps-viewer-pages
-     gh api repos/$R --jq '{visibility, default_branch}'
-       gh api --paginate repos/$R/branches --jq '.[] | {name, sha: .commit.sha, protected}'
-       gh api --paginate repos/$R/rulesets --jq '.[] | {id, name, source, source_type, enforcement}'
-       gh api --paginate repos/$R/collaborators --jq '.[] | {login, role_name}'
-       gh api --paginate repos/$R/keys --jq '.[] | {id, read_only}'
-       gh api --paginate repos/$R/hooks --jq '.[] | {id, active, events}'
-       gh api --paginate repos/$R/actions/variables --jq '.variables[].name'
-       gh api --paginate repos/$R/actions/secrets --jq '.secrets[].name'
-     gh api repos/$R/pages --jq '{build_type, cname, html_url}'
+     bash .github/prompts/transfer-baseline.sh dasbury-esri/classic-storymaps-viewer-pages > ../viewer-before.txt
      ```
 
-    - Agent records full branch/tag refs using `git ls-remote --heads --tags` against the verified repository remote, including annotated-tag object and peeled commit refs, and confirms remote `main` matches the inventory.
-    - Owner records classic branch-protection settings and each applicable ruleset's conditions, rules, enforcement and bypass permissions, including inherited rules. A ruleset list or count alone is insufficient.
-    - Owner maps deploy-key IDs to public-key fingerprints, approved purpose and read/write access, and records installed-app identities, permissions and repository grants. Do not record private keys or machine-specific aliases.
-    - Owner records an approved hostname and purpose for each webhook ID. If an agent processes URL fields, use a structural URL parser and emit only the approved hostname; never emit userinfo, path, query or fragment. Do not print raw API responses.
-    - Owner records workflow permissions, environment protection settings, secret names/scopes, enabled security settings and explicitly approved nonsecret restoration values, including `SITE_BASE_PATH`. Review values before recording them; a variable is not safe merely because it is not labeled a secret.
-   - Also record: the workflow's permissions and its latest successful run; a known-good deploy that can be restored; and the Cloudflare apex and `www` records with their TTL, proxy mode and TLS settings, plus any CAA records. Mark anything unavailable as unknown.
-    - The baseline is complete only when the owner accepts the combined evidence. Resolve required unknowns before transfer, or stop for an explicit owner decision documenting missing evidence and recovery implications. Do not treat the dated "Verified State" table as a fresh snapshot or assume defaults for unavailable fields.
+     It covers refs, branch protection and rulesets in full, collaborators, deploy-key fingerprints, webhook hostnames, Actions permissions, secret and variable names, the `SITE_BASE_PATH` value, environments, Pages, and runs that could still publish. It never prints secret values, private keys, webhook URL credentials, paths or queries, or deploy-key titles. Each result is one of:
+     - output or `(none)`: settled;
+     - `NONE (404)`: GitHub says none is configured;
+     - `NOT AVAILABLE`: the plan can't have the feature here;
+     - `UNKNOWN`: not settled. Re-run as an admin, or the owner looks in Settings.
+   - **Owner-only item:** installed GitHub Apps can't be listed with a user token. The owner notes the app names under Settings → GitHub Apps.
+   - **Also record:** a known-good deploy that can be restored, and the Cloudflare apex and `www` records with their TTL, proxy mode and TLS settings, plus any CAA records. Mark anything unavailable as unknown.
+   - **Complete** when the before file has no `UNKNOWN` lines, or the owner accepts each remaining one in the session log. Do not treat the dated "Verified State" table as a fresh snapshot.
+   - **After step 4,** re-run the script against `davidasbury/classic-storymaps-viewer-pages` and diff the two files. The expected difference is the former owner added as a collaborator. The owner approves the diff; anything else stops the cutover for review.
+   - **Drain the deploy queue:** before the transfer, and before any change to Pages or `SITE_BASE_PATH`, the script's last section must show 0 for every status. The workflow doesn't cancel runs in progress (`cancel-in-progress: false`), so stopping pushes doesn't drain runs already queued. The owner cancels them or lets them finish, then re-runs the check.
    - Keep `validation/batch-d-releases` unless the owner approves deleting it.
    - Set a quiet window with a recovery deadline. DNS and certificates can take up to 24 hours.
-    - Before transfer or changes to Pages/base-path settings, inspect queued, running and approval-waiting deployment runs. The owner cancels or lets them finish, then verifies no outstanding run can publish. The workflow uses `cancel-in-progress: false`; stopping pushes alone does not drain existing runs. Record the empty-queue check and current deployment identity.
 2. **Exact sign-in callbacks:**
    - On ArcGIS client `4ZanYdCYK0mWsFLz`, list the registered redirect URIs.
    - The catalog builds its redirect from the page's own address (origin plus path), so `/viewers/` and `/viewers/index.html` are different callbacks. Work out every production page that signs in, including runtime-specific ones.
