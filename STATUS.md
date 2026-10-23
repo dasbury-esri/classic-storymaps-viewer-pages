@@ -21,6 +21,12 @@ publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`
 
 ## Current state
 
+**Transfer plan reconciled, 2026-10-22.**
+- This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now carry the safeguarded viewer steps.
+- Domain verification is already held by `davidasbury`, and DNS already matches the cutover target.
+- The pinned revision is `1ce19fd`, or a documentation-only descendant of it.
+- The cutover waits for acceptance of the converter transfer. See [session 0008](session-logs/2026-10-22-0008-session-log.md).
+
 **Transfer approved, 2026-10-17.** David approved transferring this repository
 to `davidasbury` now, with retained-content rights review moved to "before any
 new public release". The repository stays hybrid (`extra.agents`); `domain: work`
