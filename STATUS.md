@@ -26,6 +26,7 @@ publication workflow. Its stable tracking ID is `classic-storymaps-viewer-pages`
 - This repository's [transfer decisions](.github/prompts/transfer-decisions.prompt.md) now include the follow-up safeguards: a read-only baseline script (`.github/prompts/transfer-baseline.sh`) run before and after the transfer, with the owner approving the comparison; drained deployment queues; and exact selected-SHA checks.
 - Session 0008 recorded domain verification under `davidasbury` and DNS matching the target; recheck both before execution.
 - The baseline revision remains `1ce19fd`; a documentation-only descendant requires verified ancestry and an allowed-path diff, with its full SHA selected before dispatch and matched to the run and deployed revision.
+- The owner ran the before baseline as an admin on 2026-10-22 ([`viewer-before.txt`](.github/prompts/baselines/viewer-before.txt)), with no `UNKNOWN` results. Its two commits had no `[skip ci]` and deployed Pages: the live site now serves `1ce19fd`'s content from `d05c215`. See [session 0011](session-logs/2026-10-22-0011-session-log.md).
 - The cutover still waits for owner preflight and acceptance of the converter transfer. Owner decisions and next-public-release gates are unchanged.
 
 See [session 0010](session-logs/2026-10-22-0010-session-log.md), [follow-up session 0009](session-logs/2026-10-22-0009-session-log.md) and the

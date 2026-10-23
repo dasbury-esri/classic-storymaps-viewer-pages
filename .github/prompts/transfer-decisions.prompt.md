@@ -41,8 +41,9 @@ Recorded by Claude. Each item names its evidence; re-check before acting.
 | Challenge TXT | `_github-pages-challenge-davidasbury` present; no `dasbury-esri` record | `dig` against the authoritative nameservers |
 | `www` | CNAME to `davidasbury.github.io` | `dig` |
 | Apex | A records to GitHub's four Pages addresses; returns GitHub's 404 (no site bound) | `dig`, `curl` |
-| Live viewer | Served at `dasbury-esri.github.io/classic-storymaps-viewer-pages/` (200) from `9910cd3` | `curl`, GitHub deployments API |
-| Refs | `main` `1ce19fd`; `validation/batch-d-releases` `2b8c572` | `git ls-remote` |
+| Live viewer | Served at `dasbury-esri.github.io/classic-storymaps-viewer-pages/` (200) from `d05c215`: the approved `1ce19fd` content plus a baseline text file the build doesn't read. Two baseline commits without `[skip ci]` deployed at 21:25 and 21:27 PDT, replacing `9910cd3`. Only HTTP status checked; the eight runtimes have not been loaded. | `curl`, Actions runs API |
+| Refs | `main` moves with documentation commits after `1ce19fd`; `validation/batch-d-releases` `2b8c572` | `git ls-remote` |
+| Pages environment | `github-pages` deploys from branch `main` only | Anonymous GitHub API, and the updated baseline script |
 | Branch protection | Neither branch protected; no rulesets | GitHub API, anonymous and authenticated |
 
 GitHub verification is held by one account at a time, so the verification
@@ -58,8 +59,9 @@ challenge record permanently.
 | **New public release:** new third-party content, the fonts or images named below, or enabling the conversion integration | The answer sheet below, the open attribution checks in the resolution plan, and owner acceptance |
 
 The transfer exception covers revision `1ce19fd6532950b8333e49da4eca7cd009ed9195`
-only, not whatever `main` happens to be. Its changes since the live deploy
-(`9910cd3`, 2026-10-14) are tracking documents, notice tooling and attribution,
+only, not whatever `main` happens to be. Its changes since the previous live
+deploy (`9910cd3`, 2026-10-14; replaced on 2026-10-22 by `d05c215`, which
+serves `1ce19fd`'s content) are tracking documents, notice tooling and attribution,
 the Ionicons license, and the removal of eight unused fonts. Any other revision
 needs a scoped diff review and owner approval before it uses this exception.
 **One exception:** a descendant qualifies without additional content review only
@@ -90,13 +92,13 @@ results and unknowns in an attributed session log. Never record tokens, private
 keys, recovery codes or credential-bearing URLs.
 
 1. **Snapshot (agent-collected; the owner approves the comparison):**
-   - **Settings baseline:** Copilot runs [`transfer-baseline.sh`](transfer-baseline.sh) on the work Mac, with `gh` signed in as an **admin** of the repository. Every call is read-only. Keep the output **outside the repository**:
+   - **Settings baseline:** Copilot runs [`transfer-baseline.sh`](transfer-baseline.sh) on the work Mac, with `gh` signed in as an **admin** of the repository. Every call is read-only. Save the output under `.github/prompts/baselines/` and commit it with `[skip ci]`; on 2026-10-22, two baseline commits without it deployed Pages:
 
      ```sh
-     bash .github/prompts/transfer-baseline.sh dasbury-esri/classic-storymaps-viewer-pages > ../viewer-before.txt
+     bash .github/prompts/transfer-baseline.sh dasbury-esri/classic-storymaps-viewer-pages > .github/prompts/baselines/viewer-before.txt
      ```
 
-     It covers refs, branch protection and rulesets in full, collaborators, deploy-key fingerprints, webhook hostnames, Actions permissions, secret and variable names, the `SITE_BASE_PATH` value, environments, Pages, and runs that could still publish. It never prints secret values, private keys, webhook URL credentials, paths or queries, or deploy-key titles. Each result is one of:
+     It covers refs, branch protection and rulesets in full, collaborators, deploy-key fingerprints, webhook hostnames, Actions permissions, secret and variable names, the `SITE_BASE_PATH` value, environments and their deployment branch policies, Pages, and runs that could still publish. It never prints secret values, private keys, webhook URL credentials, paths or queries, or deploy-key titles. Each result is one of:
      - output or `(none)`: settled;
      - `NONE (404)`: GitHub says none is configured;
      - `NOT AVAILABLE`: the plan can't have the feature here;
@@ -104,7 +106,13 @@ keys, recovery codes or credential-bearing URLs.
    - **Owner-only item:** installed GitHub Apps can't be listed with a user token. The owner notes the app names under Settings → GitHub Apps.
    - **Also record:** a known-good deploy that can be restored, and the Cloudflare apex and `www` records with their TTL, proxy mode and TLS settings, plus any CAA records. Mark anything unavailable as unknown.
    - **Complete** when the before file has no `UNKNOWN` lines, or the owner accepts each remaining one in the session log. Do not treat the dated "Verified State" table as a fresh snapshot.
-   - **After step 4,** re-run the script against `davidasbury/classic-storymaps-viewer-pages` and diff the two files. The expected difference is the former owner added as a collaborator. The owner approves the diff; anything else stops the cutover for review.
+   - **Before baseline collected, 2026-10-22 21:24 PDT,** by the owner as an admin: [`baselines/viewer-before.txt`](baselines/viewer-before.txt), with no `UNKNOWN` lines. Still open: the installed GitHub Apps (owner), the Cloudflare records, and a known-good deploy. `d05c215` is a candidate but has been checked by HTTP status only.
+   - **After step 4,** re-run the script against `davidasbury/classic-storymaps-viewer-pages` and diff the two files. Expected differences:
+     - `main` advanced by commits made after the before run;
+     - `davidasbury` as the admin, with `dasbury-esri` added as a collaborator;
+     - a new `deployment branch policies: github-pages` section, added to the script after the before run. Its before value, read anonymously on 2026-10-22, was `main type=branch`.
+
+     The owner approves the diff; anything else stops the cutover for review.
    - **Drain the deploy queue:** before the transfer, and before any change to Pages or `SITE_BASE_PATH`, the script's last section must show 0 for every status. The workflow doesn't cancel runs in progress (`cancel-in-progress: false`), so stopping pushes doesn't drain runs already queued. The owner cancels them or lets them finish, then re-runs the check.
    - Keep `validation/batch-d-releases` unless the owner approves deleting it.
    - Set a quiet window with a recovery deadline. DNS and certificates can take up to 24 hours.

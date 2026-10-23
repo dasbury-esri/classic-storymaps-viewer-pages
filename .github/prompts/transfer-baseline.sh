@@ -2,8 +2,10 @@
 # Read-only GitHub settings baseline for the ownership transfer.
 #
 # Usage:  bash transfer-baseline.sh OWNER/REPO > FILE
-# Run it before the transfer (old owner) and after it (new owner), keeping both
-# files OUTSIDE the repository, then compare them:  diff before.txt after.txt
+# Run it before the transfer (old owner) and after it (new owner), saving both
+# under .github/prompts/baselines/, then compare them:  diff before.txt after.txt
+# Commit them with the repository's skip markers; a viewer push to main without
+# [skip ci] deploys Pages.
 #
 # Every call is a GET. Output never contains secret values, private keys,
 # webhook URL credentials, paths or queries, or deploy-key titles. Results:
@@ -123,6 +125,12 @@ if fetch --paginate "repos/$R/actions/variables" --jq '.variables[].name'; then
   done
 fi
 call "environments" "repos/$R/environments" --jq '.environments[] | {name, protection_rules: [.protection_rules[]?.type], deployment_branch_policy}'
+if fetch "repos/$R/environments" --jq '.environments[] | select(.deployment_branch_policy.custom_branch_policies == true) | .name'; then
+  printf '%s\n' "$OUT" | while IFS= read -r e; do
+    [ -n "$e" ] || continue
+    call "deployment branch policies: $e" --paginate "repos/$R/environments/$e/deployment-branch-policies" --jq '.branch_policies[] | "\(.name) type=\(.type)"'
+  done
+fi
 call --none-on-404 "pages" "repos/$R/pages" --jq '{build_type, cname, https_enforced, source}'
 
 section "workflow runs that could still publish (all should be 0)"
